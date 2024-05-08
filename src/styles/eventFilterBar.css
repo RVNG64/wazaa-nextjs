@@ -1,0 +1,136 @@
+.event-filter-bar_container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 73px;
+  gap: 30px;
+  background-color: #202020;
+  box-shadow: 0 8px 10px -5px rgba(0, 0, 0, 0.3);
+}
+
+.event-filter-bar_filter-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: transparent;
+  width: 100px;
+  color: #cccccc;
+  border: none;
+  padding: 10px 15px;
+  gap: 10px;
+  cursor: pointer;
+  transition: all 0.5s ease-in-out;
+  outline: none;
+}
+
+.event-filter-bar_filter-button:hover, .event-filter-bar_filter-button:focus {
+  transform: translateY(-3px);
+  color: #ffffff;
+}
+
+.event-filter-bar_filter-button.active {
+  background: linear-gradient(145deg, #007bff, #0056b3);
+  color: white;
+  animation: filterBtnPulse 2s infinite;
+  box-shadow: 0 4px 20px rgba(0, 105, 217, 0.75);
+  transition: all 0.5s ease-in-out;
+}
+
+.event-filter-bar_main-button {
+  color: white;
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  font-size: 10px;
+  font-weight: bold;
+  padding: 15px 20px; /* Plus grand et plus visible */
+}
+
+.event-filter-bar_main-button .svg-inline--fa {
+  font-weight: bold;
+  font-size: 18px;
+  transition: transform 0.2s ease;
+}
+
+.event-filter-bar_main-button:hover {
+  background-image: linear-gradient(145deg, #3386de, #56a6fa);
+}
+
+@keyframes filterBtnPulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 4px 20px rgba(0, 105, 217, 0.75);
+  }
+  50% {
+    transform: scale(1.1);
+    box-shadow: 0 6px 25px rgba(0, 105, 217, 0.85);
+  }
+}
+
+.event-filter-bar_filter-button span {
+  font-size: 11px;
+  transition: transform 0.2s ease;
+}
+
+.event-filter-bar_filter-button:hover span {
+  transform: scale(1.3);
+}
+
+@media (max-width: 768px) {
+  .event-filter-bar_container {
+    display: flex;
+    height: 69px;
+    gap: 20px;
+    justify-content: flex-start; /* Aligner les éléments à gauche pour commencer le défilement de là */
+    overflow-x: auto; /* Active le défilement horizontal si le contenu dépasse */
+    box-shadow: 0 8px 10px -5px rgba(0, 0, 0, 0.3);
+    scrollbar-width: thin; /* Réduit la taille de la barre de défilement pour les navigateurs qui le supportent */
+    scrollbar-color: transparent transparent;
+  }
+
+  .event-filter-bar_filter-button {
+    padding: 10px 15px;
+  }
+
+  .event-filter-bar_main-button {
+    font-size: 10px;
+  }
+
+  .event-filter-bar_filter-button span {
+    width: 60px;
+    font-size: 10px;
+  }
+
+  .event-filter-bar_filter-button:hover span {
+    transform: scale(1);
+  }
+
+  @keyframes filterBtnPulse {
+    0%, 100% {
+      transform: scale(1);
+      box-shadow: 0 4px 20px rgba(0, 105, 217, 0.75);
+    }
+    50% {
+      transform: scale(1.1);
+      box-shadow: 0 6px 25px rgba(0, 105, 217, 0.85);
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .event-filter-bar_container {
+    height: 67px;
+    gap: 15px;
+  }
+
+  .event-filter-bar_filter-button {
+    width: 80px;
+  }
+
+  .event-filter-bar_main-button {
+    font-size: 10px;
+  }
+
+  .event-filter-bar_filter-button span {
+    width: 50px;
+    font-size: 10px;
+  }
+}

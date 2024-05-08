@@ -1,0 +1,71 @@
+.loading-animation {
+  position: fixed; /* Placé par rapport à la fenêtre du navigateur */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 7em;
+  font-weight: bold;
+  color: #ffffff;
+  text-align: center;
+  z-index: 1050;
+  padding: 20px 40px;
+  border-radius: 15px;
+  background-size: 400% 400%;
+  transition: transform 2s ease-in-out, box-shadow 2s ease-in-out, background-position 8s ease;
+}
+
+/* Mesh gradient animé */
+.loading-animation {
+  background: linear-gradient(45deg, #000000, #b3b3b3, #ffffff);
+  background-size: 400% 400%;
+  animation: animateGradient 8s ease ;
+}
+
+/* Animation du mesh gradient */
+@keyframes animateGradient {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.loading-map-animation {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform: translate(-50%, -50%);
+  height: 100%;
+  width: 100%;
+  z-index: 1050;
+}
+
+.loading-map-animation_overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* Overlay semi-transparent */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000; /* S'assurer qu'il est au-dessus des autres éléments */
+}
+
+.map-loading_lottie-animation {
+  width: 500px;
+  height: 500px;
+}
+
+@media screen and (max-width: 768px) {
+  .loading-animation {
+    font-size: 3em; /* Taille de police réduite pour les petits écrans */
+    padding: 10px 20px; /* Padding ajusté pour les petits écrans */
+    border-radius: 10px; /* Rayon de bordure ajusté pour les petits écrans */
+  }
+}

@@ -1,0 +1,567 @@
+.navbar {
+  position: relative;
+  display: flex;
+  background-color: #202020;
+  color: white;
+  height: 90px;
+  font-size: 1.2em;
+  padding: 20px 20px 10px;
+  font-family: 'Poppins', sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Espacement entre les éléments */
+  z-index: 1000;
+}
+
+.navbar_video-background {
+  position: absolute !important;
+  bottom: 0 !important;
+  width: 100% !important;
+}
+
+.navbar-brand {
+  font-size: 1.8em;
+  font-weight: bold;
+  cursor: pointer; /* Style de curseur pour indiquer la cliquabilité */
+  font-family: 'Sora', sans-serif;
+}
+
+.navbar__rightcontainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  font-family: 'Poppins', sans-serif;
+  gap: 15px; /* Espace entre les boutons et l'icône de profil */
+}
+
+.add-event-btn {
+  /* arrière-plan transparent */
+  background-image: linear-gradient(to right, #44c25d, #0f9741);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 30px;
+  cursor: pointer;
+  font-size: 0.8em;
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.15);
+  transition: all 0.5s ease-in-out;
+  will-change: transform, box-shadow;
+}
+
+.add-event-btn::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 30px;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+  z-index: -1;
+}
+
+.add-event-btn:hover::after, .add-event-btn:focus::after {
+  opacity: 1;
+}
+
+.add-event-btn::after {
+  background-image: linear-gradient(to right, #1ba136, #006e28);
+}
+
+.add-event-btn:hover, .add-event-btn:focus {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.add-event-btn:active::after {
+  background-image: linear-gradient(to right, #006e28, #004a1b);
+}
+
+.add-event-btn a {
+  color: white;
+  text-decoration: none;
+}
+
+.navbar__profile {
+  height: 40px; /* Taille de l'icône de profil */
+  width: 40px;
+  border-radius: 50%; /* Rendre l'icône circulaire */
+}
+
+/* EventFilter */
+.filter-container {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 8px;
+  border-radius: 5px;
+  flex-wrap: wrap;
+  font-family: 'Poppins', sans-serif;
+}
+
+.date-picker-animation-container {
+  display: flex;
+  overflow: hidden;
+  transition: max-height 0.3s ease-in-out;
+  max-height: 200px; /* Adjust based on content */
+}
+
+.react-datepicker {
+  border: none;
+  background-color: #f8f9fa;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  font-family: 'Poppins', sans-serif;
+  padding: 16px;
+}
+
+.react-datepicker__navigation {
+  top: 10px;
+  color: #8aa2b5;
+  cursor: pointer;
+  position: absolute;
+  z-index: 1;
+}
+
+.react-datepicker__navigation-icon::before {
+  border-color: #8aa2b5;
+}
+
+.react-datepicker__header {
+  background-color: transparent;
+  border-bottom: none;
+}
+
+.react-datepicker__current-month {
+  font-size: 16px;
+  color: #333;
+  font-weight: 600;
+}
+
+.react-datepicker__day-name, .react-datepicker__day, .react-datepicker__time-name {
+  color: #666;
+  width: 32px;
+  line-height: 32px;
+  margin: 2px;
+  font-size: 14px;
+}
+
+.react-datepicker__day--selected, .react-datepicker__day:hover {
+  border-radius: 50%;
+  background-color: #4a90e2;
+  color: white;
+}
+
+.react-datepicker__day--outside-month {
+  color: #ccc;
+}
+
+.react-datepicker__close-icon {
+  display: none;
+}
+
+.react-datepicker-popper {
+  z-index: 1500; /* S'assure que le calendrier est au-dessus des autres éléments */
+}
+
+.filter-date, .filter-text {
+  width: 100px;
+  border: none;
+  border-bottom: 2px solid white; /* Style minimaliste */
+  padding: 5px 10px;
+  color: #fff;
+  background-color: transparent;
+  transition: border-color 0.3s ease;
+}
+
+.filter-date:focus, .filter-text:focus {
+  border-color: #4a90e2; /* Accent color when focused */
+}
+
+.filter-text::placeholder, .filter-date::placeholder {
+  color: #bbb; /* Couleur de texte claire pour les placeholders */
+}
+
+.date-picker-group {
+  display: flex;
+  align-items: center;
+}
+
+.date-picker-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.date-label {
+  color: #fff;
+  margin: 0 7px;
+  margin-left: 15px;
+  font-size: 14px;
+}
+
+.filter-container .eventFilter_date-toggle {
+  background-color: #4a90e2; /* Bleu élégant */
+  color: white;
+  font-size: 14px; /* Taille de police appropriée */
+  font-weight: 500; /* Demi-gras */
+  border: none;
+  border-radius: 8px; /* Bordures arrondies pour un look moderne */
+  padding: 7px 15px; /* Padding généreux pour une meilleure accessibilité */
+  cursor: pointer;
+  outline: none; /* Supprimer l'outline par défaut pour un focus propre */
+  transition: background-color 0.3s ease, transform 0.2s ease; /* Transitions fluides pour le background et le transform */
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Ombre subtile pour la profondeur */
+}
+
+.filter-container .eventFilter_date-toggle:hover,
+.filter-container .eventFilter_date-toggle:focus {
+  background-color: #357ABD; /* Un bleu légèrement plus foncé au survol et focus */
+  transform: translateY(-2px); /* Effet de léger soulèvement */
+  box-shadow: 0 4px 6px rgba(0,0,0,0.15); /* Ombre plus prononcée pour l'effet de focus ou survol */
+}
+
+.filter-container .eventFilter_date-toggle:active {
+  transform: translateY(1px); /* Effet enfoncé lors du clic */
+  box-shadow: 0 2px 3px rgba(0,0,0,0.2); /* Ombre plus proche pour simuler le bouton pressé */
+}
+
+.navbar__burger-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  border: 1px solid #ffffff8c;
+  border-radius: 35px;
+  padding: 12px 20px;
+  cursor: pointer;
+  transition: background-color 0.5s ease-in-out, box-shadow 0.3s ease, transform 0.3s ease;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.navbar__burger-container:hover {
+  background-color: #ffffff1a;
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* BurgerMenu */
+.burger-menu-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  transition: all 0.3s ease;
+}
+
+.burger-menu-btn:hover {
+  transform: scale(1.1);
+}
+
+.burger-menu-icon {
+  width: 30px;
+  height: 2px;
+  background-color: #fff;
+  display: block;
+  position: relative;
+}
+
+.burger-menu-icon::before, .burger-menu-icon::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background-color: #fff;
+  left: 0;
+  transition: background-color 0.3s ease;
+}
+
+.burger-menu-icon::before {
+  top: -8px;
+}
+
+.burger-menu-icon::after {
+  bottom: -8px;
+}
+
+/* Animation du burger-menu-icon lors du survol */
+.navbar__burger-container:hover .burger-menu-icon,
+.navbar__burger-container:hover .burger-menu-icon::before,
+.navbar__burger-container:hover .burger-menu-icon::after {
+  background-color: #e0e0e0;
+}
+
+.navbar-left {
+  display: flex;
+  align-items: center;
+}
+
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 110%; /* Ajuster selon la hauteur de votre navbar */
+  right: 0;
+  border: 1px solid #ddd;
+  width: 250px;
+  padding: 10px;
+  z-index: 1002;
+  transform: translateY(-20px);
+  opacity: 0;
+  backdrop-filter: blur(10px);
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 10px;
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.dropdown-menu a {
+  display: block;
+  text-decoration: none;
+  color: #333;
+  padding: 10px 15px;
+  font-size: 0.9em;
+  text-align: right;
+  transition: background-color 0.3s ease;
+}
+
+.dropdown-menu a:hover {
+  background-color: #f5f5f5;
+}
+
+.dropdown-menu a:hover {
+  background-color: #f5f5f5;
+}
+
+.dropdown__back-to-map {
+  display: block;
+  padding: 10px 15px;
+  text-align: center;
+  font-size: 1em;
+  font-weight: bold;
+  color: #007bff !important;
+  margin-top: 10px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+
+  &:hover {
+    background-color: #007bff !important;
+    color: white !important;
+  }
+}
+
+.logOut {
+  display: block;
+  padding: 10px 15px;
+  text-align: center;
+  font-size: 1em;
+  font-weight: bold;
+  color: #d9534f !important;
+  margin-top: 10px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+
+  &:hover {
+    background-color: #d9534f !important;
+    color: white !important;
+  }
+}
+
+.dropdown-menu.show {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.search-icon {
+  display: none; /* Masqué par défaut */
+  cursor: pointer;
+}
+
+@media (max-width: 1024px) {
+  .add-event-btn {
+    padding: 8px 15px;
+    font-size: 0.7em;
+  }
+
+  .eventFilter_date-toggle {
+    padding: 5px 10px;
+    font-size: 0.7em;
+  }
+}
+
+/* Médias queries pour les petits écrans */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 10px;
+    height: 50px;
+    flex-wrap: wrap;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .navbar_video-background {
+    bottom: 0 !important;
+    width: auto !important;
+    height: 500px !important;
+  }
+
+  .navbar__rightcontainer {
+    flex-grow: 1;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .navbar__burger-container {
+    padding: 5px 10px;
+  }
+
+  .search-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    bottom: 100px;
+    right: 10px;
+    width: 30px;
+    height: 30px;
+    /* background: #333; */
+    border-radius: 50%;
+    padding: 10px;
+    z-index: 500;
+    cursor: pointer;
+  }
+
+  .side-menu_lottie-calendar-animation {
+    height: 50px;
+    width: 50px;
+    background-color: #333;
+    border-radius: 50%;
+    transition: transform 0.3s ease-in-out, margin-left 0.6s ease-in-out;
+  }
+
+  .side-menu_lottie-calendar-animation:hover {
+    transform: scale(1.1);
+    transition: transform 0.6s ease-in-out, margin-right 0.6s ease-in-out;
+  }
+
+  .filter-container {
+    display: none; /* Masquer par défaut en mode responsive */
+    position: fixed;
+    bottom: 90px; /* Commence en dehors de l'écran */
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    width: auto;
+    background-color: #333;
+    opacity: 0;
+    z-index: 1499; /* S'assurer qu'il est au-dessus des autres éléments */
+    transition: all 0.5s ease-in-out;
+  }
+
+  .filter-container.eventFilter_active {
+    display: flex; /* Afficher le filtre lorsqu'il est actif */
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .eventFilter_date-toggle {
+    display: none; /* Cache le bouton sur les petits écrans */
+  }
+
+  .date-picker-group {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  .filter-container button {
+    padding: 5px 10px;
+  }
+
+  /* Afficher le filtre lorsque showFilter est true */
+  .navbar .search-icon.eventFilter_active + .filter-container {
+    display: flex;
+  }
+
+  .date-label, .filter-date, .filter-text {
+    font-size: 12px; /* Réduire la taille de la police */
+  }
+
+  .date-label {
+    margin-left: 5px;
+  }
+
+  .filter-date {
+    padding: 5px 5px;
+  }
+
+  .filter-date, .filter-text {
+    width: 90px;
+    box-sizing: border-box;
+  }
+
+  .add-event-btn {
+    display: none; /* Cacher le bouton */
+  }
+
+  .dropdown-menu {
+    right: 0;
+    width: 180px;
+    font-size: 0.8em;
+  }
+
+  .dropdown-menu a {
+    padding: 7px 12px;
+  }
+
+  .react-datepicker {
+    font-size: 12px; /* Réduit la taille de la police pour l'adapter à l'écran plus petit */
+    padding: 8px; /* Diminue le padding pour économiser de l'espace */
+  }
+
+  .react-datepicker__navigation {
+      top: 8px;
+      width: 30px;
+      height: 30px;
+  }
+
+  .react-datepicker__header {
+      padding: 8px 10px; /* Ajuste le padding pour le rendre proportionnel */
+  }
+
+  .react-datepicker__current-month {
+      font-size: 14px; /* Taille de police légèrement réduite pour l'espace d'en-tête */
+  }
+
+  .react-datepicker__day-name, .react-datepicker__day, .react-datepicker__time-name {
+      width: 28px;
+      line-height: 28px; /* Ajuste la taille et la hauteur de ligne des jours pour mieux s'adapter */
+      font-size: 12px; /* Réduit la taille de la police pour les noms des jours */
+  }
+
+  .react-datepicker__day--selected, .react-datepicker__day:hover {
+      background-color: #357ABD; /* Assombrit légèrement pour un meilleur contraste sur petits écrans */
+  }
+
+  .react-datepicker__day--outside-month {
+      color: #e0e0e0; /* Rend les jours hors mois moins visibles */
+  }
+}
+
+@media (max-width: 576px) {
+  .navbar_video-background {
+    height: 300px !important;
+  }
+}
