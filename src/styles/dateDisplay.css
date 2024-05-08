@@ -1,0 +1,55 @@
+.map-date-display {
+  position: absolute;
+  top: 7px;
+  left: 50%;
+  transform: translateX(-50%) !important;
+  background: rgba(0, 0, 0, 0.612); /* Plus foncé pour un meilleur contraste */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6); /* Ombre plus profonde pour un effet 3D */
+  color: #fff;
+  padding: 7px 10px;
+  border-radius: 12px; /* Bordures plus arrondies */
+  z-index: 1000;
+  border: 1px solid rgba(255, 255, 255, 0.2); /* Bordure subtile */
+  transition: all 0.3s ease-in-out; /* Animation douce lors du changement */
+}
+
+.map-date-display:hover {
+  padding: 8px 12px; /* Légèrement agrandi au survol */
+  background: rgba(48, 48, 48, 0.9);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.8); /* Ombre plus prononcée au survol */
+}
+
+.map-date-display h2 {
+  margin: 0;
+  font-size: 15px; /* Taille de police plus grande */
+  font-weight: 500; /* Poids de la police */
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); /* Ombre de texte pour plus de profondeur */
+  letter-spacing: 1px; /* Espacement des lettres pour une meilleure lisibilité */
+}
+
+/* Pour les tablettes */
+@media screen and (max-width: 768px) {
+  .map-date-display {
+    padding: 8px 16px; /* Légèrement réduit */
+    font-size: 14px; /* Adaptation de la taille de police pour les tablettes */
+  }
+
+  .map-date-display h2 {
+    font-size: 13px; /* Taille de police réduite pour les h2 */
+  }
+}
+
+/* Pour les téléphones mobiles */
+@media screen and (max-width: 480px) {
+  .map-date-display {
+    top: unset;
+    bottom: 95px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); /* Ombre légèrement réduite */
+    padding: 6px 12px; /* Encore plus petit padding pour économiser de l'espace */
+    border-radius: 8px; /* Rayon de bordure réduit */
+  }
+
+  .map-date-display h2 {
+    font-size: 12px; /* Taille de police plus petite pour les petits écrans */
+  }
+}

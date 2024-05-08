@@ -1,0 +1,45 @@
+.mobile-menu_container {
+  display: flex;
+  justify-content: space-around;
+  position: fixed;
+  bottom: 0;
+  width: 90%;
+  border-radius: 30px;
+  margin: 10px 5%;
+  background: #333;
+  color: white;
+  padding: 10px 0;
+  box-shadow: 0 -2px 5px rgba(0,0,0,0.2);
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.5s ease, visibility 0s linear 0s;
+  z-index: 1000;
+}
+
+.mobile-menu_container.hide {
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(100%);
+  transition: visibility 0s linear 0s, transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.5s ease;
+}
+
+.mobile-menu_container.show {
+  transform: translateY(0);
+  opacity: 1;
+  transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.6s ease-out; /* Effet de rebond */
+}
+
+.mobile-menu_container button {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 20px;
+  padding: 10px;
+  width: 20%;
+  text-align: center;
+}
+
+.mobile-menu_container button:focus {
+  outline: none;
+}

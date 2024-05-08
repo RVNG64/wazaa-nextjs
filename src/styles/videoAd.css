@@ -1,0 +1,138 @@
+.video-ad-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 4000;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.video-ad-container {
+  max-width: 100%;
+  width: auto;
+  margin: 20px;
+  border-radius: 10px;
+  overflow: hidden;
+  animation: fadeIn-ad 0.5s;
+}
+
+.video-ad {
+  max-width: 700px;
+  border-radius: 10px;
+}
+
+.video-ad-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background: white;
+}
+
+.video-ad-title {
+  flex-grow: 1;
+  margin: 0;
+  font-size: 1.2em;
+}
+
+.video-ad-close-btn {
+  background: none;
+  border: none;
+  color: #333;
+  font-size: 1.5em;
+  margin-left: 15px;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.video-ad-close-btn:hover {
+  color: #666;
+}
+
+@keyframes fadeIn-ad {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.mute-toggle-btn {
+  position: relative;
+  background-color: rgba(255, 255, 255, 0.7);
+  border: none;
+  border-radius: 10px;
+  margin-top: 10px;
+  padding: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+  color: #333; /* Couleur du texte ou de l'icône */
+  font-size: 16px;
+  z-index: 10;
+}
+
+.mute-toggle-btn:hover {
+  background-color: rgba(255, 255, 255, 0.9); /* Plus de visibilité au survol */
+  transform: scale(1.1); /* Légère augmentation de taille */
+}
+
+.mute-toggle-btn:focus {
+  outline: none; /* Supprimer le contour par défaut pour le focus */
+}
+
+.countdown-timer {
+  font-size: 1em; /* Taille de la police adaptée aux éléments d'interface */
+  color: #FFF; /* Couleur du texte pour une visibilité optimale sur un fond sombre */
+  background-color: rgba(0, 0, 0, 0.5); /* Fond semi-transparent pour un effet subtil */
+  padding: 5px 10px; /* Espacement intérieur pour ne pas coller les caractères aux bords */
+  border-radius: 5px; /* Bords arrondis pour une apparence douce */
+  margin-left: 10px; /* Espacement à gauche pour séparer du titre ou d'autres éléments */
+  transition: all 0.3s ease-in-out; /* Transition douce pour tout changement de style */
+}
+
+/* Styles pour les mobiles */
+@media (max-width: 767px) {
+  .video-ad-container {
+    width: 95%; /* Utilisation maximale de l'espace disponible */
+    margin: 10px auto; /* Réduction des marges pour les petits écrans */
+    overflow: hidden;
+  }
+
+  .video-ad-container iframe {
+    width: 100%; /* Pleine largeur sur les petits écrans */
+    height: auto; /* Hauteur adaptée à la largeur */
+  }
+
+  .video-ad {
+    max-width: 100%; /* Pleine largeur sur les petits écrans */
+    height: auto; /* Hauteur adaptée à la largeur */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .video-ad-info {
+    justify-content: space-between;
+  }
+
+  .mute-toggle-btn {
+    font-size: 14px; /* Réduction de la taille de la police pour les petits écrans */
+  }
+
+  .video-ad-title {
+    font-size: 1em; /* Taille de police adaptée aux petits écrans */
+    margin-bottom: 10px; /* Espace supplémentaire sous le titre */
+  }
+
+  .video-ad-close-btn {
+    font-size: 1.2em; /* Taille de police légèrement plus grande pour faciliter le clic */
+  }
+}

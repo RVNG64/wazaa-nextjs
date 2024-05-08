@@ -1,0 +1,173 @@
+.contact-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(5px);
+  z-index: 1500; /* Assurez-vous que la popup est au-dessus des autres éléments */
+}
+
+.contact-popup-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  margin: auto;
+  width: 90%;
+  max-width: 500px; /* Ajustez la largeur maximale selon vos besoins */
+  transition: all 0.3s ease-in-out;
+}
+
+.contact-popup-content h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.contact-popup-content form {
+  display: flex;
+  flex-direction: column;
+}
+
+.contact-popup-content label {
+  margin-bottom: 5px;
+}
+
+.contact-popup-content input,
+.contact-popup-content select,
+.contact-popup-content textarea {
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.contact-popup-content textarea {
+  min-height: 150px;
+}
+
+.contact-popup-content textarea:focus {
+  border-color: #4CAF50;
+  box-shadow: 0 0 8px rgba(76, 175, 80, 0.4);
+  outline: none; /* Supprimer l'outline par défaut pour une apparence personnalisée */
+}
+
+.contact-popup-content button {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.contact-popup-content button:hover {
+  background-color: #45a049;
+}
+
+.close-popup {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 25px;
+  cursor: pointer;
+  color: #333;
+  padding: 5px;
+  transition: color 0.2s ease;
+}
+
+.close-popup:hover {
+  color: #FF6347;
+}
+
+.contact-popup-content input,
+.contact-popup-content select,
+.contact-popup-content textarea,
+.contact-popup-content button {
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.contact-popup-content input:hover,
+.contact-popup-content select:hover,
+.contact-popup-content textarea:hover {
+  border-color: #4CAF50;
+  box-shadow: 0 0 8px rgba(76, 175, 80, 0.4);
+}
+
+.success-message {
+  color: #28a745;
+  background-color: #e6f9ec;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+  text-align: center;
+
+}
+
+.error-message {
+  color: #dc3545;
+  background-color: #f9e6e6;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+  text-align: center;
+}
+
+/* Petits écrans - smartphones */
+@media (max-width: 600px) {
+  .contact-popup-content {
+    width: 85%;
+    padding: 15px;
+  }
+
+  .contact-popup-content input,
+  .contact-popup-content select,
+  .contact-popup-content textarea {
+    font-size: 14px; /* Taille de police plus adaptée pour les petits écrans */
+  }
+
+  .contact-popup-content textarea {
+    min-height: 100px;
+  }
+
+  .contact-popup-content button {
+    font-size: 14px;
+  }
+
+  .close-popup {
+    font-size: 20px;
+  }
+}
+
+/* Écrans de taille moyenne - tablettes */
+@media (min-width: 601px) and (max-width: 1024px) {
+  .contact-popup-content {
+    width: 70%; /* Ajuster la largeur pour les tablettes */
+  }
+
+  .contact-popup-content input,
+  .contact-popup-content select,
+  .contact-popup-content textarea {
+    font-size: 16px; /* Taille de police appropriée pour les tablettes */
+  }
+
+  .contact-popup-content textarea {
+    min-height: 120px;
+  }
+
+  .contact-popup-content button {
+    font-size: 16px;
+  }
+}
+
+/* Grands écrans - écrans d'ordinateur et plus */
+@media (min-width: 1025px) {
+  .contact-popup-content {
+    width: 50%; /* Plus petit pour les grands écrans */
+  }
+}
