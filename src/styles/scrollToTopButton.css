@@ -1,0 +1,105 @@
+.scroll-to-top-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 50px; /* Largeur initiale juste pour l'icône */
+  height: 50px;
+  background-color: #007bffaf;
+  color: white;
+  border: none;
+  border-radius: 50%; /* Rend le bouton rond */
+  padding-left: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Centrer l'icône initialement */
+  font-size: 24px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  transition: all 0.5s ease, transform 0.5s ease-out, opacity 0.5s ease-in;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(20px) scale(0.5);
+}
+
+.scroll-to-top-button.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+}
+
+.scroll-to-top-button:hover {
+  width: 200px; /* Agrandissement en survol pour afficher le texte */
+  border-radius: 25px; /* Coins arrondis en survol */
+  background-color: #0056b3; /* Couleur de fond en survol */
+}
+
+.scroll-to-top-button::before {
+  font-family: 'FontAwesome';
+  display: block;
+  transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+}
+
+.scroll-to-top-button:hover::before {
+  transform: translateX(-10px); /* Déplacer l'icône vers la gauche */
+  opacity: 0.9; /* Légère réduction de l'opacité pour l'effet */
+}
+
+.scroll-to-top-button::after {
+  content: 'Retour en haut'; /* Texte caché initialement */
+  font-size: 16px;
+  white-space: nowrap; /* Empêcher le texte de passer à la ligne */
+  overflow: hidden; /* Cacher tout débordement de texte */
+  margin-left: 15px; /* Espace entre l'icône et le texte */
+  opacity: 0; /* Rendre le texte transparent initialement */
+  transition: opacity 0.3s 0.3s;
+}
+
+.scroll-to-top-button:hover::after {
+  opacity: 1;
+}
+
+/* Media Queries pour les tablettes et les grands téléphones (moins de 768px) */
+@media (max-width: 768px) {
+  .scroll-to-top-button {
+    bottom: 15px; /* Un peu plus près du bord */
+    right: 15px;
+    width: 40px; /* Plus petit pour économiser de l'espace */
+    height: 40px;
+    font-size: 20px; /* Réduction de la taille de l'icône */
+    padding-left: 15px; /* Moins d'espace pour l'icône */
+  }
+
+  .scroll-to-top-button:hover {
+    width: 40px; /* Un peu moins large que sur un grand écran */
+  }
+
+  .scroll-to-top-button::after {
+    content: '';
+    font-size: 14px; /* Texte un peu plus petit */
+    margin-left: 10px; /* Moins d'espace entre l'icône et le texte */
+  }
+}
+
+/* Media Queries pour les petits téléphones (moins de 576px) */
+@media (max-width: 576px) {
+  .scroll-to-top-button {
+    bottom: 90px;
+    right: 10px;
+    width: 35px; /* Encore plus petit pour les petits appareils */
+    height: 35px;
+    font-size: 18px; /* Icône légèrement réduite */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); /* Ombre moins intense */
+  }
+
+  .scroll-to-top-button:hover {
+    width: 35px; /* Adaptation de la largeur en survol pour le texte */
+  }
+
+  .scroll-to-top-button::after {
+    content: '';
+    font-size: 12px; /* Taille de texte réduite pour éviter l'encombrement */
+    margin-left: 8px;
+  }
+}

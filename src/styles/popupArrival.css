@@ -1,0 +1,198 @@
+.popup-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.75); /* Fond sombre semi-transparent */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2001;
+  animation: fadeIn 0.5s;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.popup-container {
+  position: relative;
+  background-color: #f8f8f8;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+  width: 80%;
+  max-width: 1000px;
+  height: auto;
+  text-align: justify;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-sizing: border-box;
+  animation: slideUp 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+  z-index: 2002;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.popup-title {
+  text-align: center;
+  margin-bottom: 2rem;
+  animation: fadeInDown 0.5s;
+}
+
+.popup-intro, .popup-body {
+  font-size: 16px;
+  color: #333;
+  line-height: 1.6;
+  margin-bottom: 15px;
+}
+
+.popup-footer {
+  text-align: center;
+  font-weight: bold;
+  margin-top: 2rem;
+}
+
+.popup-footer p {
+  font-family: 'Sora', sans-serif;
+  font-size: 20px;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.popup-container button {
+  background-image: linear-gradient(to right, #007bff, #0056b3); /* Dégradé de bleu */
+  color: white;
+  border: none;
+  padding: 12px 30px; /* Padding confortable pour un toucher visuel agréable */
+  font-size: 16px; /* Taille de police augmentée pour la lisibilité */
+  font-weight: 600; /* Police un peu plus épaisse pour accentuer le texte */
+  border-radius: 30px; /* Bords très arrondis pour un look moderne */
+  cursor: pointer;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15); /* Ombre subtile pour de la profondeur */
+  transition: all 0.3s ease-in-out; /* Transition douce pour toutes les interactions */
+  will-change: transform, box-shadow; /* Optimisation des performances pour les animations */
+}
+
+.popup-container button::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: linear-gradient(to right, #0056b3, #003870); /* Dégradé plus sombre pour le hover */
+  border-radius: 30px;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+  z-index: -1;
+}
+
+.popup-container button:hover::after, .popup-container button:focus::after {
+  opacity: 1;
+}
+
+.popup-container button:active::after {
+  background-image: linear-gradient(to right, #004885, #002d5a); /* Dégradé pour le state actif */
+}
+
+.popup-container button:hover, .popup-container button:focus {
+  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.25); /* Ombre plus prononcée pour un effet de flottement */
+  transform: translateY(-3px); /* Léger déplacement vers le haut pour simuler l'élévation */
+}
+
+.popup-container button:active {
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.2); /* Ombre réduite pour simuler l'enfoncement */
+  transform: translateY(1px); /* Effet d'enfoncement lors du clic */
+}
+
+.popup-arrival_button {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px; /* Ajout d'un espace au-dessus du bouton pour une séparation claire du texte */
+}
+
+.popup-arrival_lottie-alert-blue {
+  position: absolute;
+  top: 0;
+  right: 20px;
+  height: 150px;
+  width: 150px;
+  margin-left: 10px;
+}
+
+@media (max-width: 768px) {
+  .popup-container {
+    width: 90%; /* Plus étroit pour s'adapter aux écrans plus petits */
+    padding: 20px; /* Padding augmenté pour une meilleure lisibilité */
+  }
+
+  .popup-title {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .popup-intro, .popup-body {
+    font-size: 1rem; /* Taille de police réduite pour une meilleure lisibilité */
+    margin-bottom: 10px; /* Espacement réduit entre les paragraphes */
+  }
+
+  .popup-footer {
+    font-size: 1rem;
+  }
+
+  .popup-container button {
+    padding: 8px 16px; /* Bouton légèrement plus petit */
+  }
+}
+
+@media (max-width: 480px) {
+  .popup-container {
+    width: 95%; /* Largeur quasi-complète */
+    padding: 15px; /* Padding adapté */
+    box-sizing: border-box; /* Éviter le débordement */
+    padding-top: 0;
+  }
+
+  .popup-arrival_lottie-alert-blue {
+    position: relative;
+    top: 0;
+    right: 0;
+    margin: 0 auto;
+  }
+
+  .popup-title {
+    font-size: 1.3rem;
+    margin-top: 0;
+    margin-bottom: 1rem;
+  }
+
+  .popup-intro, .popup-body {
+    font-size: 0.9rem; /* Taille de police réduite pour une meilleure lisibilité */
+    margin-bottom: 10px; /* Espacement réduit entre les paragraphes */
+  }
+
+  .popup-footer {
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .popup-container button {
+    font-size: 0.9rem; /* Police ajustée pour le bouton */
+    padding: 10px 18px; /* Taille de bouton appropriée */
+  }
+}

@@ -1,0 +1,15 @@
+User-agent: *
+Allow: /
+Disallow: /favoris
+Disallow: /mes-evenements
+Disallow: /welcomeIntro
+Disallow: /welcomeInfos
+Disallow: /profil
+Disallow: /profil-pro
+Disallow: /recherche-avancee
+Disallow: /welcomeIntroPro
+Disallow: /welcomeInfosPro
+Disallow: /creation-evenement
+Disallow: /mes-evenements/modifier
+Disallow: /wazaadmin
+Sitemap: https://www.wazaa.app/sitemap.xml

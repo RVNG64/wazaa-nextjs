@@ -1,0 +1,93 @@
+.list-view-toggle {
+  display: flex;
+  padding: 0;
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1001;
+  background-color: white;
+  color: #000000;
+  border: 2px solid #000000;
+  font-size: 16px;
+  font-weight: 500;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+  outline: none; /* Suppression du contour bleu au clic */
+  overflow: hidden;
+}
+
+.list-view-toggle:hover {
+  background-color: #f0f0f0; /* Changement de couleur au survol */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Ombre plus prononcée au survol */
+}
+
+.list-view-toggle:active {
+  background-color: #e0e0e0; /* Changement de couleur au clic */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Ombre réduite au clic */
+}
+
+.list-view-toggle-segment {
+  position: relative;
+  flex: 1;
+  padding: 10px 20px;
+  border: none;
+  background-color: transparent;
+  outline: none;
+  color: #000000;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.list-view-toggle-segment::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background-image: linear-gradient(to right, #007bff, #0056b3); /* Dégradé de bleu */
+  transform: scaleX(0);
+  transform-origin: bottom right;
+  transition: transform 0.4s ease-out;
+}
+
+.list-view-toggle-segment:hover::before {
+  transform: scaleX(1);
+  transform-origin: bottom left;
+}
+
+.list-view-toggle-segment:hover {
+  background-color:#e3f2fd;
+}
+
+.list-view-toggle-segment.active {
+  color: #ffffff;
+  background-image: linear-gradient(to right, #007bff, #0056b3); /* Dégradé de bleu */
+}
+
+.list-view-toggle-segment.active::before {
+  visibility: hidden; /* Cache la barre sous le bouton actif */
+}
+
+/* Media queries */
+@media screen and (max-width: 768px) {
+  .list-view-toggle {
+    display: flex;
+    font-size: 14px;
+    bottom: 10px;
+    border-radius: 20px;
+  }
+
+  .list-view-toggle-segment {
+    padding: 8px 16px;
+  }
+}
+
+@media screen and (max-width: 576px) {
+  .list-view-toggle {
+    display: none;
+  }
+}
