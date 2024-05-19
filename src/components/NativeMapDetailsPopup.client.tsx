@@ -100,7 +100,7 @@ const NativeMapDetailsPopup: React.FC<NativeMapDetailsPopupProps> = ({ eventData
       if (userId && nativeEventId) {
         try {
           // Appel de l'API pour récupérer les favoris natifs de l'utilisateur
-          const response = await fetch(`${process.env.REACT_APP_API_URL}/api/users/${userId}/nativeFavorites`);
+          const response = await fetch(`/api/users/${userId}/nativeFavorites`);
           console.log('Réponse checkif:', response);
           if (response.ok) {
             const favorites = await response.json();
@@ -141,7 +141,7 @@ const NativeMapDetailsPopup: React.FC<NativeMapDetailsPopupProps> = ({ eventData
     }
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/events/${eventId}/attendance/currentStatus?firebaseId=${firebaseId}`);
+      const response = await fetch(`/api/events/${eventId}/attendance/currentStatus?firebaseId=${firebaseId}`);
       console.log('Réponse API fetchCurrentStatus:', response);
       if (response.ok) {
         const data = await response.json();
@@ -188,7 +188,7 @@ const NativeMapDetailsPopup: React.FC<NativeMapDetailsPopupProps> = ({ eventData
     console.log('ID Firebase:', firebaseId);
 
     try {
-      await fetch(`${process.env.REACT_APP_API_URL}/api/events/${eventId}/attendance`, {
+      await fetch(`/api/events/${eventId}/attendance`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ firebaseId, status })
@@ -339,7 +339,7 @@ const NativeMapDetailsPopup: React.FC<NativeMapDetailsPopupProps> = ({ eventData
     const userId = auth.currentUser?.uid;
     if (userId) {
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/users/${userId}/nativeFavorites`);
+        const response = await fetch(`/api/users/${userId}/nativeFavorites`);
         if (!response.ok) {
           throw new Error('Erreur lors du chargement des favoris');
         }
@@ -362,7 +362,7 @@ const NativeMapDetailsPopup: React.FC<NativeMapDetailsPopupProps> = ({ eventData
     }
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/users/${userId}/addNativeFavorite`, {
+      const response = await fetch(`/api/users/${userId}/addNativeFavorite`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -393,7 +393,7 @@ const NativeMapDetailsPopup: React.FC<NativeMapDetailsPopupProps> = ({ eventData
     }
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/users/${userId}/removeNativeFavorite`, {
+      const response = await fetch(`/api/users/${userId}/removeNativeFavorite`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

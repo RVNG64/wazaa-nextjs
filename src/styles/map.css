@@ -3,7 +3,7 @@
 }
 
 .map-container {
-  height: calc(100vh - 163px); /* Hauteur de la carte: 100% - hauteur de la navbar + EventFilterBar */
+  height: calc(var(--window-height) - 163px); /* Hauteur de la carte: 100% - hauteur de la navbar + EventFilterBar */
   width: 100%;
   overflow: hidden;
 }
@@ -693,7 +693,7 @@
   background-image: linear-gradient(to right, #4facfe 0%, #222222 100%);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
-  z-index: 1000;
+  z-index: 500;
 }
 
 .search-events-btn:hover {
@@ -895,7 +895,7 @@
 /* Media Queries */
 @media screen and (max-width: 768px) {
   .map-container {
-    height: calc(100vh - 139px);
+    height: calc(100vh - 119px);
   }
 
   .popup-details_image {

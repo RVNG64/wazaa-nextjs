@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from 'react';
 import lottie from 'lottie-web';
-import '../WazaaLoading/WazaaLoading.css';
 
 interface LottieSuccessCheckProps {
   animationData: any;

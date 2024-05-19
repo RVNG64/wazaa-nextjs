@@ -1,0 +1,107 @@
+.sign-in-choice-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.sign-in-choice-content {
+  text-align: center;
+  background-color: white;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  width: 90%;
+  max-width: 500px;
+}
+
+.sign-in-choice-message h2,
+.sign-in-choice-options h1 {
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.sign-in-choice-buttons {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+}
+
+.sign-in-choice-btn-home,
+.sign-in-choice-btn-disconnect,
+.sign-in-choice-btn-organizer,
+.sign-in-choice-btn-personal {
+  border: none;
+  padding: 10px 20px;
+  border-radius: 10px;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.sign-in-choice-btn-home {
+  background-color: #007bff;
+}
+
+.sign-in-choice-btn-home:hover {
+  background-color: #0056b3;
+}
+
+.sign-in-choice-btn-disconnect {
+  background-color: #f44336;
+}
+
+.sign-in-choice-btn-disconnect:hover {
+  background-color: #d32f2f;
+}
+
+.sign-in-choice-btn-organizer {
+  background-color: #28a745;
+}
+
+.sign-in-choice-btn-organizer:hover {
+  background-color: #218838;
+}
+
+.sign-in-choice-btn-personal {
+  background-color: #007bff;
+}
+
+.sign-in-choice-btn-personal:hover {
+  background-color: #0056b3;
+}
+
+.sign-in-choice-btn-home:hover,
+.sign-in-choice-btn-disconnect:hover,
+.sign-in-choice-btn-organizer:hover,
+.sign-in-choice-btn-personal:hover {
+  transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+  .sign-in-choice-content {
+    padding: 20px;
+    margin: 10px;
+  }
+
+  .sign-in-choice-message h2,
+  .sign-in-choice-options h1 {
+    font-size: 1.5rem;
+  }
+
+  .sign-in-choice-message p {
+    font-size: 1rem;
+  }
+
+  .sign-in-choice-buttons {
+    flex-direction: column;
+  }
+
+  .sign-in-choice-btn-home,
+  .sign-in-choice-btn-disconnect,
+  .sign-in-choice-btn-organizer,
+  .sign-in-choice-btn-personal {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+}

@@ -1,0 +1,119 @@
+.event-card {
+  display: flex;
+  flex-direction: column;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  background: fafafa;
+  border: 1px solid #f0f0f0;
+}
+
+.event-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25);
+}
+
+.event-card_image-container {
+  display: flex;
+  position: relative;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.event-card_image-container::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 30%; /* Hauteur du gradient */
+  background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, #111111 100%);
+}
+
+.event-image {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.event-card-content-container {
+  display: flex;
+  flex-direction: column;
+  background-color: #fafafa;
+  color: #333;
+  padding: 15px;
+}
+
+.event-title {
+  background-color: #111111;
+  padding: 30px 10px;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: white;
+  margin: 0;
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.4);
+}
+
+.event-description {
+  font-size: 1rem;
+  color: #666;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  margin-bottom: 25px;
+}
+
+.event-card-content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.event-info, .event-location {
+  font-size: 0.9rem;
+  color: #888;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 5px 0;
+}
+
+.event-info i, .event-location i {
+  margin-right: 10px;
+  color: #4a90e2;
+  font-size: 0.9rem;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 50px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+/* Media queries */
+@media (max-width: 768px) {
+  .event-card {
+    margin-bottom: 20px;
+  }
+
+  .event-card-content {
+    padding: 15px;
+  }
+
+  .event-title {
+    font-size: 1.3rem;
+    margin: 0;
+  }
+}

@@ -35,3 +35,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# protected directories
+/wazaa-db-0cd954b9136a.json
+
+# firebase admin sdk
+/wazaa-afeec-firebase-adminsdk-8ijhx-f4ce5aee54.json
+/wazaa-afeec-firebase-adminsdk-8ijhx-f4ce5aee54.json:Zone.Identifier
