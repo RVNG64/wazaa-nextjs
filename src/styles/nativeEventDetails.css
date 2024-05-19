@@ -1,0 +1,89 @@
+.popup-details_native-ticket-btn {
+  position: relative;
+  padding: 15px 20px;
+  margin: 20px auto;
+  border: none;
+  border-radius: 25px;
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+  width: 80%;
+  opacity: 0.9;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+  background: linear-gradient(60deg, #000000, #1a1a1a, #1b1b1b, #1a1a1a, #161616, #000000);
+  background-size: 300% 300%;
+  animation: btnBilletterieGradient 6s ease infinite;
+  transition: all 0.3s ease-in-out;
+}
+
+@keyframes btnBilletterieGradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.popup-details_native-ticket-btn:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+}
+
+.popup-details_native-ticket-btn:active {
+  transform: translateY(-2px); /* Réduction de l'effet de flottement au clic */
+}
+
+.attendance-button {
+  background-color: transparent;
+  border: 2px solid #ddd; /* Couleur de bordure douce */
+  border-radius: 50%; /* Boutons circulaires */
+  padding: 10px;
+  margin: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 50px;
+  width: 50px;
+}
+
+.attendance-button:hover {
+  border-color: #aaa; /* Sombre légèrement au survol */
+  background-color: #f8f8f8; /* Remplissage doux au survol */
+}
+
+.attendance-button_selected {
+  background-color: #92d1e8; /* Remplissage doux */
+  border-color: #ffffff; /* Couleur de bordure douce */
+}
+
+/* Icônes */
+.participating-icon:before { content: '\2714'; /* Check */ }
+.maybe-icon:before { content: '\003F'; /* Point d'interrogation */ }
+.not-participating-icon:before { content: '\2716'; /* Croix */ }
+
+.popup-details_status-confirmation-message {
+  position: relative; /* ou absolute, selon votre mise en page */
+  bottom: 20px; /* ajustez selon le besoin */
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #f0f0f0; /* couleur de fond */
+  color: #333; /* couleur du texte */
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.popup-details_status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  color: #333; /* Couleur du texte */
+}
+
+.popup-details_attendance-item-icon {
+  margin-right: 10px;
+  color: #4a90e2; /* Couleur de l'icône */
+}

@@ -54,7 +54,7 @@ const EventDetails = () => {
 
       if (userId && poiId) {
         try {
-          const response = await fetch(`${process.env.REACT_APP_API_URL}/api/users/${userId}/favoritesJSON`);
+          const response = await fetch(`/api/users/favoritesJSON?userId=${userId}`);
           if (response.ok) {
             const favorites = await response.json();
             console.log('Favoris:', favorites);
@@ -161,7 +161,7 @@ const EventDetails = () => {
   const addToFavorites = async (eventId: string): Promise<boolean> => {
     try {
       if (auth.currentUser && auth.currentUser.uid) {
-        const response = await fetch(`/api/users/addFavorite`, {
+        const response = await fetch(`/api/users/addFavorite?userId=${auth.currentUser.uid}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -185,7 +185,7 @@ const EventDetails = () => {
   const removeFromFavorites = async (eventId: string): Promise<boolean> => {
     try {
       if (auth.currentUser && auth.currentUser.uid) {
-        const response = await fetch(`/api/users/removeFavorite`, {
+        const response = await fetch(`/api/users/removeFavorite?userId=${auth.currentUser.uid}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -243,7 +243,7 @@ const EventDetails = () => {
     const userId = auth.currentUser?.uid;
     if (userId) {
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/users/${userId}/favoritesJSON`);
+        const response = await fetch(`/api/users/favoritesJSON?userId=${userId}`);
         if (!response.ok) {
           throw new Error('Erreur lors du chargement des favoris');
         }
@@ -316,7 +316,7 @@ const EventDetails = () => {
       <div className="popup-details_ad-container">
         <p className="popup-details_ad-label">Publicité</p>
         <a href={ad.link} target="_blank" rel="noopener noreferrer">
-          <Image src={ad.adUrl} alt={`Publicité ${ad.id}`} className="popup-details_ad" />
+          <Image src={ad.adUrl} alt={`Publicité ${ad.id}`} className="popup-details_ad" width={300} height={250} />
         </a>
       </div>
     );
@@ -457,7 +457,7 @@ const EventDetails = () => {
         <div className="event-details">
           {eventImage && (
             <div className="popup-details_image-container event-details_image-container">
-              <Image src={eventImage} alt={eventName} className="popup-details_image event-details_image" />
+              <Image src={eventImage} alt={eventName} className="popup-details_image event-details_image" width={600} height={650} priority style={{ width: 'auto' }} />
             </div>
           )}
 
@@ -530,13 +530,13 @@ const EventDetails = () => {
                     <i className="fas fa-times"></i> {/* Icône de croix */}
                   </button>
                   <button onClick={() => shareOnSocialMedia('facebook')} className="popup-details_social-share-btn">
-                    <Image src="/icon-facebook.svg" alt="Facebook" />
+                    <Image src="/icon-facebook.svg" alt="Facebook" width={40} height={40} />
                   </button>
                   <button onClick={() => shareOnSocialMedia('twitter')} className="popup-details_social-share-btn">
-                    <Image src="/icon-twitter.svg" alt="Twitter" />
+                    <Image src="/icon-twitter.svg" alt="Twitter" width={40} height={40} />
                   </button>
                   <button onClick={() => shareOnSocialMedia('whatsapp')} className="popup-details_social-share-btn">
-                    <Image src="/icon-whatsapp.svg" alt="WhatsApp" />
+                    <Image src="/icon-whatsapp.svg" alt="WhatsApp" width={40} height={40} />
                   </button>
                   <button onClick={copyToClipboard} className="popup-details_social-share-btn">
                     <i className="fas fa-copy"></i>  Copier le lien
@@ -612,6 +612,8 @@ const EventDetails = () => {
 
 function extractEventDetails(eventData: POI) {
   const defaultImageUrl = 'https://res.cloudinary.com/dvzsvgucq/image/upload/v1693844552/hervemake_A_determined_business_owner_engaging_in_a_networking__4d7e7005-1d7f-4395-a9b6-d2bd94e12421_vdnels.png';
+  const poster = eventData['hasMainRepresentation']?.[0]?.['ebucore:hasRelatedResource']?.[0]?.['ebucore:locator'] || defaultImageUrl;
+  const eventImage = Array.isArray(poster) ? poster[0] : poster;
   const latitude = eventData['isLocatedAt']?.[0]?.['schema:geo']?.['schema:latitude'];
   const longitude = eventData['isLocatedAt']?.[0]?.['schema:geo']?.['schema:longitude'];
   const addressObject = eventData['isLocatedAt']?.[0]?.['schema:address']?.[0];
@@ -627,8 +629,8 @@ function extractEventDetails(eventData: POI) {
 
   return {
     eventName: eventData['rdfs:label']?.fr?.[0] || 'Événement inconnu',
+    eventImage,
     eventDescription: eventData['hasDescription']?.[0]?.['dc:description']?.fr?.[0] || 'Description non disponible',
-    eventImage: eventData['hasMainRepresentation']?.[0]?.['ebucore:hasRelatedResource']?.[0]?.['ebucore:locator'] || defaultImageUrl,
     eventStartDate: eventData['takesPlaceAt']?.[0]?.['startDate'] || 'Date inconnue',
     eventEndDate: eventData['takesPlaceAt']?.[0]?.['endDate'] || 'Date inconnue',
     eventStartTime: eventData['takesPlaceAt']?.[0]?.['startTime'] || '',

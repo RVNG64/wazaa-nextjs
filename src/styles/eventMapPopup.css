@@ -1,0 +1,65 @@
+.eventMap-popup_container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: white;
+  box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  z-index: 1000; /* S'assurer qu'elle apparaît au-dessus des autres éléments */
+  transition: transform 0.3s ease-in-out;
+}
+
+.eventMap-popup_content {
+  padding: 20px;
+  text-align: center;
+}
+
+.eventMap-popup_close-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  cursor: pointer;
+}
+
+.eventMap-popup_title {
+  font-size: 1.2rem;
+  color: #333;
+  margin-top: 20px;
+}
+
+.eventMap-popup_poster {
+  width: 100%;
+  max-height: 200px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-top: 10px;
+}
+
+.eventMap-popup_dates {
+  font-size: 0.9rem;
+  color: #666;
+  margin-top: 10px;
+}
+
+.eventMap-popup_details-button {
+  display: block;
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 1rem;
+  margin-top: 20px;
+  cursor: pointer;
+  width: calc(100% - 40px); /* Ajoutez du padding */
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.eventMap-popup_details-button:hover {
+  background-color: #0056b3;
+}

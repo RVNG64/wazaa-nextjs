@@ -1,13 +1,19 @@
-// src/pages/api/users/[auth.currentUser.uid]/addFavorite.js
+// pages/api/users/addFavorite.js
+import dbConnect from '../../../utils/dbConnect';
+import User from '../../../models/User';
+import Organizer from '../../../models/Organizer';
+
 export default async function handler(req, res) {
-  if (!req.headers.authorization) {
-    return res.status(401).json({ error: 'Authentication required' });
+  if (req.method !== 'POST') {
+    return res.status(405).end(`Method ${req.method} Not Allowed`);
   }
 
+  const { userId } = req.query;
   const { eventId } = req.body;
-  const userId = req.headers.authorization;
 
   try {
+    await dbConnect();
+
     // Trouver l'utilisateur par firebaseId
     let user = await User.findOne({ firebaseId: userId });
     if (!user) {

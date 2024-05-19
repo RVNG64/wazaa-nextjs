@@ -20,6 +20,7 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
 
 // S'assurer que 'window' est défini avant d'utiliser les fonctions qui en dépendent
 if (typeof window !== "undefined") {
@@ -33,4 +34,4 @@ if (typeof window !== "undefined") {
   const analytics = getAnalytics(app);
 }
 
-export const auth = getAuth(app);
+export { auth };

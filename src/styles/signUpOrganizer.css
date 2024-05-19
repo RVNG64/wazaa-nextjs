@@ -1,0 +1,15 @@
+.signup-password-info {
+  margin-top: 10px;
+  margin-bottom: 0;
+  font-size: 12px;
+  color: #666;
+}
+
+.background-sign-pro {
+  background: url('https://res.cloudinary.com/dvzsvgucq/image/upload/v1693844555/hervemake_grid_of_profile_pics_of_aspiring_happy_entrepreneurs__f86fe8df-4ac1-400f-9a29-fe6c57be07c7_kpp00h.png') no-repeat center center fixed;
+  background-size: cover;
+  height: 90vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

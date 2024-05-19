@@ -24,5 +24,7 @@ const userSchema = new mongoose.Schema({
   notifications: [String]
 });
 
-const User = mongoose.model('User', userSchema);
+// Vérifie si le modèle existe déjà, sinon le crée
+const User = mongoose.models.User || mongoose.model('User', userSchema);
+
 module.exports = User;

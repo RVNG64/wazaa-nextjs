@@ -1,0 +1,285 @@
+.myEvents {
+  text-align: center;
+  padding: 40px;
+  background: #f8f9fa;
+  min-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.myEvents h2 {
+  font-size: 40px;
+  animation: fadeInDown 1s ease;
+}
+
+.myEvents__container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, max-content)); /* Affiche 3 éléments par ligne, max-content permet de ne pas dépasser la largeur de l'écran */
+  gap: 30px;
+  justify-items: center;
+}
+
+/* Animation pour le titre */
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -100%, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.myEvents__recommendations {
+  background-color: #eef2f7;
+  margin: 0 0 20px 0;
+  position: relative;
+  padding: 0 20px 40px 20px;
+  height: 100%;
+  width: 100%;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+.myEvents__carousel-navigation {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.myEvents__carousel-button {
+  background-color: #fff;
+  color: #007bff;
+  border: 2px solid #007bff;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 10px;
+  cursor: pointer;
+}
+
+.myEvents__carousel-button:hover {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.myEvents__carousel-button i {
+  font-size: 16px;
+}
+
+.myEvents__carousel-button.prev {
+  left: 10px;
+}
+
+.myEvents__carousel-button.next {
+  right: 10px;
+}
+
+.myEvents__carousel-container {
+  overflow: hidden;
+}
+
+.myEvents__carousel-track {
+  display: flex;
+  transition: transform 0.5s ease;
+  height: 100%;
+}
+
+.myEvents__carousel-item {
+  flex: 0 0 calc(33.333% - 20px);
+  margin-right: 20px;
+  min-height: 350px;
+  height: 400px;
+  box-sizing: border-box;
+}
+
+.myEvents__recommendation-item {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  border-radius: 10px;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+  cursor: pointer;
+}
+
+.myEvents__recommendation-item:hover {
+  transform: translateY(-5px);
+}
+
+.myEvents__recommendation-image-container {
+  display: flex;
+  position: relative;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  height: 200px;
+}
+
+.myEvents__recommendation-image-container::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 30%; /* Hauteur du gradient */
+  background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, #fafafa 100%);
+}
+
+.myEvents__recommendation-image {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.myEvents__recommendation-content {
+  display: flex;
+  flex-direction: column;
+  background-color: #fafafa;
+  color: #333;
+  padding: 15px;
+}
+
+.myEvents__recommendation-title {
+  font-size: 1.2em;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.myEvents__recommendation-infos-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.myEvents__recommendation-date, .myEvents__recommendation-address {
+  font-size: 0.8em;
+}
+
+.myEvents__recommendation-date i, .myEvents__recommendation-address i {
+  margin-right: 5px;
+  font-size: 0.8;
+}
+
+.myEvents__carousel-navigation {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 10px;
+}
+
+.myEvents-ad-container {
+  position: relative;
+  margin-top: 40px !important;
+  margin-bottom: 40px !important;
+  box-sizing: border-box;
+  width: 100%;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+.myEvents-ad-container .popup-details_ad {
+  max-height: 200px;
+  width: auto;
+}
+
+/* Media queries */
+@media (max-width: 768px) {
+  .myEvents {
+    padding: 20px;
+  }
+
+  .myEvents h2 {
+    font-size: 30px;
+  }
+
+  .myEvents__container {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+
+  .myEvents__carousel-item {
+    flex: 0 0 calc(50% - 15px); /* Affiche 2 éléments par ligne avec une marge ajustée */
+    margin-right: 15px;
+  }
+
+  .myEvents__recommendation-item {
+    min-height: 300px;
+  }
+
+  .myEvents__recommendation-image-container {
+    height: auto;
+  }
+
+  .myEvents__recommendation-image {
+    height: 200px; /* Hauteur ajustée de l'image */
+  }
+
+  .myEvents__recommendation-content {
+    padding: 10px;
+  }
+
+  .myEvents__recommendation-title {
+    font-size: 1.1em; /* Taille de police ajustée */
+    margin-bottom: 15px;
+  }
+
+  .myEvents__recommendation-infos-container {
+    flex-direction: column;
+    align-items: flex-start;
+    background-color: #fafafa;
+  }
+
+  .myEvents__recommendation-date, .myEvents__recommendation-address {
+    text-align: left;
+    font-size: 0.7em;
+    margin: 0;
+  }
+
+  .myEvents__recommendation-date i, .myEvents__recommendation-address i {
+    margin-right: 5px;
+    font-size: 0.7em;
+  }
+
+  .myEvents__carousel-button {
+    width: 35px;
+    height: 35px;
+    font-size: 14px; /* Taille ajustée des boutons et de l'icône */
+  }
+
+  .myEvents-ad-container .popup-details_ad {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .myEvents__carousel-item {
+    flex: 0 0 100%;
+    margin-right: 10px;
+    height: 300px;
+  }
+
+  .myEvents__recommendation-image {
+    height: 200px;
+  }
+
+  .myEvents__carousel-button {
+    width: 30px;
+    height: 30px;
+    font-size: 12px;
+  }
+
+  .myEvents__carousel-navigation {
+    margin-top: 10px;
+  }
+
+  .myEvents__recommendations h2 {
+    font-size: 25px;
+  }
+}

@@ -1,4 +1,4 @@
-// pages/api/loadEventsFromGCS.js
+// src/pages/api/loadEventsFromGCS.js
 const { Storage } = require('@google-cloud/storage');
 const storage = new Storage({
   projectId: process.env.GCS_PROJECT_ID,
@@ -16,7 +16,7 @@ async function loadEventsFromGCS() {
   const indexFile = bucket.file('index.json');
   const [indexContents] = await indexFile.download();
   const index = JSON.parse(indexContents.toString());
-  // Formatage des lettres accentuées pour les URL
+
   const removeAccents = (str) => {
     const accents =
       'ÀÁÂÃÄÅàáâãäåÒÓÔÕÖØòóôõöøÈÉÊËèéêëÇçÌÍÎÏìíîïÙÚÛÜùúûüÿÑñ';
@@ -44,13 +44,11 @@ async function loadEventsFromGCS() {
     try {
       const [eventContents] = await eventFile.download();
       const event = JSON.parse(eventContents.toString());
-      // Vérification des coordonnées
       if (event.isLocatedAt && event.isLocatedAt.length > 0) {
         const location = event.isLocatedAt[0]['schema:geo'];
         const latitude = parseFloat(location['schema:latitude']);
         const longitude = parseFloat(location['schema:longitude']);
-        if (!isNaN(latitude) && !isNaN(longitude)) { // Si les coordonnées sont valides
-          // Création de l'URL de l'événement
+        if (!isNaN(latitude) && !isNaN(longitude)) {
           const eventId = event['@id'].split('/').pop();
           const eventName = event['rdfs:label']?.fr?.[0] || '';
           const eventSlug = createEventSlug(eventName);
@@ -66,7 +64,6 @@ async function loadEventsFromGCS() {
     }
   }
 
-  console.log(`3 premiers urlPath: ${events.slice(0, 3).map(e => e.urlPath)}`);
   console.log(`Chargement de ${events.length} événements détaillés depuis GCS`);
   return events;
 }

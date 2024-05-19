@@ -1,0 +1,50 @@
+.faq-container {
+  margin: 20px;
+  color: #333; /* Couleur de texte principale */
+}
+
+.faq-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.accordion__item {
+  border: none;
+  background-color: #f8f9fa; /* Couleur de fond de chaque item */
+  margin-bottom: 10px;
+  border-radius: 8px; /* Coins arrondis */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Ombre des items */
+}
+
+.accordion__button {
+  font-weight: bold; /* Texte en gras */
+  color: #0056b3; /* Couleur du texte de l'item */
+  padding: 15px; /* Espacement interne */
+  transition: background-color 0.3s ease; /* Transition de couleur de fond */
+}
+
+.accordion__button:hover,
+.accordion__button[aria-expanded='true'] {
+  background-color: #e7e7e7; /* Couleur de fond au survol et quand l'item est ouvert */
+}
+
+.accordion__panel {
+  padding: 15px; /* Espacement interne */
+  line-height: 1.5; /* Espacement des lignes */
+  background-color: #fff; /* Couleur de fond du panneau */
+}
+
+.faq-icon {
+  margin-left: 10px; /* Espacement de l'icône */
+  transition: transform 0.3s ease; /* Animation de rotation de l'icône */
+}
+
+.accordion__button[aria-expanded='true'] .faq-icon {
+  transform: rotate(180deg); /* Rotation de l'icône quand l'item est ouvert */
+}
+
+.faq-footer {
+  text-align: center;
+  margin-top: 20px;
+  color: #666; /* Couleur du texte du pied de page */
+}
