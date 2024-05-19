@@ -68,5 +68,7 @@ const eventSchema = new mongoose.Schema({
   favoritesCount: { type: Number, default: 0 }
 });
 
-const EventModel = mongoose.model('Event', eventSchema);
+// Vérifie si le modèle existe déjà, sinon le crée
+const EventModel = mongoose.models.Event || mongoose.model('Event', eventSchema);
+
 module.exports = EventModel;

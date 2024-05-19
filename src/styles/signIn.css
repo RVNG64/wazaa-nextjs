@@ -1,0 +1,177 @@
+.background-signin {
+  background: url('https://res.cloudinary.com/dvzsvgucq/image/upload/v1696452925/hervemake_strengths_and_weaknesses_positive_and_negative_side_i_167ddab9-5d17-4c31-9fee-915400330337_lnrcah.png') no-repeat center center fixed;
+  background-size: cover;
+  height: 90vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.signin-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(rgba(255,255,255,0.8), rgba(255,255,255,0.8));
+  width: 50%;
+  border-radius: 15px;
+  box-shadow: 0px 10px 30px -5px rgba(0, 0, 0, 0.3);
+  animation: slide-up 1s ease;
+}
+
+@keyframes slide-up {
+  0% {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.signin-form {
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+  max-width: 400px;
+}
+
+.signin-form h2 {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.signin-input {
+  margin: 10px 0;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.signin-button {
+  margin-top: 20px;
+  padding: 10px;
+  background: linear-gradient(270deg, #ff7a18, #af002d, #1f82ce);
+  background-size: 600% 600%;
+  color: white;
+  font-weight: bold;
+  font-family: 'Poppins', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border: none;
+  cursor: pointer;
+  border-radius: 30px;
+  animation: gradient 8s ease infinite;
+}
+
+@keyframes gradient {
+  0% {background-position: 0% 50%;}
+  50% {background-position: 100% 50%;}
+  100% {background-position: 0% 50%;}
+}
+
+.signin-button:hover {
+  box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.2);
+}
+
+.forgot-password-button {
+  padding: 8px 10px;
+  background-color: transparent;
+  border: none;
+  color: #0077cc;
+  cursor: pointer;
+  text-decoration: underline;
+  font-size: 14px;
+  margin-top: 10px;
+  align-self: center;
+}
+
+.forgot-password-button:hover {
+  color: #0056b3;
+  text-decoration: none;
+}
+
+.signin-other-options {
+  display: flex;
+  flex-direction: column;
+  margin: 1rem 0;
+}
+
+.signin-button-google,
+.signin-button-facebook,
+.signin-button-apple {
+  padding: 10px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-top: 10px;
+}
+
+.signin-button-google {
+  background-color: #4285F4;
+  color: white;
+}
+
+.signin-button-facebook {
+  background-color: #3b5998;
+  color: white;
+}
+
+.signin-button-apple {
+  background-color: #000;
+  color: white;
+}
+
+.background-signin p {
+  text-align: center;
+}
+
+.forgot-password-button {
+  margin-top: 10px;
+  text-align: center;
+}
+
+/* Responsive Design */
+
+/* Pour tablettes */
+@media (max-width: 768px) {
+  .signin-container {
+      width: 90%;
+  }
+
+  .signin-form {
+      width: 90%;
+  }
+}
+
+/* Pour mobile */
+@media (max-width: 480px) {
+  .signin-container {
+      width: 90%;
+      padding: 1rem 0;
+  }
+
+  .signin-form {
+      width: 95%;
+  }
+
+  .signin-input,
+  .signin-button,
+  .signin-button-google,
+  .signin-button-facebook,
+  .signin-button-apple {
+      font-size: 14px;
+      padding: 8px;
+  }
+
+  .signin-button-facebook,
+  .signin-button-apple {
+      display: none;
+  }
+
+  .signin-other-options {
+      flex-direction: column;
+  }
+}

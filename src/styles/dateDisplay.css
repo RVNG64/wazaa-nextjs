@@ -8,9 +8,9 @@
   color: #fff;
   padding: 7px 10px;
   border-radius: 12px; /* Bordures plus arrondies */
-  z-index: 1000;
   border: 1px solid rgba(255, 255, 255, 0.2); /* Bordure subtile */
   transition: all 0.3s ease-in-out; /* Animation douce lors du changement */
+  z-index: 500;
 }
 
 .map-date-display:hover {

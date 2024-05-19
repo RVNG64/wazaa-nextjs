@@ -60,7 +60,7 @@ const SideMenu = () => {
       setShowContactPopup(false);
       setShowLoginRequiredPopup(false);
     }
-  }, [location]);
+  }, []); // ajouter location ?
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);

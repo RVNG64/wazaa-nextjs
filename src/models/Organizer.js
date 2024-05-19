@@ -33,5 +33,7 @@ const organizerSchema = new mongoose.Schema({
   notifications: [String]
 });
 
-const Organizer = mongoose.model('Organizer', organizerSchema);
+// Vérifie si le modèle existe déjà, sinon le crée
+const Organizer = mongoose.models.Organizer || mongoose.model('Organizer', organizerSchema);
+
 module.exports = Organizer;

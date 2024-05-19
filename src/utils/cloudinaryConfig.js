@@ -1,3 +1,4 @@
+// src/utils/cloudinaryConfig.js
 const cloudinary = require('cloudinary').v2;
 
 // Config Cloudinary

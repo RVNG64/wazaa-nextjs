@@ -1,5 +1,6 @@
 
 // import { useMapContext } from '../MapContext';
+import Image from 'next/image';
 import { NativeEvent } from '../contexts/NativeEventContext';
 
 interface POI {
@@ -212,7 +213,8 @@ const ListView: React.FC<ListViewProps> = ({ isVisible, events, nativeEvents, on
             description = description.substring(0, DESCRIPTION_LIMIT) + '...';
           }
           const defaultImageUrl = 'https://res.cloudinary.com/dvzsvgucq/image/upload/v1693844552/hervemake_A_determined_business_owner_engaging_in_a_networking__4d7e7005-1d7f-4395-a9b6-d2bd94e12421_vdnels.png';
-          image = event['hasMainRepresentation']?.[0]?.['ebucore:hasRelatedResource']?.[0]?.['ebucore:locator'] || defaultImageUrl;
+          const imageUrl = event['hasMainRepresentation']?.[0]?.['ebucore:hasRelatedResource']?.[0]?.['ebucore:locator'] || defaultImageUrl;
+          image = Array.isArray(imageUrl) ? imageUrl[0] : imageUrl;
 
           const addressObject = event['isLocatedAt']?.[0]?.['schema:address']?.[0];
           const streetAddress = addressObject ? addressObject['schema:streetAddress']?.[0] : 'Adresse inconnue';
@@ -253,7 +255,7 @@ const ListView: React.FC<ListViewProps> = ({ isVisible, events, nativeEvents, on
           <div key={key} className="list-item" onClick={() => onEventClick(event)}>
             {image && (
               <div className="item-image">
-                <img src={image} alt={name} />
+                <Image src={image} alt={name} width="298" height="200" />
               </div>
             )}
             <div className="item-content">

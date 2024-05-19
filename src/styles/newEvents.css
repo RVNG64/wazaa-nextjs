@@ -1,0 +1,366 @@
+.new-event-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+  text-align: center;
+  height: 80vh;
+}
+
+.new-event-container h1 {
+  color: black;
+  margin-bottom: 100px;
+  font-size: 2.5rem;
+}
+
+.new-event-container h2 {
+  color: black;
+  margin-bottom: 20px;
+  font-size: 2rem;
+}
+
+/* Style des bulles d'information */
+.new-event_tooltip {
+  display: flex;
+  position: relative;
+  align-items: center;
+  margin: 10px;
+}
+
+.new-event_tooltiptext {
+  visibility: hidden;
+  width: 300px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -100px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.new-event_tooltip:hover .new-event_tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+
+.new-event_btn-particulier.new-event_disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.new-event_btn-particulier.new-event_disabled:hover {
+  background-color: #cccccc;
+  transform: none;
+  box-shadow: none;
+}
+
+.new-event_disabled-tooltip {
+  display: block;
+  color: red;
+  font-size: 0.8em;
+}
+
+.new-event-container button {
+  color: white;
+  width: 300px;
+  padding: 12px 30px;
+  margin: 5px 0;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  gap: 10px;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease-in-out;
+  will-change: transform, box-shadow;
+}
+
+.new-event-container button::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 30px;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+  z-index: -1;
+}
+
+.new-event-container button:hover::after, .new-event-container button:focus::after {
+  opacity: 1;
+}
+
+.new-event_btn-pro {
+  background-image: linear-gradient(to right, #007bff, #0056b3);
+}
+
+.new-event_btn-particulier {
+  background-image: linear-gradient(to right, #25c70d, #00b712);
+}
+
+.new-event_btn-pro:hover, .new-event_btn-pro:focus {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.new-event_btn-particulier:hover, .new-event_btn-particulier:focus {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.new-event_btn-pro::after {
+  background-image: linear-gradient(to right, #0056b3, #003870);
+}
+
+.new-event_btn-pro:active::after {
+  background-image: linear-gradient(to right, #003870, #001f48);
+}
+
+.new-event_btn-particulier::after {
+  background-image: linear-gradient(to right, #00b712, #007a0f);
+}
+
+.new-event_btn-particulier:active::after {
+  background-image: linear-gradient(to right, #007a0f, #00460a);
+}
+
+.new-event_btn-pro:hover::after, .new-event_btn-pro:focus::after {
+  opacity: 1;
+}
+
+.new-event_btn-particulier:hover::after, .new-event_btn-particulier:focus::after {
+  opacity: 1;
+}
+
+.new-event_btn-pro:active, .new-event_btn-particulier:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Style spécifique pour les options d'événement public */
+.public-event-options {
+  margin-top: 30px;
+}
+
+.public-event-options h2 {
+  color: white;
+  margin-bottom: 20px;
+}
+
+.new-event_btn-pro, .new-event_btn-particulier {
+  width: 200px;
+  display: block;
+  margin: 10px auto;
+  font-size: 16px;
+}
+
+/* Style spécifique pour les options d'événement privé */
+.new-event_lottie-animation {
+  position: relative;
+  max-width: 500px;
+  width: 400px;
+  height: 400px;
+}
+
+.new-event_lottie-animation:hover {
+  transform: scale(1.05);
+  transition: transform 0.3s;
+}
+
+/* Style des bulles d'information */
+.new-event_tooltiptext {
+  backdrop-filter: blur(5px);
+}
+
+.new-event_tooltip:hover .new-event_tooltiptext {
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(-10px);
+  transition: opacity 0.3s, transform 0.3s;
+}
+
+.new-event_tooltip .fa-circle-question {
+  margin-left: 8px;
+  cursor: pointer;
+  color: #5c5c5c;
+  transition: color 0.3s ease;
+}
+
+.new-event_tooltip .fa-circle-question:hover {
+  color: #333;
+}
+
+/* Style pour les sections de contenu */
+.new-event_content-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.new-event_animation-section {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.new-event_buttons-section {
+  flex: 9;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding-left: 60px;
+}
+
+/* Styles généraux pour la section de connexion */
+.new-event-login-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  background-color: #f9f9f9;
+  margin-top: 20px;
+}
+
+.new-event-login-section h4 {
+  color: #333;
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+}
+
+/* Transition de base pour les écrans */
+.screen-transition {
+  transition: transform 0.5s ease-in-out;
+}
+
+/* État de départ - écran hors de la vue */
+.screen-start {
+  transform: translateX(-100%);
+}
+
+/* État final - écran en vue */
+.screen-end {
+  transform: translateX(0);
+}
+
+@media (max-width: 1024px) {
+  .new-event-container {
+    padding: 10px;
+    height: 80vh;
+    max-width: 800px;
+  }
+}
+
+@media (max-width: 768px) {
+  .new-event-container {
+    padding: 5px;
+    height: 80vh;
+  }
+
+  .new-event-container h1, .new-event-container h2 {
+    font-size: 1.8rem;
+  }
+
+  .new-event-container h1 {
+    margin-bottom: 50px;
+  }
+
+  .new-event_tooltip .new-event_tooltiptext {
+    font-size: 14px; /* Réduction de la taille du texte pour les tooltips */
+  }
+
+  .new-event_tooltip {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .new-event_tooltiptext {
+    width: 200px; /* Réduction de la largeur */
+  }
+
+  .new-event-container button {
+    width: 300px;
+    font-size: 14px;
+    padding: 10px 20px; /* Réduction de la taille des boutons */
+  }
+
+  .new-event_btn-pro, .new-event_btn-particulier {
+    width: 100%; /* Pleine largeur pour faciliter le clic */
+    margin: 5px 0; /* Réduction de la marge */
+  }
+
+  .new-event_content-wrapper, .new-event_animation-section, .new-event_buttons-section {
+    flex-direction: column;
+    align-items: center; /* Centrage des éléments */
+    padding: 0;
+  }
+
+  .new-event_buttons-section {
+    display: block;
+  }
+
+  .new-event-login-section h4 {
+    margin-bottom: 20px; /* Ajout d'une marge en bas */
+    font-size: 1.2rem; /* Réduction de la taille du titre */
+    color: #333; /* Changement de la couleur du texte */
+  }
+
+  .new-event-login-section {
+    width: 90%; /* Ajustement de la largeur de la section de connexion */
+    margin: 0 auto; /* Centrage avec une marge auto */
+    margin-bottom: 30px; /* Ajout d'une marge en bas */
+    padding: 10px; /* Réduction de la marge intérieure */
+  }
+
+  .new-event_animation-section {
+    margin-bottom: 50px;
+  }
+
+  .new-event_lottie-animation {
+    max-width: 100%; /* Ajustement de la largeur de l'animation pour petits écrans */
+    height: 250px; /* Réduction de la hauteur */
+  }
+
+  .new-event_lottie-animation svg {
+    width: 100%; /* Ajustement de la largeur de l'animation */
+    height: 250px !important; /* Réduction de la hauteur */
+  }
+}
+
+@media (max-width: 480px) {
+  .new-event-container {
+    padding: 10px;
+    height: 80vh;
+  }
+
+  .new-event_animation-section {
+    margin-bottom: 20px;
+  }
+
+  .new-event_lottie-animation {
+    max-width: 100%; /* Ajustement de la largeur de l'animation pour petits écrans */
+    height: 200px; /* Réduction de la hauteur */
+  }
+
+  .new-event_lottie-animation svg {
+    width: 100%; /* Ajustement de la largeur de l'animation */
+    height: 200px !important; /* Réduction de la hauteur */
+  }
+}
