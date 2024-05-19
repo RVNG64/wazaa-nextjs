@@ -1,0 +1,65 @@
+.legal-mentions {
+  background-color: #f0f2f5; /* Couleur de fond douce */
+  padding: 40px;
+  max-width: 800px;
+  margin: 40px auto;
+  border-radius: 10px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  font-family: 'Poppins', sans-serif; /* Une police élégante */
+}
+
+.legal-mentions h1, .legal-mentions h2 {
+  color: #2a2a2a; /* Couleur de texte foncée */
+  padding-bottom: 10px;
+  border-bottom: 2px solid #eaeaea; /* Ligne subtile sous les titres */
+  margin-bottom: 20px;
+  animation: fadeIn 0.5s ease-in-out; /* Animation d'apparition douce */
+}
+
+.legal-mentions p {
+  color: #4a4a4a; /* Couleur de texte légèrement plus claire */
+  line-height: 1.6; /* Espacement des lignes pour une meilleure lisibilité */
+  margin-bottom: 20px;
+}
+
+.legal-mentions a {
+  color: #1a73e8; /* Couleur du lien */
+  text-decoration: none; /* Pas de soulignement */
+  transition: color 0.3s ease; /* Transition douce */
+}
+
+.legal-mentions a:hover {
+  color: #0c49aa; /* Changement de couleur au survol */
+}
+
+/* Animation d'apparition */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Media queries pour les écrans plus petits */
+@media (max-width: 600px) {
+  .legal-mentions {
+    padding: 20px;
+    margin: 20px;
+  }
+
+  .legal-mentions h1 {
+    font-size: 24px;
+  }
+
+  .legal-mentions h2 {
+    font-size: 20px;
+  }
+
+  .legal-mentions h1, .legal-mentions h2 {
+    margin-bottom: 10px;
+  }
+
+  .legal-mentions p {
+    font-size: 14px;
+    margin-bottom: 10px;
+    line-height: 1.4;
+  }
+}

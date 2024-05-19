@@ -1,0 +1,120 @@
+.fade-in-intro-wizard {
+  animation: fadeIn ease 2s;
+}
+
+@keyframes fadeIn {
+  0% {opacity:0;}
+  100% {opacity:1;}
+}
+
+.wizard_video-background {
+  position: fixed; /* Permet de fixer la vidéo en arrière-plan */
+  right: 0;
+  bottom: 0;
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  z-index: -100; /* Place la vidéo derrière le contenu */
+}
+
+.intro-wizard {
+  position: relative;
+  height: calc(100vh - 100px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  z-index: 1;
+}
+
+.intro-wizard-message {
+  margin-bottom: 2rem;
+  text-align: center;
+  line-height: 1.5;
+  font-size: 1.2rem;
+  font-family: 'Sora', sans-serif;
+  font-weight: bold;
+  max-width: 1000px;
+}
+
+.intro-wizard-button {
+  padding: 10px 20px;
+  margin: 10px;
+  background-color: rgba(255, 255, 255, 0.2);
+  border: none;
+  border-radius: 5px;
+  color: #FFFFFF;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.5s ease;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.intro-wizard-button:before {
+  content: "";
+  position: absolute;
+  left: -100%;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(120deg, #84fab0, #8fd3f4, #a6c0fe);
+  transition: all 0.5s;
+  z-index: -1;
+}
+
+.intro-wizard-button:hover:before {
+  left: 0;
+}
+
+.intro-wizard-button:hover {
+  color: #000000;
+}
+
+/* Animation pour l'entrée et la sortie des étapes */
+@keyframes slideIn {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOut {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+.intro-wizard.animating {
+  animation: slideOut 0.5s forwards;
+}
+
+/* Responsive Design */
+
+/* Pour tablettes et écrans moyens */
+@media (max-width: 768px) {
+  .intro-wizard-message {
+      font-size: 1.1rem;
+      padding: 0 10px;
+  }
+}
+
+/* Pour mobiles et écrans très petits */
+@media (max-width: 480px) {
+  .intro-wizard-message {
+      font-size: 1rem;
+      padding: 0 10px;
+  }
+}

@@ -1,19 +1,21 @@
-// pages/api/events.js
-import loadEventsFromGCS from './loadEventsFromGCS';
+// src/pages/api/events.js
+import { checkAndUpdateCache, eventsCache } from '../../cache';
+
+export const config = {
+  api: {
+    responseLimit: '8mb', // Augmente la limite de réponse à 8MB
+  },
+};
 
 export default async function handler(req, res) {
   console.log('Requête GET /api/events:', req.query);
   console.log("Received NE:", req.query.ne, "Received SW:", req.query.sw);
 
-  if (!global.eventsCache) {
-    console.log('Cache not initialized, loading...');
-    try {
-      global.eventsCache = await loadEventsFromGCS();
-      console.log('Cache loaded successfully.');
-    } catch (error) {
-      console.error('Failed to load cache:', error);
-      return res.status(500).json({ error: 'Failed to initialize events cache' });
-    }
+  await checkAndUpdateCache();
+
+  if (!eventsCache) {
+    console.log('Cache not available');
+    return res.status(503).json({ error: 'Cache is initializing, please retry.' });
   }
 
   // Récupération et décomposition des paramètres de requête
@@ -25,8 +27,6 @@ export default async function handler(req, res) {
   const northEastLng = parseFloat(ne[1]);
   const southWestLat = parseFloat(sw[0]);
   const southWestLng = parseFloat(sw[1]);
-
-  console.log('NE:', northEastLat, northEastLng, 'SW:', southWestLat, southWestLng);
 
   // Vérification si les coordonnées sont valides
   if (isNaN(northEastLat) || isNaN(northEastLng) || isNaN(southWestLat) || isNaN(southWestLng)) {

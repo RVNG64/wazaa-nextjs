@@ -48,7 +48,7 @@
 }
 
 .social-icons img {
-  width: 30px;
+  width: auto;
   height: 30px;
 }
 
@@ -149,7 +149,7 @@
   }
 
   .social-icons img {
-    width: 25px;
+    width: auto;
     height: 25px;
   }
 }

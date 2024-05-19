@@ -1,0 +1,171 @@
+.fade-in-profile-completion {
+  animation: fadeIn ease 2s;
+}
+
+.profile-completion-wizard {
+  position: relative;
+  height: calc(100vh - 100px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  z-index: 1;
+}
+
+.profile-completion-message {
+  font-size: 1.5em;
+  text-align: center;
+  margin-bottom: 2em;
+  font-family:  'Sora', sans-serif;
+  font-weight: bold;
+}
+
+.profile-completion-input {
+  padding: 10px;
+  margin-bottom: 10px;
+  font-size: 1em;
+}
+
+.profile-completion-button {
+  padding: 20px 40px;
+  font-size: 1em;
+  border: 2px solid #ffffff;
+  width: 200px;
+  color: white;
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  background: transparent;
+  transition: all 0.4s ease-in-out;
+}
+
+.profile-completion-button:after {
+  content: "";
+  position: absolute;
+  display: block;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  background: #ffffff;
+  filter: blur(20px);
+  opacity: 0;
+  transition: all 0.4s ease-in-out;
+}
+
+.profile-completion-button:hover {
+  border-color: transparent;
+  color: #282c34;
+}
+
+.profile-completion-button:hover:after {
+  opacity: 1;
+}
+
+.completion__back-button {
+  position: absolute;
+  top: 50%;
+  left: 20px;
+  padding: 10px 20px;
+  border: 2px solid #fff;
+  border-radius: 30px;
+  background: transparent;
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+.completion__back-button:hover {
+  background: #fff;
+  color: #000;
+}
+
+.completion__back-button:active {
+  transform: scale(0.95);
+}
+
+.completion__error-message {
+  color: #d8000c;
+  background-color: #ffbaba;
+  border-radius: 5px;
+  padding: 10px;
+  margin: 10px 0;
+  font-size: 1.2em;
+}
+
+.progressBarWizard {
+  position: absolute;
+  top: 10%;
+  width: 70%;
+  height: 20px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  overflow: hidden;
+  z-index: 100;
+}
+
+.progressBarWizard__fill {
+  height: 100%;
+  background-color: #11ad4d;
+  transition: width 0.4s ease-in-out;
+}
+
+@keyframes fadeIn {
+  0% {opacity:0;}
+  100% {opacity:1;}
+}
+
+.css-b62m3t-container {
+  width: 200px;
+  color: black;
+  margin-bottom: 20px;
+}
+
+/* Responsive Design */
+/* Media queries pour les petits écrans */
+@media (max-width: 768px) {
+  .profile-completion-wizard {
+      padding: 0 20px;
+  }
+
+  .profile-completion-message {
+      font-size: 1.2em;
+      margin: 10px 0;
+  }
+
+  .profile-completion-input {
+      width: 100%;
+      box-sizing: border-box;
+  }
+
+  .profile-completion-button {
+      width: 100%;
+  }
+
+  .completion__back-button {
+      top: 90%;
+      left: 10px;
+      font-size: 14px;
+  }
+
+  .completion__error-message {
+      font-size: 1em;
+      padding: 8px;
+  }
+
+  .progressBarWizard {
+      top: 5%;
+      width: 90%;
+      height: 10px;
+  }
+
+  .css-b62m3t-container {
+      width: 100%;
+  }
+}

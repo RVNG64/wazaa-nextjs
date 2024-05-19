@@ -1,3 +1,5 @@
+// src/contexts/EventContext.tsx
+'use client';
 import React, { createContext, useContext, useState } from 'react';
 import L from 'leaflet';
 
@@ -164,21 +166,8 @@ export const useEvents = () => {
   }
   return context;
 };
-/*
-export const fetchEvents = async () => {
-  try {
-    const response = await fetch('https://storage.googleapis.com/wazaa/bddEvents.json');
-    const data = await response.json();
-    console.log(`Fetched ${data.length} events`);
-    return data;
-  } catch (error) {
-    console.error("Erreur lors du chargement des événements", error);
-    return [];
-  }
-};
-*/
 
-export const fetchEventsInBounds = async (bounds: L.LatLngBounds, category: string) => {
+export const fetchEventsInBounds = async (bounds: L.LatLngBounds) => {
   const ne = bounds.getNorthEast();
   const sw = bounds.getSouthWest();
   try {
@@ -189,7 +178,6 @@ export const fetchEventsInBounds = async (bounds: L.LatLngBounds, category: stri
     const textResponse = await response.text();
     console.log("Réponse brute: ", textResponse);
 
-    // Vérifie si la réponse est ok (statut 200-299)
     if (!response.ok) {
       console.error("Erreur de réponse du serveur: ", response.status);
       throw new Error(`Erreur de serveur: ${response.status}`);
@@ -237,7 +225,7 @@ export const EventsProvider: React.FC<EventsProviderProps> = ({ children, initia
             'Accept': 'application/json'
           },
         });
-        console.log("Réponse brute: ", response);
+      console.log("Réponse brute: ", response);
       const data = await response.json();
       return data;
     } catch (error) {

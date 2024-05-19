@@ -402,7 +402,7 @@
 @media (max-width: 768px) {
   .navbar {
     padding: 10px;
-    height: 50px;
+    height: 70px;
     flex-wrap: wrap;
     flex-direction: row;
     align-items: center;

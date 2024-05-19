@@ -1,5 +1,5 @@
 'use client'
-// src/components/Navbar.tsx
+// src/components/Navbar.client.tsx
 import React, { useState, useRef, useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
@@ -89,11 +89,12 @@ const Navbar = ({ onPathChange }: { onPathChange: (path: string) => void }) => {
   const router = useRouter();
   const auth = getAuth();
   const route = useRouter();
+
   const pathname = usePathname();
   const isHomePage = pathname === '/';
   const [profilePicUrl, setProfilePicUrl] = useState("/profile.svg");
-  const isInitialLargeScreen = window.innerWidth > 768;
-  const [showEventFilter, setShowEventFilter] = useState(isInitialLargeScreen);
+  const [isLargeScreen, setIsLargeScreen] = useState(false);
+  const [showEventFilter, setShowEventFilter] = useState(false);
   const [userType, setUserType] = useState(null);
 
   useEffect(() => {
@@ -113,6 +114,22 @@ const Navbar = ({ onPathChange }: { onPathChange: (path: string) => void }) => {
       console.error('Erreur de déconnexion', error);
     });
   }
+
+  useEffect(() => {
+    // Function to update screen size state
+    const handleResize = () => {
+      setIsLargeScreen(window.innerWidth > 768);
+    };
+
+    // Set initial state
+    handleResize();
+
+    // Setup resize event listener
+    window.addEventListener('resize', handleResize);
+
+    // Cleanup listener when component unmounts
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -135,34 +152,37 @@ const Navbar = ({ onPathChange }: { onPathChange: (path: string) => void }) => {
 
   // Gère la taille de l'écran pour déterminer la visibilité de EventFilter
   useEffect(() => {
-    // Gestion de l'affichage de EventFilter en fonction de la route et de la taille de l'écran
+    // Manage the visibility of event filter based on route and screen size
     const handleEventFilterVisibility = () => {
-      if (location.pathname === "/") {
-        setShowEventFilter(isInitialLargeScreen);
+      if (pathname === "/") {
+        setShowEventFilter(isLargeScreen);
       } else {
         setShowEventFilter(false);
       }
     };
 
     handleEventFilterVisibility();
-  }, [location, isInitialLargeScreen]);
+  }, [pathname, isLargeScreen]);
 
   const handleToggleEventFilter = () => {
-    if (location.pathname === "/" && !isInitialLargeScreen) {
+    // Toggle event filter for small screens on the home page
+    if (pathname === "/" && !isLargeScreen) {
       setShowEventFilter(!showEventFilter);
     }
   };
 
+  // Vérification de l'URL actuelle pour afficher ou masquer EventFilter
   useEffect(() => {
-    // Appeler onPathChange avec le chemin actuel
-    onPathChange(location.pathname);
-  }, [location, onPathChange]); // Réagir aux changements de location et onPathChange
+    if (onPathChange) {
+      onPathChange(location.pathname);
+    }
+  }, [pathname, onPathChange]);
 
   useEffect(() => {
     const fetchUserProfile = async () => {
       if (auth.currentUser) {
         try {
-          const response = await fetch(`${process.env.REACT_APP_API_URL}/api/users/${auth.currentUser.uid}`);
+          const response = await fetch(`/api/users/${auth.currentUser.uid}`);
           const userData = await response.json();
           if (userData) {
             setProfilePicUrl(userData.profilePic || '/profile.svg');
@@ -189,11 +209,11 @@ const Navbar = ({ onPathChange }: { onPathChange: (path: string) => void }) => {
     event.stopPropagation();
     setIsMenuOpen(!isMenuOpen);
   };
-
+/*
   useEffect(() => {
     console.log("showEventFilter changed to: ", showEventFilter);
   }, [showEventFilter]);
-
+*/
   return (
     <nav className="navbar">
       {/*}
@@ -207,7 +227,7 @@ const Navbar = ({ onPathChange }: { onPathChange: (path: string) => void }) => {
         onClick={() => window.location.href = '/'}
       >WAZAA</div>
 
-      {isHomePage && !isInitialLargeScreen && (
+      {isHomePage && !isLargeScreen && (
         <div className="search-icon">
           <div
             className=""

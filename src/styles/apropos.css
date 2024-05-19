@@ -1,0 +1,397 @@
+.about_container {
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  z-index: 1;
+}
+
+.about_hero-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 3rem;
+  height: 60vh;
+  padding: 0 20px;
+  color: #fff;
+  text-align: center;
+  z-index: 2;
+}
+
+.about_hero-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -2;
+}
+
+.about_hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6); /* Noir avec une opacité de 50% */
+  z-index: -1; /* S'assure que l'overlay est entre la vidéo et le contenu */
+  animation: about_overlayFadeIn 5s ease-in-out;
+}
+
+@keyframes about_overlayFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.about_hero-text {
+  position: relative;
+  z-index: 1;
+  animation: aboutTextPopUp 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes aboutTextPopUp {
+  0% {
+    transform: translateY(100px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.about_hero-title {
+  font-size: 4.5rem;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+}
+
+.about_hero-title-translation {
+  font-size: 1.5rem;
+  font-style: italic;
+  margin-bottom: 1rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+}
+
+/* Styles pour la section Manifesto */
+.about_manifesto-container {
+  max-width: 1200px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px auto;
+  flex-direction: column;
+  line-height: 1.6; /* Interligne pour une meilleure lisibilité */
+  padding: 50px 80px;
+  color: #333;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+  border-radius: 15px;
+  z-index: 2;
+}
+
+.about_manifesto-content {
+  position: relative;
+  width: 100%;
+  margin: 0 auto; /* Centrage du contenu */
+  border-radius: 10px; /* Bords arrondis pour un look moderne */
+}
+
+.about_manifesto-title {
+  font-size: 2.5rem; /* Taille de police plus grande pour le titre */
+  margin: 20px 0; /* Espace avant et après le titre */
+  text-align: center; /* Centre le titre pour attirer l'attention */
+}
+
+.about_manifesto-subtitle-text {
+  font-size: 1.4rem;
+  margin-top: 30px; /* Espace avant le sous-titre */
+  margin-bottom: 10px; /* Espace après le sous-titre */
+  font-weight: bold; /* Gras pour plus de présence */
+}
+
+.about_manifesto-text {
+  margin-bottom: 20px; /* Espacement entre les paragraphes */
+  text-align: justify; /* Justification pour un look propre et formel */
+}
+
+.about_manifesto-mission {
+  font-weight: bold; /* Texte en gras pour mettre en évidence la mission */
+  margin-top: 20px; /* Espace avant la déclaration de mission */
+  background-color: #eeeeee; /* Fond rouge pour attirer l'attention */
+  padding: 10px;
+  border-top: 2px solid #ccc; /* Ligne de séparation subtile */
+  border-bottom: 2px solid #ccc;
+}
+
+.about_manifesto-note {
+  font-style: italic; /* Italique pour les notes pour différencier du reste du texte */
+  color: #6c757d; /* Gris pour une note subtile */
+}
+
+/* Styles pour la section Valeurs */
+.about_values-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  color: #fff;
+  padding: 20px;
+  padding-bottom: 100px;
+  gap: 20px;
+  overflow: hidden;
+  z-index: 2;
+}
+
+.about-values_video-background {
+  position: absolute !important;
+  bottom: 0 !important;
+  height: auto !important;
+  z-index: -100 !important;
+}
+
+.about_values-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Assombrissement pour la lisibilité */
+  z-index: -1;
+}
+
+.about_values-title {
+  margin-bottom: 30px;
+  font-size: 3rem;
+  z-index: 1;
+  position: relative;
+}
+
+.about_values-content {
+  background-color: rgba(255, 255, 255, 0.9); /* Fond semi-transparent pour une meilleure visibilité du texte */
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 600px; /* Contrôle de la largeur pour la lisibilité */
+  color: #333;
+}
+
+.about_values-text {
+  font-size: 1.2rem;
+  line-height: 1.6;
+}
+
+/* Styles pour la section Call to Actions */
+.about_call-to-actions {
+  display: flex;
+  justify-content: stretch;
+  align-items: stretch;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  z-index: 2;
+}
+
+.about_call-to-action-card {
+  position: relative;
+  flex: 1; /* Ensure each card takes equal space */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 300px; /* Set a fixed height */
+  color: #fff;
+  background-size: cover;
+  background-position: center;
+  text-decoration: none; /* Removes underline from links */
+  font-size: 1.5rem; /* Larger font size for visibility */
+  font-weight: bold; /* Bold text for emphasis */
+  cursor: pointer; /* Pointer to indicate clickable */
+  overflow: hidden;
+}
+
+.about_call-to-action-card-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.about_call-to-action-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-size: cover;
+  background-position: center;
+  transition: transform 0.25s ease-in-out;
+  z-index: 1;
+}
+
+.about_call-to-action-card:hover .about_call-to-action-background {
+  transform: scale(1.1); /* Zoom effect */
+}
+
+.about_call-to-action-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 2; /* Place overlay above the background */
+}
+
+.about_call-to-action-card:hover .about_call-to-action-overlay {
+  opacity: 1;
+}
+
+.about_call-to-action-card a,
+.about_call-to-action-card div {
+  position: relative;
+  color: #fff; /* White text color for better readability on images */
+  text-decoration: none; /* Removes underline from links */
+  font-size: 1.5rem; /* Larger font size for visibility */
+  font-weight: bold; /* Bold text for emphasis */
+}
+
+.about_call-to-action-card a,
+.about_call-to-action-text {
+  position: absolute !important;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  transform: translate(-50%, -50%);
+  z-index: 4;
+}
+
+@media screen and (max-width: 1024px) {
+  .about_hero-content {
+    height: 50vh;
+  }
+
+  .about_hero-title {
+    font-size: 3rem;
+  }
+
+  .about_hero-title-translation {
+    font-size: 1.5rem;
+  }
+
+  .about_manifesto-container {
+    padding: 30px 50px;
+  }
+
+  .about_manifesto-title {
+    font-size: 2rem;
+  }
+
+  .about_manifesto-subtitle-text {
+    font-size: 1.2rem;
+  }
+
+  .about_values-container {
+    gap: 15px;
+    padding: 20px;
+  }
+
+  .about_values-title {
+      font-size: 2.5rem;
+  }
+
+  .about_values-content {
+      max-width: 500px;
+  }
+
+  .about_call-to-action-card a,
+  .about_call-to-action-card div {
+      font-size: 1.2rem;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .about_hero-content {
+    height: 40vh;
+  }
+
+  .about_hero-title {
+    font-size: 2.5rem;
+  }
+
+  .about_hero-title-translation {
+    font-size: 1rem;
+  }
+
+  .about_manifesto-container {
+    padding: 20px 30px;
+  }
+
+  .about_manifesto-title {
+    font-size: 1.5rem;
+  }
+
+  .about_manifesto-subtitle-text {
+    font-size: 1rem;
+  }
+
+  .about_manifesto-text {
+    font-size: 0.9rem;
+  }
+
+  .about_manifesto-mission {
+    font-size: 0.9rem;
+  }
+
+  .about_values-container {
+    gap: 10px;
+    padding: 10px;
+    padding-bottom: 50px;
+  }
+
+  .about_values-title {
+      font-size: 2rem;
+  }
+
+  .about_values-content {
+      max-width: 400px;
+      padding: 15px;
+  }
+
+  .about_values-text {
+      font-size: 1rem;
+  }
+
+  .about_call-to-action-overlay {
+    background-color: rgba(0, 0, 0, 0.2);
+    opacity: 1;
+  }
+
+  .about_call-to-action-card a,
+  .about_call-to-action-card div {
+      font-size: 1rem;
+  }
+}
+
+@media screen and (max-width: 576px) {
+  .about_hero-content {
+    height: 30vh;
+  }
+
+  .about_hero-title {
+    font-size: 1.7rem;
+  }
+
+  .about_hero-title-translation {
+    font-size: 0.7rem;
+  }
+}
