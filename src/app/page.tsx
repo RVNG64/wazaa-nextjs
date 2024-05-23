@@ -31,8 +31,18 @@ interface PageProps {
   nativeEvents: any;
 }
 
-const Page: React.FC<PageProps> = ({ events, nativeEvents }) => {
-  return <LeafletMap />;
-};
+function Map() {
+  /* const [isClient, setIsClient] = useState(false);
 
-export default Page;
+  useEffect(() => {
+    setIsClient(true);
+  }, []); */
+
+  return (
+    <>
+      <LeafletMap />
+    </>
+  );
+}
+
+export default Map;
