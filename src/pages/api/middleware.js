@@ -1,8 +1,8 @@
 // pages/api/middleware.js
 import { NextResponse } from 'next/server';
-import morgan from 'morgan';
-import cors from 'cors';
-import bodyParser from 'body-parser';
+const morgan = require('morgan');
+const cors = require('cors');
+const bodyParser = require('body-parser');
 
 export function middlewares(req) {
   // Morgan pour le logging
