@@ -1,6 +1,6 @@
 // src/pages/api/events/updateStatus.js
 import Event from '../../../models/Event';
-import mailer from '../../../utils/mailer';
+import { sendEmail } from '../../utils/mailer';
 import dbConnect from '../../../utils/dbConnect';
 
 export default async function handler(req, res) {
@@ -100,7 +100,7 @@ export default async function handler(req, res) {
 
         try {
           if (mailOptions) {
-            await mailer.sendEmail(mailOptions);
+            await sendEmail(mailOptions);
             console.log('Email envoyé avec succès');
           }
         } catch (mailError) {
