@@ -8,7 +8,7 @@
   color: white;
   border: none;
   border-radius: 50%; /* Rend le bouton rond */
-  padding-left: 20px;
+  padding-left: 15px;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -68,7 +68,7 @@
     width: 40px; /* Plus petit pour économiser de l'espace */
     height: 40px;
     font-size: 20px; /* Réduction de la taille de l'icône */
-    padding-left: 15px; /* Moins d'espace pour l'icône */
+    padding-left: 10px; /* Moins d'espace pour l'icône */
   }
 
   .scroll-to-top-button:hover {

@@ -3,7 +3,7 @@ import { checkAndUpdateCache, eventsCache } from '../../cache';
 
 export const config = {
   api: {
-    responseLimit: '8mb', // Augmente la limite de réponse à 8MB
+    responseLimit: '45mb', // Augmente la limite de réponse à 8MB
   },
 };
 

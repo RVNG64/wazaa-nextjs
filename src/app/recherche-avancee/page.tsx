@@ -184,7 +184,7 @@ const AdvancedSearch = () => {
 
       if (userId && poiId) {
         try {
-          const response = await fetch(`/api/users/favoritesJSON`);
+          const response = await fetch(`/api/users/favoritesJSON?userId=${userId}`);
           if (!response.ok) throw new Error('Erreur lors de la récupération des favoris');
 
           const favorites = await response.json();
@@ -213,7 +213,7 @@ const AdvancedSearch = () => {
     }
 
     try {
-      const response = await fetch(`/api/users/addFavorite`, {
+      const response = await fetch(`/api/users/addFavorite?userId=${auth.currentUser.uid}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ eventId }),
@@ -238,7 +238,7 @@ const AdvancedSearch = () => {
     }
 
     try {
-      const response = await fetch(`/api/users/removeFavorite`, {
+      const response = await fetch(`/api/users/removeFavorite?userId=${auth.currentUser.uid}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ eventId }),
@@ -348,7 +348,8 @@ const AdvancedSearch = () => {
     }
 
     const defaultImageUrl = 'https://res.cloudinary.com/dvzsvgucq/image/upload/v1693844552/hervemake_A_determined_business_owner_engaging_in_a_networking__4d7e7005-1d7f-4395-a9b6-d2bd94e12421_vdnels.png';
-    const poiImage = selectedPoi['hasMainRepresentation']?.[0]?.['ebucore:hasRelatedResource']?.[0]?.['ebucore:locator'] || defaultImageUrl;
+    const poster = selectedPoi['hasMainRepresentation']?.[0]?.['ebucore:hasRelatedResource']?.[0]?.['ebucore:locator'] || defaultImageUrl;
+    const poiImage = Array.isArray(poster) ? poster[0] : poster;
     const latitude = selectedPoi['isLocatedAt']?.[0]?.['schema:geo']?.['schema:latitude'];
     const longitude = selectedPoi['isLocatedAt']?.[0]?.['schema:geo']?.['schema:longitude'];
     // Conversion de la latitude et de la longitude en nombres
@@ -405,7 +406,7 @@ const AdvancedSearch = () => {
       const userId = auth.currentUser?.uid;
       if (userId) {
         try {
-          const response = await fetch(`/api/users/favoritesJSON`);
+          const response = await fetch(`/api/users/favoritesJSON?userId=${userId}`);
           if (!response.ok) {
             throw new Error('Erreur lors du chargement des favoris');
           }
@@ -954,35 +955,42 @@ const AdvancedSearch = () => {
 
     return (
       <div className="advanced-search-grid-container">
-        {results.map((result) => (
-          <div className="advanced-search-grid-item" key={result['@id']}>
-            <div className="advanced-search-grid-item-image-container">
-              <Image
-                src={result['hasMainRepresentation'] ? result['hasMainRepresentation'][0]['ebucore:hasRelatedResource'][0]['ebucore:locator'] : defaultImageUrl}
-                alt={result['rdfs:label']['fr'] ? result['rdfs:label']['fr'].join(', ') : 'Image non disponible'}
-                className="advanced-search-grid-item-image"
-                width={300}
-                height={200}
-              />
-              <div className="advanced-search-grid-item-overlay">
-                <div className="advanced-search-grid-item-overlay-content">
-                  <h3 className="advanced-search-grid-item-title">
-                    {result['rdfs:label']['fr'] ? result['rdfs:label']['fr'].join(', ') : 'Titre non disponible'}
-                  </h3>
-                  <p className="advanced-search-grid-item-date">
-                    {result['schema:startDate'] ? new Date(result['schema:startDate'][0]).toLocaleDateString() : 'Date non disponible'}
-                  </p>
-                  <p className="advanced-search-grid-item-city">
-                    {result['isLocatedAt'] && result['isLocatedAt'][0]['schema:address'] ? result['isLocatedAt'][0]['schema:address'][0]['schema:addressLocality'] : 'Ville non disponible'}
-                  </p>
-                  <button className="advanced-search-grid-item-link" onClick={() => handleMarkerClick(result)}>
-                    Voir détails
-                  </button>
+        {results.map((result) => {
+          const posterUrl = result['hasMainRepresentation'] && result['hasMainRepresentation'][0]['ebucore:hasRelatedResource']
+            ? result['hasMainRepresentation'][0]['ebucore:hasRelatedResource'][0]['ebucore:locator']
+            : defaultImageUrl;
+          const poster = Array.isArray(posterUrl) ? posterUrl[0] : posterUrl;
+
+          return (
+            <div className="advanced-search-grid-item" key={result['@id']}>
+              <div className="advanced-search-grid-item-image-container">
+                <Image
+                  src={poster}
+                  alt={result['rdfs:label']['fr'] ? result['rdfs:label']['fr'].join(', ') : 'Image non disponible'}
+                  className="advanced-search-grid-item-image"
+                  width={300}
+                  height={200}
+                />
+                <div className="advanced-search-grid-item-overlay">
+                  <div className="advanced-search-grid-item-overlay-content">
+                    <h3 className="advanced-search-grid-item-title">
+                      {result['rdfs:label']['fr'] ? result['rdfs:label']['fr'].join(', ') : 'Titre non disponible'}
+                    </h3>
+                    <p className="advanced-search-grid-item-date">
+                      {result['schema:startDate'] ? new Date(result['schema:startDate'][0]).toLocaleDateString() : 'Date non disponible'}
+                    </p>
+                    <p className="advanced-search-grid-item-city">
+                      {result['isLocatedAt'] && result['isLocatedAt'][0]['schema:address'] ? result['isLocatedAt'][0]['schema:address'][0]['schema:addressLocality'] : 'Ville non disponible'}
+                    </p>
+                    <button className="advanced-search-grid-item-link" onClick={() => handleMarkerClick(result)}>
+                      Voir détails
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     );
   };
@@ -1033,6 +1041,7 @@ const AdvancedSearch = () => {
               onChange={handleStartDateChange}
               dateFormat="dd/MM/yyyy"
               className="advanced-search-date-picker"
+              readOnly
             />
           </div>
           <div className="advanced-search-date-picker-container">
@@ -1043,6 +1052,7 @@ const AdvancedSearch = () => {
               onChange={handleEndDateChange}
               dateFormat="dd/MM/yyyy"
               className="advanced-search-date-picker"
+              readOnly
             />
           </div>
         </div>
