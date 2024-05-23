@@ -1,12 +1,13 @@
 'use client'
 // src/components/Navbar.client.tsx
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useContext } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 import '../utils/firebase';
 import Image from 'next/image';
 import ReactDatePicker from 'react-datepicker';
+import { AuthContext } from '../contexts/AuthProvider.client';
 import { useSearch } from '../contexts/EventFilter';
 import { motion } from 'framer-motion';
 import LottieCalendarMobile from './lotties/LottieCalendarMobile';
@@ -63,6 +64,7 @@ const EventFilter = ({ showEventFilter }: { showEventFilter: boolean }) => {
               id="startDate"
               dateFormat="dd/MM/yyyy"
               className="filter-date"
+              readOnly
             />
           </div>
           <div className="date-picker-wrapper">
@@ -73,6 +75,7 @@ const EventFilter = ({ showEventFilter }: { showEventFilter: boolean }) => {
               id="endDate"
               dateFormat="dd/MM/yyyy"
               className="filter-date"
+              readOnly
             />
           </div>
         </div>
@@ -82,6 +85,7 @@ const EventFilter = ({ showEventFilter }: { showEventFilter: boolean }) => {
 }
 
 const Navbar = ({ onPathChange }: { onPathChange: (path: string) => void }) => {
+  const { currentUser } = useContext(AuthContext);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const burgerContainerRef = useRef<HTMLDivElement>(null);
@@ -118,7 +122,7 @@ const Navbar = ({ onPathChange }: { onPathChange: (path: string) => void }) => {
   useEffect(() => {
     // Function to update screen size state
     const handleResize = () => {
-      setIsLargeScreen(window.innerWidth > 768);
+      setIsLargeScreen(window.innerWidth > 1025);
     };
 
     // Set initial state
@@ -179,28 +183,37 @@ const Navbar = ({ onPathChange }: { onPathChange: (path: string) => void }) => {
   }, [pathname, onPathChange]);
 
   useEffect(() => {
-    const fetchUserProfile = async () => {
-      if (auth.currentUser) {
-        try {
-          const response = await fetch(`/api/users/${auth.currentUser.uid}`);
-          const userData = await response.json();
-          if (userData) {
-            setProfilePicUrl(userData.profilePic || '/profile.svg');
-            setUserType(userData.type); // Stocker le type d'utilisateur (par exemple, 'user' ou 'organizer')
-          }
-        } catch (error) {
-          console.error('Erreur lors de la récupération du profil utilisateur:', error);
-        }
-      }
-    };
+    if (currentUser) {
+      setIsLoggedIn(true);
+      fetchUserProfile(currentUser.uid);
+    } else {
+      setIsLoggedIn(false);
+    }
+  }, [currentUser]);
 
-    fetchUserProfile();
-  }, [auth.currentUser]);
+  const fetchUserProfile = async (userId: string) => {
+    try {
+      const response = await fetch(`/api/users/${userId}`);
+      const userData = await response.json();
+      if (userData) {
+        setProfilePicUrl(userData.profilePic || '/profile.svg');
+        setUserType(userData.type);
+      }
+    } catch (error) {
+      console.error('Erreur lors de la récupération du profil utilisateur:', error);
+    }
+  };
 
   const handleProfileRedirect = () => {
-    if (userType === 'organizer') {
+    console.log('handleProfileRedirect appelé');
+    if (!currentUser) {
+      console.log('Utilisateur non authentifié, redirection vers /connexion');
+      router.push('/connexion');
+    } else if (userType === 'organizer') {
+      console.log('Redirection vers /profil-pro');
       router.push('/profil-pro');
     } else {
+      console.log('Redirection vers /profil');
       router.push('/profil');
     }
   };
@@ -273,7 +286,7 @@ const Navbar = ({ onPathChange }: { onPathChange: (path: string) => void }) => {
                   <a href="/evenement">Créer un événement</a>
                   <a href="/mes-evenements">Mes événements</a>
                   <a href="/recherche-avancee">Recherche avancée</a>
-                  <a href="" onClick={handleProfileRedirect}>Profil</a>
+                  <a onClick={handleProfileRedirect}>Profil</a>
                   <a href="/faq">FAQ</a>
                   <a href="/qui-sommes-nous">Qui sommes-nous ?</a>
                   <a href="/mentions-legales">Mentions Légales</a>

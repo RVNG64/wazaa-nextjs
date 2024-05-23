@@ -1,7 +1,8 @@
+// src/app/welcomeIntro/page.tsx
+'use client';
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import useFetchFirstName from '../../hooks/useFetchFirstName';
-import '../styles/welcomeIntro.css';
 
 // Définition des types pour les étapes
 type StepType = 'next' | 'options';
@@ -22,16 +23,6 @@ const WelcomeIntro: React.FC = () => {
   const navigate = (path: string) => {
     router.push(path);
   };
-
-  /*
-  useEffect(() => {
-    if (!auth.currentUser) {
-      console.log("Aucun utilisateur n'est connecté");
-    } else {
-      console.log(`L'utilisateur ${auth.currentUser.uid} est connecté`);
-    }
-  }, [auth]);
-  */
 
   // Étapes pour l'introduction de l'application
   const steps: Step[] = [
@@ -68,7 +59,6 @@ const WelcomeIntro: React.FC = () => {
 
   // Gestion des réponses de l'utilisateur
   const handleOptionClick = (option: string) => {
-    console.log(`L'utilisateur a choisi : ${option}`);
     nextStep();
   };
 

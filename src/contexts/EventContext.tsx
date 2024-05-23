@@ -149,7 +149,8 @@ interface EventsContextProps {
   events: POI[];
   setEvents: React.Dispatch<React.SetStateAction<POI[]>>;
   fetchEventsInBounds: (bounds: L.LatLngBounds) => Promise<POI[]>;
-  initializeEvents: (bounds: L.LatLngBounds) => Promise<void>;
+  initializeEvents: (bounds?: L.LatLngBounds) => Promise<void>;
+  fetchAllEvents: () => Promise<POI[]>;
 }
 
 interface EventsProviderProps {
@@ -210,6 +211,19 @@ export const fetchEventById = async (eventId: string) => {
   }
 };
 
+const fetchAllEvents = async () => {
+  try {
+    const response = await fetch('/api/cache/events');
+    if (!response.ok) {
+      throw new Error('Erreur lors de la récupération des événements depuis le cache');
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Erreur lors du chargement des événements depuis le cache", error);
+    return [];
+  }
+};
+
 export const EventsProvider: React.FC<EventsProviderProps> = ({ children, initialBounds }) => {
   const [events, setEvents] = useState<POI[]>([]);
 
@@ -234,13 +248,18 @@ export const EventsProvider: React.FC<EventsProviderProps> = ({ children, initia
     }
   };
 
-  const initializeEvents = async (bounds: L.LatLngBounds) => {
-    const initialEvents = await fetchEventsInBounds(bounds);
-    setEvents(initialEvents);
+  const initializeEvents = async (bounds?: L.LatLngBounds) => {
+    if (bounds) {
+      const initialEvents = await fetchEventsInBounds(bounds);
+      setEvents(initialEvents);
+    } else {
+      const allEvents = await fetchAllEvents();
+      setEvents(allEvents);
+    }
   };
 
   return (
-    <EventsContext.Provider value={{ events, setEvents, fetchEventsInBounds, initializeEvents }}>
+    <EventsContext.Provider value={{ events, setEvents, fetchEventsInBounds, initializeEvents, fetchAllEvents }}>
       {children}
     </EventsContext.Provider>
   );

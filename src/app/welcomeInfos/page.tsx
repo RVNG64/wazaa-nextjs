@@ -1,8 +1,10 @@
-import React, { useState, useCallback } from 'react';
-import { useEffect } from 'react';
-import { useRouter, usePathname } from 'next/navigation';
+// src/app/welcomeInfos/page.tsx
+'use client';
+import React, { useState, useMemo } from 'react';
+import { useRouter } from 'next/navigation';
 import { auth } from '../../utils/firebase';
-import '../styles/WelcomeInfos.css';
+import Select from 'react-select'
+import countryList from 'react-select-country-list'
 
 // Définition des types pour les étapes
 type StepType = 'next' | 'options';
@@ -27,6 +29,11 @@ const profileCompletionSteps: Step[] = [
     message: `Dans quelle ville habitez-vous ?`,
   },
   {
+    id: 'zip',
+    type: 'next',
+    message: `Quel est votre code postal ?`,
+  },
+  {
     id: 'gender',
     type: 'options',
     message: `Quel est votre genre?`,
@@ -35,7 +42,7 @@ const profileCompletionSteps: Step[] = [
   {
     id: 'phone',
     type: 'next',
-    message: `Quel est ton numéro de téléphone ? (Aucune information n'est communiquée à des tiers)`,
+    message: `Quel est votre numéro de téléphone ? (Aucune information n'est communiquée à des tiers)`,
   },
   {
     id: 'dob',
@@ -55,6 +62,11 @@ const WelcomeInfos: React.FC = () => {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [inputValue, setInputValue] = useState('');
   const [profileData, setProfileData] = useState({});
+  const [selectedCountry, setSelectedCountry] = useState(null);
+  const countryOptions = useMemo(() => countryList().getData().map(country => ({
+    label: country.label,
+    value: country.value
+  })), []);
   const router = useRouter();
   const navigate = (path: string) => {
     router.push(path);
@@ -75,6 +87,12 @@ const WelcomeInfos: React.FC = () => {
   const validateZip = (zip: string): boolean => {
     const zipRegex = /^[0-9]{2,6}$/;
     return zipRegex.test(zip);
+  };
+
+  // Mettre à jour l'état de `inputValue` lorsque l'utilisateur sélectionne un pays
+  const handleCountryChange = (option: any) => {
+    setSelectedCountry(option);
+    setInputValue(option.label);
   };
 
   const validateInput = (): boolean => {
@@ -129,13 +147,13 @@ const WelcomeInfos: React.FC = () => {
       // L'utilisateur a terminé la configuration du profil
       console.log("Sending data to server:", updatedProfileData);
 
-      fetch(`/user/profileInfos`, {
+      fetch(`/api/user/profileInfos`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          firebaseId: user?.uid, // Pass the user's id here
+          firebaseId: user?.uid,
           hasCompletedProfile: true,
-          profileData: updatedProfileData, // Pass the profile data here
+          profileData: updatedProfileData,
         }),
       })
       .then(() => navigate('/profil'))
@@ -162,8 +180,6 @@ const WelcomeInfos: React.FC = () => {
 
   // Gestion des réponses de l'utilisateur
   const handleOptionClick = (option: string) => {
-    console.log(`L'utilisateur a choisi : ${option}`);
-    console.log(`Profil après mise à jour :`, { ...profileData, [currentStep.id]: option });
     nextStep(option);
   };
 
@@ -182,9 +198,39 @@ const WelcomeInfos: React.FC = () => {
   // Obtenir l'étape actuelle
   const currentStep = profileCompletionSteps[currentStepIndex];
 
-  useEffect(() => {
-    console.log('Etat du profil mis à jour :', profileData);
-  }, [profileData]);
+  const renderCurrentStepInput = () => {
+    if (currentStep.id === 'country') {
+      return (
+        <>
+          <Select
+            options={countryOptions}
+            value={selectedCountry}
+            onChange={handleCountryChange}
+            className="profile-completion-select"
+          />
+          <button className="profile-completion-button" onClick={() => nextStep(inputValue)}>Suivant</button>
+        </>
+      );
+    } else if (currentStep.type === 'next') {
+      return (
+        <>
+          <input
+            type="text"
+            value={inputValue}
+            onChange={handleInputChange}
+            className="profile-completion-input"
+          />
+          <button className="profile-completion-button" onClick={() => nextStep(inputValue)}>Suivant</button>
+        </>
+      );
+    } else {
+      return currentStep.options?.map(option => (
+        <button key={option} className="profile-completion-button" onClick={() => handleOptionClick(option)}>
+          {option}
+        </button>
+      ));
+    }
+  };
 
   return (
     <div className="fade-in-profile-completion">
@@ -208,23 +254,7 @@ const WelcomeInfos: React.FC = () => {
         <p className="profile-completion-message">{currentStep.message}</p>
         {errorMessage && <p className="completion__error-message">{errorMessage}</p>}
 
-        {currentStep.type === 'next' ? (
-          <>
-            <input
-              type="text"
-              value={inputValue}
-              onChange={handleInputChange}
-              className="profile-completion-input"
-            />
-            <button className="profile-completion-button" onClick={() => nextStep(inputValue)}>Suivant</button>
-          </>
-        ) : (
-          currentStep.options?.map(option => (
-            <button key={option} className="profile-completion-button" onClick={() => handleOptionClick(option)}>
-              {option}
-            </button>
-          ))
-        )}
+        {renderCurrentStepInput()}
       </div>
     </div>
   );

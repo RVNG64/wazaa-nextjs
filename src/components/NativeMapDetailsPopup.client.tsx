@@ -78,13 +78,6 @@ const NativeMapDetailsPopup: React.FC<NativeMapDetailsPopupProps> = ({ eventData
   };
   const currentLocation = usePathname();
 
-  // Scroll jusqu'en haut de la popup lors de la navigation
-  useEffect(() => {
-    if (topRef.current) {
-      topRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, [currentLocation]);
-
   // Fonction pour remonter en haut de la page
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -544,7 +537,7 @@ const NativeMapDetailsPopup: React.FC<NativeMapDetailsPopupProps> = ({ eventData
       <div className="popup-details_ad-container">
         <p className="popup-details_ad-label">Publicité</p>
         <a href={ad.link} target="_blank" rel="noopener noreferrer">
-          <Image src={ad.adUrl} alt={`Publicité ${ad.id}`} className="popup-details_ad" />
+          <Image src={ad.adUrl} alt={`Publicité ${ad.id}`} className="popup-details_ad" width={300} height={250} />
         </a>
       </div>
     );
@@ -663,7 +656,7 @@ const NativeMapDetailsPopup: React.FC<NativeMapDetailsPopupProps> = ({ eventData
 
               {photoUrl && (
                 <div className="popup-details_image-container">
-                  <Image src={photoUrl} alt={name} className="popup-details_image" />
+                  <Image src={photoUrl} alt={name} className="popup-details_image" width={500} height={600} />
                   <button onClick={handleCloseDetails} className="popup-details_close-btn">
                     <i className="fas fa-times"></i> {/* Icône de fermeture */}
                   </button>
@@ -742,13 +735,13 @@ const NativeMapDetailsPopup: React.FC<NativeMapDetailsPopupProps> = ({ eventData
                         <i className="fas fa-times"></i> {/* Icône de croix */}
                       </button>
                       <button onClick={() => shareOnSocialMedia('facebook')} className="popup-details_social-share-btn">
-                        <Image src="/icon-facebook.svg" alt="Facebook" />
+                        <Image src="/icon-facebook.svg" alt="Facebook" width={40} height={40} />
                       </button>
                       <button onClick={() => shareOnSocialMedia('twitter')} className="popup-details_social-share-btn">
-                        <Image src="/icon-twitter.svg" alt="Twitter" />
+                        <Image src="/icon-twitter.svg" alt="Twitter" width={40} height={40} />
                       </button>
                       <button onClick={() => shareOnSocialMedia('whatsapp')} className="popup-details_social-share-btn">
-                        <Image src="/icon-whatsapp.svg" alt="WhatsApp" />
+                        <Image src="/icon-whatsapp.svg" alt="WhatsApp" width={40} height={40} />
                       </button>
                       <button onClick={copyToClipboard} className="popup-details_social-share-btn">
                         <i className="fas fa-copy"></i>  Copier le lien

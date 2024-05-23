@@ -7,6 +7,7 @@ import Joyride from 'react-joyride';
 import CookieConsent from "react-cookie-consent";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBookOpen } from '@fortawesome/free-solid-svg-icons';
+import { initializeCache } from '../cache'
 import { AuthContext } from '../contexts/AuthProvider.client';
 import { adVideos } from '../components/VideoAd';
 import AdBlockDetect from '../utils/AdBlockDetect';
@@ -36,7 +37,7 @@ function App({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const auth = getAuth();
 
-/*
+/* Protection des routes
   useEffect(() => {
     console.log('Location:', location);
     console.log('Current User:', currentUser);
@@ -93,13 +94,6 @@ function App({ children }: { children: React.ReactNode }) {
   const divStyle: StyleWithCustomProperties = {
     '--window-height': `${windowHeight}px`,
   };
-
-  useEffect(() => {
-    if (currentPath !== location) {
-      console.log('App - currentPath changed:', location);
-      setCurrentPath(location);
-    }
-  }, [location]);
 
   // Gestion de l'affichage des publicités en tenant compte du bloqueur de publicités
   useEffect(() => {
@@ -262,7 +256,6 @@ function App({ children }: { children: React.ReactNode }) {
 
   const handlePathChange = (path: string) => {
     if (currentPath !== path) {
-      console.log('App - currentPath changed:', path);
       setCurrentPath(path);
     }
   };

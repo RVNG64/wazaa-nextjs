@@ -1,7 +1,7 @@
 // pages/api/user/profileInfos.js
 import dbConnect from '../../../utils/dbConnect';
 import Organizer from '../../../models/Organizer';
-import { normalizeCountry, normalizeCity } from '../../../services/normalizer';
+import { normalizeCountry, normalizeCity } from '../../../utils/normalizer';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {

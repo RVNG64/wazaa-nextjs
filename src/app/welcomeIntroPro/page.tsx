@@ -1,7 +1,8 @@
+// src/app/welcomeIntroPro/page.tsx
+'use client';
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import useFetchFirstName from '../../hooks/useFetchFirstName';
-import '../styles/welcomeIntro.css';
 
 // Définition des types pour les étapes
 type StepType = 'next' | 'options';
@@ -68,7 +69,6 @@ const WelcomeIntroPro: React.FC = () => {
 
   // Gestion des réponses de l'utilisateur
   const handleOptionClick = (option: string) => {
-    console.log(`L'utilisateur a choisi : ${option}`);
     nextStep();
   };
 
