@@ -3,7 +3,6 @@
 'use client';
 import React, { useState, useRef, useEffect } from 'react';
 import { useRouter, usePathname, useParams } from 'next/navigation';
-import { GetStaticPaths, GetStaticProps } from 'next';
 import axios from 'axios';
 import Head from 'next/head';
 import Image from 'next/image';
@@ -14,31 +13,6 @@ import { auth } from '../../../../../utils/firebase';
 import MobileMenu from '../../../../../components/MobileMenu';
 import ScrollToTopButton from '../../../../../components/ScrollToTopButton';
 import MiniMap from '../../../../../components/MiniMapEventDetails.client';
-
-export const getStaticPaths: GetStaticPaths = async () => {
-  const response = await fetch(`/api/native-events`);
-  const nativeEvents = await response.json();
-
-  const paths = nativeEvents.map((event: { eventID: string }) => ({
-    params: { eventId: event.eventID },
-  }));
-
-  return { paths, fallback: false };
-};
-
-// Fonction pour récupérer les props statiquement
-export const getStaticProps: GetStaticProps = async (context: any) => {
-  const { params } = context;
-  const response = await fetch(`/api/events/${params?.eventId}`);
-  const nativeEvent = await response.json();
-
-  return {
-    props: {
-      nativeEvent,
-    },
-    revalidate: 86400, // Re-générer la page toutes les 24 heures
-  };
-};
 
 const NativeEventDetails = () => {
   const params = useParams<{ eventId: string }>();
