@@ -1,5 +1,5 @@
 // src/cache.js
-import fs from 'fs';
+import fs from 'fs/promises';
 import path from 'path';
 import loadEventsFromGCS from './pages/api/loadEventsFromGCS';
 
@@ -15,33 +15,42 @@ let eventsCache = global.eventsCache;
 let lastCacheUpdate = global.lastCacheUpdate;
 
 // Chargement du cache depuis un fichier
-function loadCacheFromFile() {
-  if (fs.existsSync(cacheFilePath)) {
-    const cacheData = fs.readFileSync(cacheFilePath);
+async function loadCacheFromFile() {
+  try {
+    await fs.access(cacheFilePath);
+    const cacheData = await fs.readFile(cacheFilePath, 'utf8');
     const parsedCache = JSON.parse(cacheData);
     eventsCache = parsedCache.eventsCache;
     lastCacheUpdate = parsedCache.lastCacheUpdate;
     global.eventsCache = eventsCache;
     global.lastCacheUpdate = lastCacheUpdate;
     console.log('Cache chargé depuis le fichier.');
-  } else {
-    console.log('Le fichier de cache n\'existe pas.');
+  } catch (error) {
+    if (error.code === 'ENOENT') {
+      console.log('Le fichier de cache n\'existe pas.');
+    } else {
+      console.error('Erreur lors du chargement du cache depuis le fichier:', error);
+    }
   }
 }
 
 // Enregistrement du cache dans un fichier
-function saveCacheToFile() {
-  const cacheData = {
-    eventsCache,
-    lastCacheUpdate,
-  };
-  fs.writeFileSync(cacheFilePath, JSON.stringify(cacheData));
-  console.log('Cache sauvegardé dans le fichier.');
+async function saveCacheToFile() {
+  try {
+    const cacheData = {
+      eventsCache,
+      lastCacheUpdate,
+    };
+    await fs.writeFile(cacheFilePath, JSON.stringify(cacheData));
+    console.log('Cache sauvegardé dans le fichier.');
+  } catch (error) {
+    console.error('Erreur lors de la sauvegarde du cache dans le fichier:', error);
+  }
 }
 
 // Initialisation du cache
 async function initializeCache() {
-  loadCacheFromFile();
+  await loadCacheFromFile();
 
   const currentTime = Date.now();
   if (!eventsCache || (currentTime - lastCacheUpdate) > cacheLifetime) {
@@ -51,7 +60,7 @@ async function initializeCache() {
       lastCacheUpdate = currentTime;
       global.eventsCache = eventsCache;
       global.lastCacheUpdate = lastCacheUpdate;
-      saveCacheToFile(); // Save to file
+      await saveCacheToFile();
       console.log('Cache initialisé avec succès.');
     } catch (error) {
       console.error('Échec de l\'initialisation du cache:', error);
@@ -72,7 +81,7 @@ async function checkAndUpdateCache() {
       lastCacheUpdate = currentTime;
       global.eventsCache = eventsCache;
       global.lastCacheUpdate = lastCacheUpdate;
-      saveCacheToFile(); // Save to file
+      await saveCacheToFile();
       console.log('Cache mis à jour avec succès.');
     } catch (error) {
       console.error('Échec de la mise à jour du cache:', error);

@@ -1,12 +1,11 @@
-'use client';
-import React, { useState, useEffect } from 'react';
+// src/app/qui-sommes-nous/page.tsx
+import React, { useState } from 'react';
 import Link from 'next/link';
 import Head from 'next/head';
-import { useRouter, usePathname } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import ContactPopup from '../../components/ContactPopup';
 import MobileMenu from '../../components/MobileMenu';
 import ScrollToTopButton from '../../components/ScrollToTopButton';
-import '../../styles/apropos.css';
 
 const Apropos: React.FC = () => {
   const [showContactPopup, setShowContactPopup] = useState(false);
@@ -14,7 +13,6 @@ const Apropos: React.FC = () => {
   const navigate = (path: string) => {
     router.push(path);
   };
-  const location = usePathname();
 
   const openPopup = (setPopupState: React.Dispatch<React.SetStateAction<boolean>>) => {
     setPopupState(true);
@@ -28,16 +26,18 @@ const Apropos: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    // Détecte les changements dans le hash pour fermer les popups
-    if (!window.location.hash.includes('popup')) {
-      setShowContactPopup(false);
-    }
-  }, [location]);
-
   const toggleContactPopup = () => {
     showContactPopup ? closePopup(setShowContactPopup) : openPopup(setShowContactPopup);
   };
+
+  // Gestionnaire d'événement popstate pour fermer la popup lors du retour arrière
+  if (typeof window !== 'undefined') {
+    window.addEventListener('popstate', () => {
+      if (!window.location.hash.includes('popup')) {
+        setShowContactPopup(false);
+      }
+    });
+  }
 
   return (
     <div className="about_container">
@@ -165,6 +165,12 @@ const Apropos: React.FC = () => {
       <ScrollToTopButton />
     </div>
   );
+};
+
+export const getStaticProps = async () => {
+  return {
+    props: {},
+  };
 };
 
 export default Apropos;

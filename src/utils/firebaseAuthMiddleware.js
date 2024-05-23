@@ -1,4 +1,4 @@
-// utils/firebaseAdmin.js
+// utils/firebaseAuthMiddleware.js
 import * as admin from 'firebase-admin';
 
 const serviceAccount = JSON.parse(Buffer.from(process.env.FIREBASE_CREDENTIALS_BASE64, 'base64').toString('ascii'));

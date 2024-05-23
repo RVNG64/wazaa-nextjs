@@ -1,14 +1,15 @@
+// src/app/profil/page.tsx
 'use client';
-import React, { useState, useEffect } from "react";
-import { useRouter, usePathname } from 'next/navigation';
+import React, { useState, useEffect, useContext } from "react";
+import { usePathname, useRouter } from 'next/navigation';
 import axios from 'axios';
 import Image from 'next/image';
 import { useDropzone } from 'react-dropzone';
 import * as yup from 'yup';
 import { getAuth, User, EmailAuthProvider, reauthenticateWithCredential, updatePassword, deleteUser } from 'firebase/auth';
+import { AuthContext } from '../../contexts/AuthProvider.client';
 import MobileMenu from '../../components/MobileMenu';
 import ScrollToTopButton from '../../components/ScrollToTopButton';
-import '../../styles/profile.css';
 
 interface FirebaseUser {
   uid: string;
@@ -31,6 +32,7 @@ interface UserProfileInterface {
 }
 
 const UserProfile: React.FC<{ user: FirebaseUser | null }> = ({ user }) => {
+  const { currentUser } = useContext(AuthContext);
   const [userProfile, setUserProfile] = useState<UserProfileInterface | null>(null);
   const [error, setError] = useState<any>(null);
   const [password, setPassword] = useState<string>('');
@@ -39,6 +41,7 @@ const UserProfile: React.FC<{ user: FirebaseUser | null }> = ({ user }) => {
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [completionPercentage, setCompletionPercentage] = useState<number>(0);
   const location = usePathname();
+  const router = useRouter();
   const calculateCompletionPercentage = (): number => {
     const fieldsToCheck = [
       { name: 'firstName', value: userProfile?.firstName },
@@ -61,22 +64,26 @@ const UserProfile: React.FC<{ user: FirebaseUser | null }> = ({ user }) => {
   }, [location]);
 
   useEffect(() => {
+    if (!currentUser) {
+      router.push('/connexion');
+      return;
+    }
+
     const fetchUserProfile = async (firebaseId: string) => {
       try {
         const response = await axios.get(`/api/users/${firebaseId}`);
-        console.log(response.data);
         setUserProfile(response.data);
         setError(null);
-      } catch (err:any) {
+      } catch (err: any) {
         setError(new Error(err.message));
-        console.error(err);
+        console.error('Erreur lors de la récupération du profil utilisateur:', err);
       }
     };
 
-    if (user) {
-      fetchUserProfile(user.uid);
+    if (currentUser) {
+      fetchUserProfile(currentUser.uid);
     }
-  }, [user]);
+  }, [currentUser]);
 
   useEffect(() => {
     if(userProfile) {
@@ -157,7 +164,7 @@ const UserProfile: React.FC<{ user: FirebaseUser | null }> = ({ user }) => {
 
           const token = await currentUser.getIdToken();
 
-          const response = await axios.delete(`/deleteUser/mongoDB/${currentUser.uid}`, {
+          const response = await axios.delete(`/api/deleteUser/mongoDB/${currentUser.uid}`, {
             headers: {
               Authorization: `Bearer ${token}`
             }
@@ -189,35 +196,40 @@ const UserProfile: React.FC<{ user: FirebaseUser | null }> = ({ user }) => {
   });
 
   const {getRootProps, getInputProps} = useDropzone({
-    accept: 'image/*' as any,
-    onDrop: async ([file]) => {
+    accept: {
+      'image/*': ['.jpeg', '.png', '.gif', '.bmp', '.webp']
+    },
+    onDrop: async (acceptedFiles) => {
+      if (acceptedFiles.length === 0) {
+        return;
+      }
+      const file = acceptedFiles[0];
       try {
-        // Delete the old image
-        if(userProfile && userProfile.profilePic) {
-          const public_id = userProfile.profilePic.split('/').pop()?.split('.')[0]; // Extract public_id from url
+        let public_id = '';
+        // Supprimer l'ancienne image
+        if (userProfile && userProfile.profilePic) {
+          public_id = userProfile.profilePic.split('/').pop()?.split('.')[0] ?? '';
           if (public_id) {
             await axios.post(`/api/deleteProfilePic`, { public_id });
           }
         }
-        // Then, upload the new image
+
+        // Télécharger la nouvelle image
         const formData = new FormData();
         formData.append('file', file);
-        if (user) {
-          const response = await axios.post(`/api/uploadProfilePic`, formData, {
+        if (currentUser) {
+          const response = await axios.post(`/api/uploadProfilePic/${currentUser.uid}`, formData, {
             headers: {
               'Content-Type': 'multipart/form-data'
             }
           });
-          setUserProfile((prevProfile) => ({
-            ...prevProfile,
-            profilePic: response.data.fileUrl,
-          }));
 
-          // Mettre à jour le profil utilisateur dans la base de données
-          await axios.post(`/api/users/${user.uid}`, {
-            ...userProfile,
+          // Mettre à jour userProfile avec la nouvelle URL de l'image
+          setUserProfile(prevProfile => ({
+            ...prevProfile,
             profilePic: response.data.fileUrl
-          });
+          }));
+          window.location.reload();
         } else {
           setError(new Error('Utilisateur non connecté.'));
         }
@@ -231,8 +243,6 @@ const UserProfile: React.FC<{ user: FirebaseUser | null }> = ({ user }) => {
   if (error) {
     return <div>An error occurred: {error.message}</div>;
   }
-
-  console.log(userProfile);
 
   return (
     <div className="userProfile__big-container">
@@ -269,7 +279,7 @@ const UserProfile: React.FC<{ user: FirebaseUser | null }> = ({ user }) => {
           <div {...getRootProps()} className="userProfile__dropzone">
             <input {...getInputProps()} />
             {userProfile?.profilePic ? (
-              <Image src={userProfile.profilePic} alt="myProfilePic" className="userProfile__profile-pic" width={200} height={200} />
+              <Image src={userProfile.profilePic} alt="myProfilePic" className="userProfile__profile-pic" width={200} height={200} priority />
             ) : (
               <p>Glisser-déposer une image ici, ou cliquez pour sélectionner une image</p>
             )}
