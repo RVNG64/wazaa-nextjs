@@ -2,10 +2,12 @@
 import React, { useEffect, useState, useContext, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
+import dynamic from 'next/dynamic';
 import { AuthContext } from '../../contexts/AuthProvider.client';
 import Swal from 'sweetalert2';
-import NativeEventDetailsPopup from '../../components/NativeEventDetailsPopup';
 import '../../styles/adminEvents.css';
+
+const NativeEventDetailsPopup = dynamic(() => import('../../components/NativeEventDetailsPopup'), { ssr: false });
 
 interface Event {
   eventID: string;
@@ -58,24 +60,18 @@ const AdminEvents = () => {
   const router = useRouter();
 
   const navigate = useCallback((path: string) => {
-    router.push(path);
+    if (typeof window !== 'undefined') {
+      router.push(path);
+    }
   }, [router]);
 
   useEffect(() => {
-    console.log("Vérification de l'état du chargement et de l'utilisateur...");
-    console.log("loading:", loading);
-    console.log("currentUser:", currentUser);
-
-    if (loading) {
-      console.log("Non connecté, récupération de l'utilisateur en cours...");
-      return; // Attendre que le chargement soit terminé
-    }
-    console.log("Chargement terminé");
-    console.log("Utilisateur actuel:", currentUser);
-    if (!currentUser) {
-      navigate('/connexion');
-    } else if (currentUser?.uid !== 'oqrJOhstj8dHwf13mNp6TIYbLAj1') {
-      navigate('/');
+    if (!loading) {
+      if (!currentUser) {
+        navigate('/connexion');
+      } else if (currentUser?.uid !== 'oqrJOhstj8dHwf13mNp6TIYbLAj1') {
+        navigate('/');
+      }
     }
   }, [currentUser, loading, navigate]);
 
@@ -99,29 +95,33 @@ const AdminEvents = () => {
   const handleStatusChange = async (eventId: string, newStatus: 'approved' | 'rejected') => {
     const action = newStatus === 'approved' ? 'approuver' : 'rejeter';
 
-    Swal.fire({
-      title: `Êtes-vous sûr de vouloir ${action} cet événement ?`,
-      showDenyButton: true,
-      confirmButtonText: `Oui, ${action}`,
-      denyButtonText: `Non, annuler`,
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        try {
-          await axios.put(`/api/events/updateStatus?eventId=${eventId}`, { validationStatus: newStatus }); // Mise à jour du chemin API
-          fetchPendingEvents(); // Recharger la liste après la mise à jour
-          Swal.fire('Mis à jour!', `L'événement a été ${action} avec succès.`, 'success');
-        } catch (error) {
-          console.error('Erreur lors de la mise à jour du statut de l\'événement', error);
-          Swal.fire('Erreur', 'Une erreur est survenue lors de la mise à jour.', 'error');
+    if (typeof window !== 'undefined') {
+      Swal.fire({
+        title: `Êtes-vous sûr de vouloir ${action} cet événement ?`,
+        showDenyButton: true,
+        confirmButtonText: `Oui, ${action}`,
+        denyButtonText: `Non, annuler`,
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          try {
+            await axios.put(`/api/events/updateStatus?eventId=${eventId}`, { validationStatus: newStatus }); // Mise à jour du chemin API
+            fetchPendingEvents(); // Recharger la liste après la mise à jour
+            Swal.fire('Mis à jour!', `L'événement a été ${action} avec succès.`, 'success');
+          } catch (error) {
+            console.error('Erreur lors de la mise à jour du statut de l\'événement', error);
+            Swal.fire('Erreur', 'Une erreur est survenue lors de la mise à jour.', 'error');
+          }
         }
-      }
-    });
+      });
+    }
   };
 
   const handlePreviewValidation = (event: Event) => {
-    console.log('Aperçu de l\'événement : ', event);
-    setSelectedEvent(event);
-    setShowPreviewValidation(true);
+    if (typeof window !== 'undefined') {
+      console.log('Aperçu de l\'événement : ', event);
+      setSelectedEvent(event);
+      setShowPreviewValidation(true);
+    }
   };
 
   return (
