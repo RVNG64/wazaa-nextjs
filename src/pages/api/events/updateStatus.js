@@ -1,6 +1,6 @@
 // src/pages/api/events/updateStatus.js
 import Event from '../../../models/Event';
-import { sendEmail } from '../../utils/mailer';
+import { sendEmail } from '../../../utils/mailer';
 import dbConnect from '../../../utils/dbConnect';
 
 export default async function handler(req, res) {
