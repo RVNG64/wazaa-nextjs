@@ -1,4 +1,4 @@
-module.exports = function(eventsCache) {
+/* module.exports = function(eventsCache) {
   const router = require('express').Router();
   const Event = require('../../models/Event');
   const { validationResult } = require('express-validator');
@@ -140,3 +140,4 @@ module.exports = function(eventsCache) {
 
   return router;
 };
+*/
