@@ -1,4 +1,5 @@
 // src/app/inscription/page.tsx
+'use client';
 import React, { useState } from 'react';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../utils/firebase';
