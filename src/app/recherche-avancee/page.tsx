@@ -4,7 +4,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { auth } from '../../utils/firebase';
 import Image from 'next/image';
-import { useRouter, usePathname } from 'next/navigation';
+import dynamic from 'next/dynamic';
+import { useRouter } from 'next/navigation';
 import ReactDatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -12,15 +13,16 @@ import { faThList, faThLarge } from '@fortawesome/free-solid-svg-icons';
 import { format, parseISO } from 'date-fns';
 import { POI } from '../../contexts/EventContext';
 import { motion, AnimatePresence } from 'framer-motion';
-import MobileMenu from '../../components/MobileMenu';
-import ScrollToTopButton from '../../components/ScrollToTopButton';
-import MiniMap from '../../components/MiniMapEventDetails.client';
-import LoginRequiredPopup from '../../components/LoginRequiredPopup';
-import LottieLoupe from '../../components/lotties/LottieLoupe';
-import LottieLoupeFiles from '../../components/lotties/LottieLoupeFiles';
 import loupeFiles from '../../assets/LoupeFiles - 1709065825491.json';
 import loupe from '../../assets/Loupe - 1708980970911.json';
 import '../../styles/advancedSearch.css';
+
+const MobileMenu = dynamic(() => import('../../components/MobileMenu'), { ssr: false });
+const ScrollToTopButton = dynamic(() => import('../../components/ScrollToTopButton'), { ssr: false });
+const MiniMap = dynamic(() => import('../../components/MiniMapEventDetails.client'), { ssr: false });
+const LoginRequiredPopup = dynamic(() => import('../../components/LoginRequiredPopup'), { ssr: false });
+const LottieLoupe = dynamic(() => import('../../components/lotties/LottieLoupe'), { ssr: false });
+const LottieLoupeFiles = dynamic(() => import('../../components/lotties/LottieLoupeFiles'), { ssr: false });
 
 interface Ad {
   id: number;
@@ -64,7 +66,7 @@ const AdvancedSearch = () => {
   const navigate = (path: string) => {
     router.push(path);
   };
-  const location = usePathname();
+  const location = typeof window !== 'undefined' ? window.location.pathname : '';
   const [randomSuggestions, setRandomSuggestions] = useState<string[]>([]);
   const [showSharePopup, setShowSharePopup] = useState(false);
 
@@ -87,7 +89,9 @@ const AdvancedSearch = () => {
   };
 
   useEffect(() => {
-    window.scrollTo(0, 0);
+    if (typeof window !== 'undefined') {
+      window.scrollTo(0, 0);
+    }
   }, [location]);
 
   useEffect(() => {
@@ -135,15 +139,17 @@ const AdvancedSearch = () => {
   }, [nextAd, searchPerformed]);
 
   useEffect(() => {
-    let timeoutId: number;
-    if (showError) {
-      // Typecast le retour de setTimeout en `number`
-      timeoutId = window.setTimeout(() => {
-        setShowError(false);
-        setDateError(''); // Réinitialisez également le message d'erreur
-      }, 5000) as unknown as number;
+    if (typeof window !== 'undefined') {
+      let timeoutId: number;
+      if (showError) {
+        // Typecast le retour de setTimeout en `number`
+        timeoutId = window.setTimeout(() => {
+          setShowError(false);
+          setDateError(''); // Réinitialisez également le message d'erreur
+        }, 5000) as unknown as number;
+      }
+      return () => clearTimeout(timeoutId);
     }
-    return () => clearTimeout(timeoutId);
   }, [showError]);
 
   useEffect(() => {
@@ -203,7 +209,9 @@ const AdvancedSearch = () => {
 
   const handleCloseDetails = () => {
     setShowDetails(false);
-    window.history.pushState({}, '', '/recherche-avancee');
+    if (typeof window !== 'undefined') {
+      window.history.pushState({}, '', '/recherche-avancee');
+    }
   };
 
   const addToFavorites = async (eventId: string): Promise<boolean> => {
@@ -421,32 +429,36 @@ const AdvancedSearch = () => {
 
     // Fonction pour partager l'événement
     const shareOnSocialMedia = (platform: string) => {
-      const eventUrl = window.location.href;
-      let url = '';
+      if (typeof window !== 'undefined') {
+        const eventUrl = window.location.href;
+        let url = '';
 
-      switch (platform) {
-        case 'facebook':
-          url = `https://www.facebook.com/sharer/sharer.php?u=${eventUrl}`;
-          break;
-        case 'twitter':
-          url = `https://twitter.com/intent/tweet?url=${eventUrl}`;
-          break;
-        case 'whatsapp':
-          url = `whatsapp://send?text=${eventUrl}`;
-          break;
+        switch (platform) {
+          case 'facebook':
+            url = `https://www.facebook.com/sharer/sharer.php?u=${eventUrl}`;
+            break;
+          case 'twitter':
+            url = `https://twitter.com/intent/tweet?url=${eventUrl}`;
+            break;
+          case 'whatsapp':
+            url = `whatsapp://send?text=${eventUrl}`;
+            break;
+        }
+
+        window.open(url, '_blank');
       }
-
-      window.open(url, '_blank');
     };
 
     const copyToClipboard = () => {
-      const eventUrl = window.location.href;
-      navigator.clipboard.writeText(eventUrl)
-        .then(() => {
-          setShowShareConfirmation(true);
-          setTimeout(() => setShowShareConfirmation(false), 3000);
-        })
-        .catch(err => console.error("Impossible de copier le lien", err));
+      if (typeof window !== 'undefined') {
+        const eventUrl = window.location.href;
+        navigator.clipboard.writeText(eventUrl)
+          .then(() => {
+            setShowShareConfirmation(true);
+            setTimeout(() => setShowShareConfirmation(false), 3000);
+          })
+          .catch(err => console.error("Impossible de copier le lien", err));
+      }
     };
 
     // Fonction pour partager l'événement
@@ -749,7 +761,9 @@ const AdvancedSearch = () => {
     const city = poi.isLocatedAt[0]['schema:address']?.[0]['schema:addressLocality'];
     const citySlug = city ? createEventSlug(city) : 'evenement';
 
-    window.history.pushState(null, '', `/event/${citySlug}/${eventSlug}/${eventId}`);
+    if (typeof window !== 'undefined') {
+      window.history.pushState(null, '', `/event/${citySlug}/${eventSlug}/${eventId}`);
+    }
     setSelectedPoi(poi);
     setShowDetails(true);
   };

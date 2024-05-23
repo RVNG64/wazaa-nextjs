@@ -1,4 +1,5 @@
 // src/app/faq/page.tsx
+'use client';
 import React from 'react';
 import { Accordion, AccordionSummary, AccordionDetails, Typography, Paper, useTheme } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';

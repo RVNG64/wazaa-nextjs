@@ -31,7 +31,7 @@ interface UserProfileInterface {
   phone?: number;
 }
 
-const UserProfile: React.FC<{ user: FirebaseUser | null }> = ({ user }) => {
+const UserProfile = () => {
   const { currentUser } = useContext(AuthContext);
   const [userProfile, setUserProfile] = useState<UserProfileInterface | null>(null);
   const [error, setError] = useState<any>(null);
