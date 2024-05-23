@@ -1,12 +1,13 @@
 // src/app/profil-pro/page.tsx
 'use client';
-import React, { useState, useEffect } from "react";
-import { usePathname } from 'next/navigation';
+import React, { useState, useEffect, useContext } from "react";
+import { usePathname, useRouter } from 'next/navigation';
 import axios from 'axios';
 import Image from 'next/image';
 import { useDropzone } from 'react-dropzone';
 import * as yup from 'yup';
 import { getAuth, User, EmailAuthProvider, reauthenticateWithCredential, updatePassword, deleteUser } from 'firebase/auth';
+import { AuthContext } from '../../contexts/AuthProvider.client';
 import MobileMenu from '../../components/MobileMenu';
 import ScrollToTopButton from '../../components/ScrollToTopButton';
 
@@ -46,6 +47,7 @@ interface OrganizerProfileInterface {
 }
 
 const OrganizerProfile: React.FC<{ user: FirebaseUser | null }> = ({ user }) => {
+  const { currentUser } = useContext(AuthContext);
   const [error, setError] = useState<any>(null);
   const [password, setPassword] = useState<string>('');
   const [confirmPassword, setConfirmPassword] = useState<string>('');
@@ -78,6 +80,7 @@ const OrganizerProfile: React.FC<{ user: FirebaseUser | null }> = ({ user }) => 
     },
   });
   const location = usePathname();
+  const router = useRouter();
   const calculateCompletionPercentage = (): number => {
     const fieldsToCheck = [
       { name: 'firstName', value: userProfile?.firstName },
@@ -101,6 +104,11 @@ const OrganizerProfile: React.FC<{ user: FirebaseUser | null }> = ({ user }) => 
   }, [location]);
 
   useEffect(() => {
+    if (!currentUser) {
+      router.push('/connexion');
+      return;
+    }
+
     const fetchUserProfile = async (firebaseId: string) => {
       try {
         const response = await axios.get(`/api/users/${firebaseId}`);
@@ -113,10 +121,10 @@ const OrganizerProfile: React.FC<{ user: FirebaseUser | null }> = ({ user }) => 
       }
     };
 
-    if (user) {
-      fetchUserProfile(user.uid);
+    if (currentUser) {
+      fetchUserProfile(currentUser.uid);
     }
-  }, [user]);
+  }, [currentUser]);
 
   useEffect(() => {
     if(userProfile) {
@@ -262,8 +270,8 @@ const OrganizerProfile: React.FC<{ user: FirebaseUser | null }> = ({ user }) => 
         // Télécharger la nouvelle image
         const formData = new FormData();
         formData.append('file', file);
-        if (user) {
-          const response = await axios.post(`/api/uploadProfilePic/${user.uid}`, formData, {
+        if (currentUser) {
+          const response = await axios.post(`/api/uploadProfilePic/${currentUser.uid}`, formData, {
             headers: {
               'Content-Type': 'multipart/form-data'
             }

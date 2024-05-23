@@ -1,3 +1,4 @@
+// src/app/inscription-choice/page.tsx
 'use client';
 import React, { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
@@ -24,10 +25,6 @@ const SignUpChoice = () => {
     return () => unsubscribe();
   }, [auth]);
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
   const handleNavigate = (path: string) => {
     navigate(path);
   };
@@ -40,7 +37,7 @@ const SignUpChoice = () => {
             <h2>Vous êtes déjà connecté.</h2>
             <p>Veuillez vous déconnecter pour créer un nouveau compte.</p>
             <div className="sign-in-choice-buttons">
-              <button onClick={() => handleNavigate('/')} className="sign-in-choice-btn-home">Revenir à a carte</button>
+              <button onClick={() => handleNavigate('/')} className="sign-in-choice-btn-home">Revenir à la carte</button>
               <button onClick={() => auth.signOut()} className="sign-in-choice-btn-disconnect">Se déconnecter</button>
             </div>
           </div>
@@ -48,7 +45,7 @@ const SignUpChoice = () => {
           <div className="sign-in-choice-options">
             <h1>Quel type de compte souhaitez-vous créer ?</h1>
             <div className="sign-in-choice-buttons">
-              <button onClick={() => handleNavigate('/inscription-pro')} className="sign-in-choice-btn-organizer">Entreprise</button>
+              <button onClick={() => handleNavigate('/inscription-pro')} className="sign-in-choice-btn-organizer">Professionnel</button>
               <button onClick={() => handleNavigate('/inscription')} className="sign-in-choice-btn-personal">Personnel</button>
             </div>
           </div>

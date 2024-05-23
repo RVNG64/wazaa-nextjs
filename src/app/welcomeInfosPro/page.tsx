@@ -1,10 +1,10 @@
+// src/app/welcomeInfosPro/page.tsx
+'use client';
 import React, { useState, useMemo } from 'react';
-import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { auth } from '../../utils/firebase';
 import Select from 'react-select'
 import countryList from 'react-select-country-list'
-import '../styles/welcomeInfos.css';
 
 // Définition des types pour les étapes
 type StepType = 'next' | 'options';
@@ -41,7 +41,7 @@ const profileCompletionSteps: Step[] = [
   {
     id: 'phone',
     type: 'next',
-    message: `Quel est ton numéro de téléphone ? (Aucune information n'est communiquée à des tiers)`,
+    message: `Quel est votre numéro de téléphone ? (Aucune information n'est communiquée à des tiers)`,
   },
   {
     id: 'website',
@@ -151,7 +151,7 @@ const WelcomeInfosPro: React.FC = () => {
       // L'utilisateur a terminé la configuration du profil
       console.log("Sending data to server:", updatedProfileData);
 
-      fetch(`/user/profileInfosPro`, {
+      fetch(`/api/user/profileInfosPro`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -188,8 +188,6 @@ const WelcomeInfosPro: React.FC = () => {
 
   // Gestion des réponses de l'utilisateur
   const handleOptionClick = (option: string) => {
-    console.log(`L'utilisateur a choisi : ${option}`);
-    console.log(`Profil après mise à jour :`, { ...profileData, [currentStep.id]: option });
     nextStep(option);
   };
 
@@ -207,10 +205,6 @@ const WelcomeInfosPro: React.FC = () => {
 
   // Obtenir l'étape actuelle
   const currentStep = profileCompletionSteps[currentStepIndex];
-
-  useEffect(() => {
-    console.log('Etat du profil mis à jour :', profileData);
-  }, [profileData]);
 
   const renderCurrentStepInput = () => {
     if (currentStep.id === 'country') {

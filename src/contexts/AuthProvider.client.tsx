@@ -1,4 +1,3 @@
-// src/contexts/AuthProvider.client.tsx
 'use client';
 import React, { useState, useEffect, createContext, Dispatch, SetStateAction } from 'react';
 import { getAuth, onAuthStateChanged, User } from 'firebase/auth';
@@ -23,6 +22,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(authInstance, (user) => {
+      console.log('AuthProvider - Utilisateur authentifié:', user);
       setCurrentUser(user);
       setLoading(false);
     });

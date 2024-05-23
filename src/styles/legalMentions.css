@@ -38,6 +38,33 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
+@media (max-width: 769px) {
+  .legal-mentions {
+    padding: 40px;
+    margin: 40px;
+    text-align: justify;
+  }
+
+  .legal-mentions h1 {
+    text-align: center;
+    font-size: 32px;
+  }
+
+  .legal-mentions h2 {
+    margin-top: 40px;
+    text-align: center;
+    font-size: 28px;
+  }
+
+  .legal-mentions p {
+    font-size: 14px;
+  }
+
+  .legal-mentions a {
+    font-size: 14px;
+  }
+}
+
 /* Media queries pour les écrans plus petits */
 @media (max-width: 600px) {
   .legal-mentions {

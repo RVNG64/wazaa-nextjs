@@ -867,6 +867,7 @@ const EventEdit = () => {
               className="event-creation_input"
               dateFormat="dd/MM/yyyy"
               id="startDate"
+              readOnly
               required
             />
           </div>
@@ -878,6 +879,7 @@ const EventEdit = () => {
                 onChange={date => setEventData(prevEventData => ({...prevEventData, endDate: date || prevEventData.startDate} ))}
                 className="event-creation_input"
                 dateFormat="dd/MM/yyyy"
+                readOnly
                 id="endDate"
               />
             </div>

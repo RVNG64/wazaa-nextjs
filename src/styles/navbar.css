@@ -392,6 +392,77 @@
     font-size: 0.7em;
   }
 
+  .search-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    bottom: 70px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    /* background: #333; */
+    border-radius: 50%;
+    z-index: 500;
+    cursor: pointer;
+  }
+
+  .filter-container {
+    display: none; /* Masquer par défaut en mode responsive */
+    position: fixed;
+    bottom: 90px; /* Commence en dehors de l'écran */
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    width: auto;
+    background-color: #333;
+    opacity: 0;
+    z-index: 1499; /* S'assurer qu'il est au-dessus des autres éléments */
+    transition: all 0.5s ease-in-out;
+  }
+
+  .filter-container.eventFilter_active {
+    display: flex; /* Afficher le filtre lorsqu'il est actif */
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .date-picker-group {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  .filter-container button {
+    padding: 5px 10px;
+  }
+
+  /* Afficher le filtre lorsque showFilter est true */
+  .navbar .search-icon.eventFilter_active + .filter-container {
+    display: flex;
+  }
+
+
+  .date-label, .filter-date, .filter-text {
+    font-size: 12px; /* Réduire la taille de la police */
+  }
+
+  .date-label {
+    margin-left: 5px;
+  }
+
+  .filter-date {
+    padding: 5px 5px;
+  }
+
+  .filter-date, .filter-text {
+    width: 90px;
+    box-sizing: border-box;
+  }
+
   .eventFilter_date-toggle {
     padding: 5px 10px;
     font-size: 0.7em;
@@ -399,7 +470,7 @@
 }
 
 /* Médias queries pour les petits écrans */
-@media (max-width: 768px) {
+@media (max-width: 769px) {
   .navbar {
     padding: 10px;
     height: 70px;
@@ -429,13 +500,12 @@
     align-items: center;
     justify-content: center;
     position: fixed;
-    bottom: 100px;
-    right: 10px;
-    width: 30px;
-    height: 30px;
+    bottom: 60px;
+    right: 15px;
+    width: 50px;
+    height: 50px;
     /* background: #333; */
     border-radius: 50%;
-    padding: 10px;
     z-index: 500;
     cursor: pointer;
   }
@@ -456,7 +526,7 @@
   .filter-container {
     display: none; /* Masquer par défaut en mode responsive */
     position: fixed;
-    bottom: 90px; /* Commence en dehors de l'écran */
+    bottom: 60px; /* Commence en dehors de l'écran */
     left: 50%;
     transform: translateX(-50%) translateY(20px);
     flex-direction: column;
@@ -563,5 +633,14 @@
 @media (max-width: 576px) {
   .navbar_video-background {
     height: 300px !important;
+  }
+
+  .search-icon {
+    bottom: 95px;
+    right: 10px;
+  }
+
+  .filter-container {
+    bottom: 90px;
   }
 }

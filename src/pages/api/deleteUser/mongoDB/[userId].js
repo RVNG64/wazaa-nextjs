@@ -1,15 +1,19 @@
 // pages/api/deleteUser/mongoDB/[userId].js
-import dbConnect from '../../../utils/dbConnect';
-import User from '../../../models/User';
-import { authenticate } from '../../../utils/firebaseAdmin';
+import dbConnect from '../../../../utils/dbConnect';
+import User from '../../../../models/User';
+import { authenticate } from '../../../../utils/firebaseAuthMiddleware';
 
 export default async function handler(req, res) {
+  console.log('Handler called');
   if (req.method !== 'DELETE') {
     return res.status(405).json({ message: 'Method Not Allowed' });
   }
 
   await authenticate(req, res, async () => {
     const { userId } = req.query;
+
+    console.log(`Authenticated user: ${req.user.uid}`);
+    console.log(`User to be deleted: ${userId}`);
 
     try {
       await dbConnect();

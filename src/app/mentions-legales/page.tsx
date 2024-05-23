@@ -1,16 +1,11 @@
-'use client';
+// src/app/mentions-legales/page.tsx
 /* eslint-disable react/no-unescaped-entities */
-import React, { useEffect } from 'react';
-import { usePathname } from 'next/navigation';
+import React from 'react';
+
 import MobileMenu from '../../components/MobileMenu';
 import ScrollToTopButton from '../../components/ScrollToTopButton';
 
 export default function LegalMentions() {
-  const location = usePathname();
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [location]);
 
   return (
     <>

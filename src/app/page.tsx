@@ -1,20 +1,38 @@
 // src/app/page.tsx
-'use client';
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import LeafletMap from '../components/LeafletMap';
+import { initializeCache, eventsCache } from '../cache';
+import { getEvents } from '../utils/getEvents';
 
-function Map() {
-  const [isClient, setIsClient] = useState(false);
+// Cette fonction génère les paramètres statiques pour ISR
+export async function generateStaticParams() {
+  // Initialiser le cache
+  await initializeCache();
 
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
+  // Récupérer les événements depuis le cache
+  const cachedEvents = eventsCache || [];
 
-  return (
-    <>
-      {isClient ? <LeafletMap /> : null}
-    </>
-  );
+  // Récupérer les événements supplémentaires
+  const { events, nativeEvents } = await getEvents();
+
+  return [
+    {
+      props: {
+        events: cachedEvents || events,
+        nativeEvents,
+      },
+      revalidate: 86400, // Re-générer la page toutes les 24 heures
+    },
+  ];
 }
 
-export default Map;
+interface PageProps {
+  events: any;
+  nativeEvents: any;
+}
+
+const Page: React.FC<PageProps> = ({ events, nativeEvents }) => {
+  return <LeafletMap />;
+};
+
+export default Page;

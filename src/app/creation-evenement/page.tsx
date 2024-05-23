@@ -218,8 +218,9 @@ const EventCreationForm = () => {
               onChange={date => setEventData(prevEventData => ({...prevEventData, startDate: date || new Date()}))}
               className="event-creation_input"
               dateFormat="dd/MM/yyyy"
-              id="startDate"
+              readOnly // Empêche la saisie manuelle de la date, donc l'ouverture du clavier sur mobile
               required
+              id="startDate"
             />
           </div>
           {showEndDate && (
@@ -230,6 +231,7 @@ const EventCreationForm = () => {
                 onChange={date => setEventData(prevEventData => ({...prevEventData, endDate: date || prevEventData.startDate} ))}
                 className="event-creation_input"
                 dateFormat="dd/MM/yyyy"
+                readOnly // Empêche la saisie manuelle de la date, donc l'ouverture du clavier sur mobile
                 id="endDate"
               />
             </div>

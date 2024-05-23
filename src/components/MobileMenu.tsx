@@ -36,7 +36,7 @@ const MobileMenu = ({ toggleListView: parentToggleListView }: { toggleListView?:
   useEffect(() => {
     const checkIfNearBottom = () => {
       if (location.pathname === '/') {
-        // Sur la page d'accueil, on ne veut pas que le menu disparaisse en bas
+        // Sur la page d'accueil, le menu ne doit pas être caché en bas de page
         setIsNearBottom(false);
         return;
       }
@@ -88,7 +88,7 @@ const MobileMenu = ({ toggleListView: parentToggleListView }: { toggleListView?:
         <button onClick={toggleContactPopup}>
           <i className="fas fa-envelope"></i>
         </button>
-        <button onClick={() => navigate('/mes-evenements')}>
+        <button onClick={isLoggedIn ? () => navigate('/mes-evenements') : () => navigate('/evenement')}>
           <i className="fas fa-plus"></i>
         </button>
         <button onClick={() => navigate('/recherche-avancee')}>

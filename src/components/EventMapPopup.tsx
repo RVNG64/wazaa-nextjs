@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 import '../styles/eventMapPopup.css';
 
 const EventMapPopup = ({ event, onClose }: { event: any, onClose: any }) => {
@@ -26,7 +27,7 @@ const EventMapPopup = ({ event, onClose }: { event: any, onClose: any }) => {
       <div className="eventMap-popup_content">
         <button onClick={onClose} className="eventMap-popup_close-btn">✖</button>
         <h3 className="eventMap-popup_title">{title}</h3>
-        <img className="eventMap-popup_poster" src={image} alt={title} />
+        <Image className="eventMap-popup_poster" src={image} alt={title} />
         <p>{description}</p>
         <span className="eventMap-popup_dates">{`Du ${startDate} au ${endDate}`}</span>
         <button className="eventMap-popup_details-button">Voir plus</button>
