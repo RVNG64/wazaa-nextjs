@@ -1,3 +1,5 @@
+// src/components/ScrollToTopButton.tsx
+'use client';
 import React, { useState, useEffect } from 'react';
 
 const ScrollToTopButton = () => {
