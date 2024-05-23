@@ -46,7 +46,7 @@ interface OrganizerProfileInterface {
   socialMedia: SocialMediaLinks;
 }
 
-const OrganizerProfile: React.FC<{ user: FirebaseUser | null }> = ({ user }) => {
+const OrganizerProfile = () => {
   const { currentUser } = useContext(AuthContext);
   const [error, setError] = useState<any>(null);
   const [password, setPassword] = useState<string>('');

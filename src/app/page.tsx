@@ -6,24 +6,26 @@ import { getEvents } from '../utils/getEvents';
 
 // Cette fonction génère les paramètres statiques pour ISR
 export async function generateStaticParams() {
-  // Initialiser le cache
-  await initializeCache();
+  try {
+    await initializeCache();
 
-  // Récupérer les événements depuis le cache
-  const cachedEvents = eventsCache || [];
+    const cachedEvents = eventsCache || [];
 
-  // Récupérer les événements supplémentaires
-  const { events, nativeEvents } = await getEvents();
+    const { events, nativeEvents } = await getEvents();
 
-  return [
-    {
-      props: {
-        events: cachedEvents || events,
-        nativeEvents,
+    return [
+      {
+        props: {
+          events: cachedEvents || events,
+          nativeEvents,
+        },
+        revalidate: 86400, // Re-générer la page toutes les 24 heures
       },
-      revalidate: 86400, // Re-générer la page toutes les 24 heures
-    },
-  ];
+    ];
+  } catch (error) {
+    console.error('Error in generateStaticParams:', error);
+    return [];
+  }
 }
 
 interface PageProps {

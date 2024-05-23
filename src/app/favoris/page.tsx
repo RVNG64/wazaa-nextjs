@@ -1,19 +1,21 @@
 'use client';
 import React, { useEffect, useState, useRef } from 'react';
-import { useRouter, usePathname } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { auth } from '../../utils/firebase';
 import axios from 'axios';
 import Image from 'next/image';
+import dynamic from 'next/dynamic';
 import { motion, AnimatePresence } from 'framer-motion';
 import { POI } from '../../contexts/EventContext';
 import { NativeEvent } from '../../contexts/NativeEventContext';
-import NativeMapDetailsPopup from '../../components/NativeMapDetailsPopup.client';
-import MiniMap from '../../components/MiniMapEventDetails.client';
-import PastEventsView from '../../components/PastEventsView';
-import EventCard from '../../components/EventCard';
-import MobileMenu from '../../components/MobileMenu';
-import ScrollToTopButton from '../../components/ScrollToTopButton';
 import '../../styles/myEvents.css';
+
+const NativeMapDetailsPopup = dynamic(() => import('../../components/NativeMapDetailsPopup.client'), { ssr: false });
+const MiniMap = dynamic(() => import('../../components/MiniMapEventDetails.client'), { ssr: false });
+const PastEventsView = dynamic(() => import('../../components/PastEventsView'), { ssr: false });
+const EventCard = dynamic(() => import('../../components/EventCard'), { ssr: false });
+const MobileMenu = dynamic(() => import('../../components/MobileMenu'), { ssr: false });
+const ScrollToTopButton = dynamic(() => import('../../components/ScrollToTopButton'), { ssr: false });
 
 interface Ad {
   id: number;
@@ -37,6 +39,7 @@ const MyEvents = () => {
   const [recommendations, setRecommendations] = useState<any[]>([]);
   const [, setRecommendationsError] = useState('');
   const [selectedNativeEvent, setSelectedNativeEvent] = useState<NativeEvent | null>(null);
+  const location = typeof window !== 'undefined' ? window.location.pathname : '';
   const topOfPopup = React.createRef<HTMLDivElement>();
   const [carouselIndex, setCarouselIndex] = useState(0);
   const [isFading, setIsFading] = useState(false);
@@ -45,7 +48,6 @@ const MyEvents = () => {
   const navigate = (path: string) => {
     router.push(path);
   };
-  const location = usePathname();
   const previousLocation = useRef(location);
   const [currentPath, setCurrentPath] = useState(location);
 
@@ -57,21 +59,21 @@ const MyEvents = () => {
 
   // Effets pour gérer les changements de location
   useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const checkPathChange = () => {
+        const currentPath = window.location.pathname;
 
-    // Check if the path has changed
-    const checkPathChange = () => {
-      const currentPath = window.location.pathname;
+        if (currentPath !== location && showDetails) {
+          setShowDetails(false);
+        }
+      };
 
-      if (currentPath !== location && showDetails) {
-        setShowDetails(false);
-      }
-    };
+      window.addEventListener('popstate', checkPathChange);
 
-    window.addEventListener('popstate', checkPathChange);
-
-    return () => {
-      window.removeEventListener('popstate', checkPathChange);
-    };
+      return () => {
+        window.removeEventListener('popstate', checkPathChange);
+      };
+    }
   }, [location, showDetails]);
 
   // Fonction pour gérer le clic sur un événement recommandé
@@ -94,18 +96,20 @@ const MyEvents = () => {
 
   // Ferme les détails de l'événement si l'utilisateur clique sur le bouton "Retour"
   useEffect(() => {
-    const handlePopState = (event: PopStateEvent) => {
-      if (showDetails) {
-        setShowDetails(false);
-        event.preventDefault(); // Empêcher le navigateur de changer l'URL
-      }
-    };
+    if (typeof window !== 'undefined') {
+      const handlePopState = (event: PopStateEvent) => {
+        if (showDetails) {
+          setShowDetails(false);
+          event.preventDefault(); // Empêcher le navigateur de changer l'URL
+        }
+      };
 
-    window.addEventListener('popstate', handlePopState);
+      window.addEventListener('popstate', handlePopState);
 
-    return () => {
-      window.removeEventListener('popstate', handlePopState);
-    };
+      return () => {
+        window.removeEventListener('popstate', handlePopState);
+      };
+    }
   }, [showDetails]);
 
   // Fonction pour gérer les transitions entre les publicités
@@ -693,32 +697,36 @@ const MyEvents = () => {
 
     // Fonction pour partager l'événement
     const shareOnSocialMedia = (platform: string) => {
-      const eventUrl = window.location.href;
-      let url = '';
+      if (typeof window !== 'undefined') {
+        const eventUrl = window.location.href;
+        let url = '';
 
-      switch (platform) {
-        case 'facebook':
-          url = `https://www.facebook.com/sharer/sharer.php?u=${eventUrl}`;
-          break;
-        case 'twitter':
-          url = `https://twitter.com/intent/tweet?url=${eventUrl}`;
-          break;
-        case 'whatsapp':
-          url = `whatsapp://send?text=${eventUrl}`;
-          break;
+        switch (platform) {
+          case 'facebook':
+            url = `https://www.facebook.com/sharer/sharer.php?u=${eventUrl}`;
+            break;
+          case 'twitter':
+            url = `https://twitter.com/intent/tweet?url=${eventUrl}`;
+            break;
+          case 'whatsapp':
+            url = `whatsapp://send?text=${eventUrl}`;
+            break;
+        }
+
+        window.open(url, '_blank');
       }
-
-      window.open(url, '_blank');
     };
 
     const copyToClipboard = () => {
-      const eventUrl = window.location.href;
-      navigator.clipboard.writeText(eventUrl)
-        .then(() => {
-          setShowShareConfirmation(true);
-          setTimeout(() => setShowShareConfirmation(false), 3000);
-        })
-        .catch(err => console.error("Impossible de copier le lien", err));
+      if (typeof window !== 'undefined') {
+        const eventUrl = window.location.href;
+        navigator.clipboard.writeText(eventUrl)
+          .then(() => {
+            setShowShareConfirmation(true);
+            setTimeout(() => setShowShareConfirmation(false), 3000);
+          })
+          .catch(err => console.error("Impossible de copier le lien", err));
+      }
     };
 
     // Fonction pour partager l'événement
@@ -961,9 +969,10 @@ const MyEvents = () => {
       .replace(/--+/g, '-');
   };
 
+  // Fonction pour gérer le clic sur un marqueur
   const handleMarkerClick = (event: POI | NativeEvent) => {
     if ('@id' in event) {
-      if (selectedPoi?.['@id'] === event['@id']) return; // Vérifiez ici
+      if (selectedPoi?.['@id'] === event['@id']) return;
 
       const eventName = event['rdfs:label']?.fr?.[0] || '';
       const eventId = event['@id'].split('/').pop();
@@ -971,11 +980,13 @@ const MyEvents = () => {
       const city = event.isLocatedAt[0]['schema:address']?.[0]['schema:addressLocality'];
       const citySlug = city ? createEventSlug(city) : 'evenement';
 
-      window.history.pushState(null, '', `/event/${citySlug}/${eventSlug}/${eventId}`);
+      if (typeof window !== 'undefined') {
+        window.history.pushState(null, '', `/event/${citySlug}/${eventSlug}/${eventId}`);
+      }
       setSelectedPoi(event);
       setShowDetails(true);
     } else {
-      if (selectedNativeEvent?.eventID === event.eventID) return; // Vérifiez ici
+      if (selectedNativeEvent?.eventID === event.eventID) return;
 
       const eventName = event.name || '';
       const eventId = event.eventID;
@@ -983,7 +994,9 @@ const MyEvents = () => {
       const city = event.location?.city;
       const citySlug = city ? createEventSlug(city) : 'evenement';
 
-      window.history.pushState({}, '', `/events/${citySlug}/${eventSlug}/${eventId}`);
+      if (typeof window !== 'undefined') {
+        window.history.pushState({}, '', `/events/${citySlug}/${eventSlug}/${eventId}`);
+      }
       setSelectedNativeEvent(event);
       setShowDetails(true);
     }
