@@ -1,22 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import ContactPopup from './ContactPopup';
-import LoginRequiredPopup from './LoginRequiredPopup';
-import LottieCalendar from './lotties/LottieCalendar';
-import LottieWorldMyWazaa from './lotties/LottieWorldMyWazaa';
-import AboutLottie from './lotties/AboutLottie';
-import aboutLottie from '../assets/About Lottie.json';
-import worldLottie from '../assets/Earth1- 1708701894997.json';
-import calendarLottie from '../assets/Calendar - 1712091697562.json';
-import loupe from '../assets/Loupe - 1708980970911.json';
+import dynamic from 'next/dynamic';
+
+const Link = dynamic(() => import('next/link'), { ssr: false });
+const ContactPopup = dynamic(() => import('./ContactPopup'), { ssr: false });
+const LoginRequiredPopup = dynamic(() => import('./LoginRequiredPopup'), { ssr: false });
+const LottieCalendar = dynamic(() => import('./lotties/LottieCalendar'), { ssr: false });
+const LottieWorldMyWazaa = dynamic(() => import('./lotties/LottieWorldMyWazaa'), { ssr: false });
+const AboutLottie = dynamic(() => import('./lotties/AboutLottie'), { ssr: false });
 
 const SideMenu = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showContactPopup, setShowContactPopup] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [showComingSoonPopup, setShowComingSoonPopup] = useState(false);
+  // const [showComingSoonPopup, setShowComingSoonPopup] = useState(false);
   const [showLoginRequiredPopup, setShowLoginRequiredPopup] = useState(false);
   const router = useRouter();
   const navigate = (path: string) => {
@@ -90,6 +88,11 @@ const SideMenu = () => {
     // toggleMenu();
   };
 
+  const aboutLottie = 'https://res.cloudinary.com/dvzsvgucq/raw/upload/v1716624105/About_Lottie_h9789c.json';
+  const worldLottie = 'https://res.cloudinary.com/dvzsvgucq/raw/upload/v1716627571/Earth1-_1708701894997_nerun5.json';
+  const loupe = 'https://res.cloudinary.com/dvzsvgucq/raw/upload/v1716628193/Loupe_-_1708980970911_ydnv6k.json';
+  const calendarLottie = 'https://res.cloudinary.com/dvzsvgucq/raw/upload/v1716627386/Calendar_-_1712091697562_amlidv.json';
+
   return (
     <>
       {/*
@@ -119,12 +122,12 @@ const SideMenu = () => {
               </div> */}
               <div className="side-menu-item" onClick={() => handleLinkClick()}>
                 <Link href="/" className="side-menu-link">
-                <span className="side-menu-text">Retour à la carte</span> <LottieWorldMyWazaa animationData={worldLottie} />
+                <span className="side-menu-text">Retour à la carte</span> <LottieWorldMyWazaa animationUrl={worldLottie} />
                 </Link>
               </div>
               <div className="side-menu-item" onClick={() => handleLinkClick()}>
                 <Link href="/mes-evenements" className="side-menu-link">
-                  <span className="side-menu-text side-menu-my-events">Mes événements</span> <LottieCalendar animationData={calendarLottie} />
+                  <span className="side-menu-text side-menu-my-events">Mes événements</span> <LottieCalendar animationUrl={calendarLottie} />
                 </Link>
               </div>
               {/* <div className="side-menu-item" onClick={() => openComingSoonPopup()}>
@@ -137,7 +140,7 @@ const SideMenu = () => {
               </div>
               <div className="side-menu-item" onClick={() => handleLinkClick()}>
                 <Link href="recherche-avancee" className="side-menu-link">
-                  <span className="side-menu-text">Recherche avancée</span> <LottieWorldMyWazaa animationData={loupe} />
+                  <span className="side-menu-text">Recherche avancée</span> <LottieWorldMyWazaa animationUrl={loupe} />
                 </Link>
               </div>
               {/* <div className="side-menu-item" onClick={() => handleLinkClick()}>
@@ -153,7 +156,7 @@ const SideMenu = () => {
                 </div> */}
               <div className="side-menu-item" onClick={() => handleLinkClick()}>
                 <Link href="/qui-sommes-nous" className="side-menu-link">
-                  <span className="side-menu-text">A propos de WAZAA</span> <AboutLottie animationData={aboutLottie} />
+                  <span className="side-menu-text">A propos de WAZAA</span> <AboutLottie animationUrl={aboutLottie} />
                 </Link>
               </div>
               <div className="side-menu-item" onClick={toggleContactPopup} >
@@ -177,12 +180,12 @@ const SideMenu = () => {
               </div>
               <div className="side-menu-item" onClick={() => handleLinkClick()}>
                 <Link href="/" className="side-menu-link">
-                  <span className="side-menu-text">Retour à la carte</span> <LottieWorldMyWazaa animationData={worldLottie} />
+                  <span className="side-menu-text">Retour à la carte</span> <LottieWorldMyWazaa animationUrl={worldLottie} />
                 </Link>
               </div>
               <div className="side-menu-item" >
                 <Link href="recherche-avancee" className="side-menu-link">
-                  <span className="side-menu-text">Recherche avancée</span> <LottieWorldMyWazaa animationData={loupe} />
+                  <span className="side-menu-text">Recherche avancée</span> <LottieWorldMyWazaa animationUrl={loupe} />
                 </Link>
               </div>
               <div className="side-menu-item" onClick={() => openLoginRequiredPopup()}>
@@ -203,7 +206,7 @@ const SideMenu = () => {
               </div> */}
               <div className="side-menu-item" onClick={() => handleLinkClick()}>
                 <Link href="/qui-sommes-nous" className="side-menu-link">
-                  <span className="side-menu-text">A propos de WAZAA</span> <AboutLottie animationData={aboutLottie} />
+                  <span className="side-menu-text">A propos de WAZAA</span> <AboutLottie animationUrl={aboutLottie} />
                 </Link>
               </div>
               <div className="side-menu-item" onClick={toggleContactPopup} >

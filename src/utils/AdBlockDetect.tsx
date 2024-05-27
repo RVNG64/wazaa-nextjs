@@ -27,7 +27,7 @@ const AdBlockDetect: React.FC<AdBlockDetectProps> = ({ onDetected, onNotDetected
         onNotDetected();
       }
     });
-  }, []);
+  }, [onDetected, onNotDetected]);
 
   return null;
 }

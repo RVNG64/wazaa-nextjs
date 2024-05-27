@@ -1,8 +1,8 @@
+// src/app/connexion/page.tsx
 'use client';
 import React, { useState } from 'react';
 import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail } from 'firebase/auth';
 import Link from 'next/link';
-import Head from 'next/head';
 import { useRouter } from 'next/navigation';
 
 async function getUserFromDatabase(uid: string) {

@@ -1,15 +1,18 @@
+// src/app/creation-evenement/page.tsx
 'use client';
 import React, { useState, useEffect } from 'react';
-import { useRouter, usePathname } from 'next/navigation';
-import axios from 'axios';
+import { useRouter } from 'next/navigation';
 import { auth } from '../../utils/firebase';
+import axios from 'axios';
 import ReactDatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import Flatpickr from 'react-flatpickr';
 import 'flatpickr/dist/themes/light.css';
 import { French } from 'flatpickr/dist/l10n/fr.js';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
+import dynamic from 'next/dynamic';
+
+const Flatpickr = dynamic(() => import('react-flatpickr'), { ssr: false });
+const FontAwesomeIcon = dynamic(() => import('@fortawesome/react-fontawesome').then(mod => mod.FontAwesomeIcon), { ssr: false });
 
 const EventCreationForm = () => {
   const categories = ["Musique", "Art", "Sport", "Festival", "Vie nocturne", "Éducation", "Théâtre", "Tourisme", "Business", "Gastronomie", "Famille/Amis", "Pour les petits", "Divertissement", "Social", "Autre"];
@@ -156,12 +159,10 @@ const EventCreationForm = () => {
 
   const handleEndDateToggle = () => {
     setShowEndDate(!showEndDate);
-    setEventData(prevEventData => {
-      return {
-        ...prevEventData,
-        endDate: !showEndDate ? prevEventData.startDate : null
-      };
-    });
+    setEventData(prevEventData => ({
+      ...prevEventData,
+      endDate: !showEndDate ? prevEventData.startDate : null
+    }));
   };
 
   return (
@@ -218,7 +219,6 @@ const EventCreationForm = () => {
               onChange={date => setEventData(prevEventData => ({...prevEventData, startDate: date || new Date()}))}
               className="event-creation_input"
               dateFormat="dd/MM/yyyy"
-              readOnly // Empêche la saisie manuelle de la date, donc l'ouverture du clavier sur mobile
               required
               id="startDate"
             />
@@ -231,7 +231,6 @@ const EventCreationForm = () => {
                 onChange={date => setEventData(prevEventData => ({...prevEventData, endDate: date || prevEventData.startDate} ))}
                 className="event-creation_input"
                 dateFormat="dd/MM/yyyy"
-                readOnly // Empêche la saisie manuelle de la date, donc l'ouverture du clavier sur mobile
                 id="endDate"
               />
             </div>

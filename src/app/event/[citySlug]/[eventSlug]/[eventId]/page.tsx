@@ -2,7 +2,9 @@
 'use client';
 import React from 'react';
 import { useParams } from 'next/navigation';
-import EventDetailsClient from './EventDetailsClient';
+import dynamic from 'next/dynamic';
+
+const EventDetailsClient = dynamic(() => import('./EventDetailsClient'), { ssr: false });
 
 const EventDetails = () => {
   const params = useParams<{ eventId: string }>();

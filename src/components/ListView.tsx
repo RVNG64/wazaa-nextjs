@@ -1,7 +1,9 @@
 
 // import { useMapContext } from '../MapContext';
-import Image from 'next/image';
 import { NativeEvent } from '../contexts/NativeEventContext';
+import dynamic from 'next/dynamic';
+
+const Image = dynamic(() => import('next/image'), { ssr: false });
 
 interface POI {
   '@id': string;

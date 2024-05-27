@@ -128,11 +128,20 @@
 
 .popup-arrival_lottie-alert-blue {
   position: absolute;
-  top: 0;
+  top: -10px;
   right: 20px;
   height: 150px;
   width: 150px;
   margin-left: 10px;
+}
+
+@media (max-width: 1024px) {
+  .popup-arrival_lottie-alert-blue {
+    top: 0;
+    right: 0;
+    height: 100px;
+    width: 100px;
+  }
 }
 
 @media (max-width: 768px) {
@@ -157,6 +166,13 @@
 
   .popup-container button {
     padding: 8px 16px; /* Bouton légèrement plus petit */
+  }
+
+  .popup-arrival_lottie-alert-blue {
+    top: -10px;
+    right: 0;
+    height: 80px;
+    width: 80px;
   }
 }
 

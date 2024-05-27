@@ -1,22 +1,20 @@
 // src/app/recherche-avancee/page.tsx
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
 import { auth } from '../../utils/firebase';
-import Image from 'next/image';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import ReactDatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faThList, faThLarge } from '@fortawesome/free-solid-svg-icons';
 import { format, parseISO } from 'date-fns';
 import { POI } from '../../contexts/EventContext';
 import { motion, AnimatePresence } from 'framer-motion';
-import loupeFiles from '../../assets/LoupeFiles - 1709065825491.json';
-import loupe from '../../assets/Loupe - 1708980970911.json';
 import '../../styles/advancedSearch.css';
 
+const Image = dynamic(() => import('next/image'), { ssr: false });
+const FontAwesomeIcon = dynamic(() => import('@fortawesome/react-fontawesome').then(mod => mod.FontAwesomeIcon), { ssr: false });
 const MobileMenu = dynamic(() => import('../../components/MobileMenu'), { ssr: false });
 const ScrollToTopButton = dynamic(() => import('../../components/ScrollToTopButton'), { ssr: false });
 const MiniMap = dynamic(() => import('../../components/MiniMapEventDetails.client'), { ssr: false });
@@ -70,7 +68,7 @@ const AdvancedSearch = () => {
   const [randomSuggestions, setRandomSuggestions] = useState<string[]>([]);
   const [showSharePopup, setShowSharePopup] = useState(false);
 
-  const suggestions = ["#Concert", "#Festival", "#Théâtre", "#Exposition", "#Conférence", "#Spectacle", "#Danse", "#Salon", "#Marché", "#Course"];
+  const suggestions = useMemo(() => ["#Concert", "#Festival", "#Théâtre", "#Exposition", "#Conférence", "#Spectacle", "#Danse", "#Salon", "#Marché", "#Course"], []);
 
   // Fonction pour obtenir des suggestions aléatoires
   const getRandomSuggestions = (suggestions: string[], count: number) => {
@@ -81,7 +79,7 @@ const AdvancedSearch = () => {
   // Génération des suggestions aléatoires au montage du composant
   useEffect(() => {
     setRandomSuggestions(getRandomSuggestions(suggestions, 5));
-  }, []); // Le tableau de dépendances vide [] assure que cet effet ne s'exécute qu'une fois, au montage du composant
+  }, [suggestions]); // Le tableau de dépendances vide [] assure que cet effet ne s'exécute qu'une fois, au montage du composant
 
   // Gestion des suggestions de recherche
   const onSuggestionClick = (suggestion: string) => {
@@ -156,7 +154,7 @@ const AdvancedSearch = () => {
     if (showDetails && topOfPopup.current) {
       topOfPopup.current.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [showDetails]);
+  }, [showDetails, topOfPopup]);
 
   // Validation des dates (obligatoires pour la recherche)
   const validateDates = () => {
@@ -179,7 +177,7 @@ const AdvancedSearch = () => {
     if (showDetails && topOfPopup.current) {
       topOfPopup.current.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [showDetails]);
+  }, [showDetails, topOfPopup]);
 
   useEffect(() => {
     const checkIfFavorite = async () => {
@@ -205,7 +203,10 @@ const AdvancedSearch = () => {
     };
 
     checkIfFavorite();
-  }, [selectedPoi, auth.currentUser]);
+  }, [selectedPoi]);
+
+  const loupe = 'https://res.cloudinary.com/dvzsvgucq/raw/upload/v1716628193/Loupe_-_1708980970911_ydnv6k.json';
+  const loupeFiles = 'https://res.cloudinary.com/dvzsvgucq/raw/upload/v1716628242/LoupeFiles_-_1709065825491_dijytm.json';
 
   const handleCloseDetails = () => {
     setShowDetails(false);
@@ -1012,10 +1013,10 @@ const AdvancedSearch = () => {
   return (
     <div className="advanced-search-container">
       <h1>Recherche avancée</h1>
-      <LottieLoupe animationData={loupe} />
+      <LottieLoupe animationUrl={loupe} />
       {isLoading && (
         <div className="advanced-search-loading-overlay">
-          <LottieLoupeFiles animationData={loupeFiles} />
+          <LottieLoupeFiles animationUrl={loupeFiles} />
         </div>
       )}
 
@@ -1055,7 +1056,6 @@ const AdvancedSearch = () => {
               onChange={handleStartDateChange}
               dateFormat="dd/MM/yyyy"
               className="advanced-search-date-picker"
-              readOnly
             />
           </div>
           <div className="advanced-search-date-picker-container">
@@ -1066,7 +1066,6 @@ const AdvancedSearch = () => {
               onChange={handleEndDateChange}
               dateFormat="dd/MM/yyyy"
               className="advanced-search-date-picker"
-              readOnly
             />
           </div>
         </div>

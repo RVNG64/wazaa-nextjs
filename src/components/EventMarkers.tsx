@@ -1,11 +1,13 @@
 // src/components/EventMarkers.tsx
 import React from 'react';
-import { Marker, Popup } from 'react-leaflet';
 import { motion } from 'framer-motion';
-import Image from 'next/image';
 import L from 'leaflet';
 import { POI } from '../contexts/EventContext';
-import { useMapEvents } from 'react-leaflet';
+import dynamic from 'next/dynamic';
+
+const Image = dynamic(() => import('next/image'), { ssr: false });
+const Marker = dynamic(() => import('react-leaflet').then(mod => mod.Marker), { ssr: false });
+const Popup = dynamic(() => import('react-leaflet').then(mod => mod.Popup), { ssr: false });
 
 const mapMarker = new L.Icon({
   iconUrl: '/map-marker.svg',

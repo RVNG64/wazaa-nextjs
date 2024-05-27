@@ -2,7 +2,7 @@
 import type { Metadata } from "next";
 import Script from "next/script";
 import LayoutClient from "./LayoutClient";
-import { Sora, Poppins } from "next/font/google";
+// import { Sora, Poppins } from "next/font/google";
 import "./globals.css";
 import "../styles/app.css";
 import "../styles/popupArrival.css";
@@ -80,7 +80,7 @@ export const viewport = {
   userScalable: 'no',
   themeColor: '#000000',
 };
-
+/*
 const sora = Sora({
   weight: ['400', '700'],
   subsets: ['latin'],
@@ -92,7 +92,7 @@ const poppins = Poppins({
   subsets: ['latin'],
   display: 'swap',
 });
-
+*/
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -100,21 +100,20 @@ export default function RootLayout({
 }>) {
 
   return (
-    <html lang="fr" className={`${sora.className} ${poppins.className}`}>
+    <html lang="fr">
       <head>
         <meta charSet="utf-8" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
         <link rel="canonical" href="https://www.wazaa.app/" />
         <link rel="icon" sizes="48x48" href="/favicon-48x48.ico" />
         <link rel="icon" sizes="32x32" href="/favicon-32x32.ico" />
         <link rel="icon" sizes="16x16" href="/favicon-16x16.ico" />
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon-180x180.png" />
         <link rel="manifest" href="/manifest.json" />
+        <link rel="stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
         <link rel="" as="image" href="https://api.mapbox.com/styles/v1/example/tiles/256/0/0/0?access_token=your_token" crossOrigin="anonymous" />
         <meta name="google-site-verification" content="rxFdv_sLMmx55m5kcOxYzhll02GuFHsgKKZuxPmkd8Q" />
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet" />
         <Script strategy="lazyOnload" id="hotjar">
           {`
             (function(h,o,t,j,a,r){

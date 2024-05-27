@@ -2,13 +2,14 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Link from 'next/link';
-import Image from 'next/image';
 import { auth } from '../../utils/firebase';
-import LottieHandWaiting from '../../components/lotties/LottieHandWaiting';
-import animationData from '../../assets/handWait - 1711447749795.json';
-import MobileMenu from '../../components/MobileMenu';
-import ScrollToTopButton from '../../components/ScrollToTopButton';
+import dynamic from 'next/dynamic';
+
+const Link = dynamic(() => import('next/link'), { ssr: false });
+const Image = dynamic(() => import('next/image'), { ssr: false });
+const LottieHandWaiting = dynamic(() => import('../../components/lotties/LottieHandWaiting'), { ssr: false });
+const MobileMenu = dynamic(() => import('../../components/MobileMenu'), { ssr: false });
+const ScrollToTopButton = dynamic(() => import('../../components/ScrollToTopButton'), { ssr: false });
 
 interface Event {
   eventID: string;
@@ -181,11 +182,13 @@ const EventsOrganized = () => {
     );
   };
 
+  const animationData = 'https://res.cloudinary.com/dvzsvgucq/raw/upload/v1716627770/handWait_-_1711447749795_brjm3i.json';
+
   if (events.length === 0) {
     return (
       <div className="no-events_container">
         <h2 className="no-events_title">Commencez votre aventure d&apos;organisateur!</h2>
-        <LottieHandWaiting animationData={animationData} />
+        <LottieHandWaiting animationUrl={animationData} />
         <p className="no-events_text">Vous n&apos;avez pas encore organisé d&apos;événements.
           Créez votre premier événement et partagez-le avec vos amis ou le monde entier!</p>
         <Link href="/evenement" className="no-events_create-event-button">Créer mon premier événement</Link>

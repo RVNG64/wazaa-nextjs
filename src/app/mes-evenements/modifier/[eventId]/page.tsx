@@ -1,26 +1,27 @@
+// src/app/mes-evenements/modifier/[eventId]/page.tsx
 'use client';
 import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter, usePathname, useParams } from 'next/navigation';
 import axios from 'axios';
-import Image from 'next/image';
 import { auth } from '../../../../utils/firebase';
-import FormData from 'form-data';
-import { useDropzone } from 'react-dropzone';
 import Swal from 'sweetalert2';
-import Select from 'react-select';
 import ReactDatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import Flatpickr from 'react-flatpickr';
 import 'flatpickr/dist/themes/light.css';
 import { French } from 'flatpickr/dist/l10n/fr.js';
-import LottieSuccessCheck from '../../../../components/lotties/LottieSuccessCheck';
-import successCheck from '../../../../assets/LottieSuccessCheck 1712519182257.json';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useDropzone } from 'react-dropzone';
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
-import NativeEventDetailsPopup from '../../../../components/NativeEventDetailsPopup';
-import MiniMap from '../../../../components/MiniMapEventDetails.client';
-import MobileMenu from '../../../../components/MobileMenu';
-import ScrollToTopButton from '../../../../components/ScrollToTopButton';
+import dynamic from 'next/dynamic';
+
+const Image = dynamic(() => import('next/image'), { ssr: false });
+const Select = dynamic(() => import('react-select'), { ssr: false });
+const Flatpickr = dynamic(() => import('react-flatpickr'), { ssr: false });
+const LottieSuccessCheck = dynamic(() => import('../../../../components/lotties/LottieSuccessCheck'), { ssr: false });
+const FontAwesomeIcon = dynamic(() => import('@fortawesome/react-fontawesome').then(mod => mod.FontAwesomeIcon), { ssr: false });
+const NativeEventDetailsPopup = dynamic(() => import('../../../../components/NativeEventDetailsPopup'), { ssr: false });
+const MiniMap = dynamic(() => import('../../../../components/MiniMapEventDetails.client'), { ssr: false });
+const MobileMenu = dynamic(() => import('../../../../components/MobileMenu'), { ssr: false });
+const ScrollToTopButton = dynamic(() => import('../../../../components/ScrollToTopButton'), { ssr: false });
 
 interface FileWithPreview extends File {
   preview: string;
@@ -111,7 +112,7 @@ const EventEdit = () => {
     };
 
     uploadImage();
-  }, [files]); // Se déclenche uniquement lorsque les fichiers changent
+  }, [files, isImageUploaded]); // Se déclenche uniquement lorsque les fichiers changent
 
   // Les données de l'événement sont stockées dans un objet
   const [eventData, setEventData] = useState({
@@ -681,7 +682,7 @@ const EventEdit = () => {
       preview: URL.createObjectURL(file)
     })));
     setIsImageUploaded(false); // Réinitialiser le statut de téléchargement
-  }, []);
+  }, [files]);
 
   // Utilisation de la fonction de téléchargement de fichiers
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
@@ -692,6 +693,8 @@ const EventEdit = () => {
       <Image src={file.preview} style={{ width: "100px", height: "auto" }} alt="Aperçu de l&apos;affiche" width={100} height={100} />
     </div>
   ));
+
+  const successCheck = 'https://res.cloudinary.com/dvzsvgucq/raw/upload/v1716628048/LottieSuccessCheck_1712519182257_kxqc2u.json';
 
   if (!eventData) {
     return <div>Chargement des données de l&apos;événement...</div>;
@@ -867,7 +870,6 @@ const EventEdit = () => {
               className="event-creation_input"
               dateFormat="dd/MM/yyyy"
               id="startDate"
-              readOnly
               required
             />
           </div>
@@ -879,7 +881,6 @@ const EventEdit = () => {
                 onChange={date => setEventData(prevEventData => ({...prevEventData, endDate: date || prevEventData.startDate} ))}
                 className="event-creation_input"
                 dateFormat="dd/MM/yyyy"
-                readOnly
                 id="endDate"
               />
             </div>
@@ -1116,7 +1117,7 @@ const EventEdit = () => {
         {showSuccessAnimation &&
           <div className="event-creation_success-check-overlay">
             <h2 className="event-creation_success-message">Événement mis à jour avec succès !</h2>
-            <LottieSuccessCheck animationData={successCheck} />
+            <LottieSuccessCheck animationUrl={successCheck} />
           </div>
         }
         <NativeEventDetailsPopup eventData={eventData} isPreview={showPreview} onClose={() => setShowPreview(false)} />

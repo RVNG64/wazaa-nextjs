@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import '../styles/eventCard.css';
 
 const EventCard = ({ event, onCardClick }: { event: any; onCardClick: (event: any) => void }) => {
@@ -55,7 +56,7 @@ const EventCard = ({ event, onCardClick }: { event: any; onCardClick: (event: an
 
       {image !== 'default-image-url' && (
         <div className="event-card_image-container">
-          <img src={image} alt={title} className="event-image" />
+          <Image src={image} alt={title} className="event-image" width={300} height={200} />
         </div>
       )}
 

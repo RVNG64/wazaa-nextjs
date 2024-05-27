@@ -1,8 +1,11 @@
 import React, { useState, useRef } from 'react';
-import Image from 'next/image';
-import { AnimatePresence, motion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import YouTube, { YouTubeProps, YouTubePlayer } from 'react-youtube';
-import MiniMap from './MiniMapEventDetails.client';
+import dynamic from 'next/dynamic';
+
+const Image = dynamic(() => import('next/image'), { ssr: false });
+const MiniMap = dynamic(() => import('./MiniMapEventDetails.client'), { ssr: false });
+const AnimatePresence = dynamic(() => import('framer-motion').then(mod => mod.AnimatePresence), { ssr: false });
 
 interface Event {
   eventID: string;
