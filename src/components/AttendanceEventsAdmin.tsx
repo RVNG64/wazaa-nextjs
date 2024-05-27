@@ -1,10 +1,13 @@
+// src/components/AttendanceEventsAdmin.tsx
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import axios from 'axios';
-import Image from 'next/image';
 import Swal from 'sweetalert2';
 import { motion } from 'framer-motion';
 import '../styles/attendanceEventsAdmin.css';
+import dynamic from 'next/dynamic';
+
+const Image = dynamic(() => import('next/image'), { ssr: false });
 
 interface Participant {
   firebaseId: string;

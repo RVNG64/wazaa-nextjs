@@ -1,7 +1,9 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import Image from 'next/image';
 import '../styles/eventMapPopup.css';
+import dynamic from 'next/dynamic';
+
+const Image = dynamic(() => import('next/image'), { ssr: false });
 
 const EventMapPopup = ({ event, onClose }: { event: any, onClose: any }) => {
   if (!event) return null;

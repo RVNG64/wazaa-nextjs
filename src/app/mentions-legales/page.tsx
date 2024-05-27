@@ -1,9 +1,10 @@
 // src/app/mentions-legales/page.tsx
 /* eslint-disable react/no-unescaped-entities */
 import React from 'react';
+import dynamic from 'next/dynamic';
 
-import MobileMenu from '../../components/MobileMenu';
-import ScrollToTopButton from '../../components/ScrollToTopButton';
+const MobileMenu = dynamic(() => import('../../components/MobileMenu'), { ssr: false });
+const ScrollToTopButton = dynamic(() => import('../../components/ScrollToTopButton'), { ssr: false });
 
 export default function LegalMentions() {
 

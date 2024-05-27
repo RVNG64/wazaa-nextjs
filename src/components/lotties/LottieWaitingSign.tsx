@@ -1,26 +1,47 @@
 import React, { useEffect, useRef } from 'react';
-import lottie from 'lottie-web';
+import axios from 'axios';
 
 interface LottieWaitingSignProps {
-  animationData: any;
+  animationUrl: string;
 }
 
-const LottieWaitingSign: React.FC<LottieWaitingSignProps> = ({ animationData }) => {
-  const animationContainer = useRef(null);
+const LottieWaitingSign: React.FC<LottieWaitingSignProps> = ({ animationUrl }) => {
+  const animationContainer = useRef<HTMLDivElement | null>(null);
+  const lottieInstance = useRef<any>(null);
 
   useEffect(() => {
-    if (animationContainer.current) {
-      const anim = lottie.loadAnimation({
-        container: animationContainer.current,
-        renderer: 'svg',
-        loop: true,
-        autoplay: true,
-        animationData: animationData
-      });
+    let isMounted = true;
 
-      return () => anim.destroy(); // Nettoyer l'animation à la désallocation
-    }
-  }, [animationData]);
+    const loadAnimation = async () => {
+      try {
+        const response = await axios.get(animationUrl);
+        const animationData = response.data;
+
+        if (isMounted && animationContainer.current && animationData) {
+          const Lottie = (await import('lottie-web')).default;
+          lottieInstance.current = Lottie.loadAnimation({
+            container: animationContainer.current,
+            renderer: 'svg',
+            loop: true,
+            autoplay: true,
+            animationData: animationData,
+          });
+        }
+      } catch (error) {
+        console.error('Error loading animation data:', error);
+      }
+    };
+
+    loadAnimation();
+
+    return () => {
+      isMounted = false;
+      if (lottieInstance.current) {
+        lottieInstance.current.destroy();
+        lottieInstance.current = null;
+      }
+    };
+  }, [animationUrl]);
 
   return <div ref={animationContainer} className="waiting-sign_lottie-animation" />;
 };

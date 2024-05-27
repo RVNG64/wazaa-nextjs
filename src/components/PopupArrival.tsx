@@ -1,6 +1,7 @@
 import React from 'react';
-import LottieAlertBlue from './lotties/LottieAlertBlue';
-import lottieAlert from '../assets/Alert popup - 1709143571071.json';
+import dynamic from 'next/dynamic';
+
+const LottieAlertBlue = dynamic(() => import('./lotties/LottieAlertBlue'), { ssr: false });
 
 const Popup = ({ show, onClose }: { show: boolean; onClose: () => void }) => {
   if (!show) return null;
@@ -12,10 +13,12 @@ const Popup = ({ show, onClose }: { show: boolean; onClose: () => void }) => {
     }
   };
 
+  const lottieAlert = 'https://res.cloudinary.com/dvzsvgucq/raw/upload/v1716623813/Alert_popup_-_1709143571071_n0wjye.json';
+
   return (
     <div className="popup-backdrop" onClick={handleBackdropClick}>
       <div className="popup-container" onClick={e => e.stopPropagation()}>
-        <LottieAlertBlue animationData={lottieAlert} />
+        <LottieAlertBlue animationUrl={lottieAlert} />
         <h1 className="popup-title">Bienvenue dans votre univers WAZAA !</h1>
         <p className="popup-intro">
           Imaginez un monde où chaque journée vous offre la possibilité de découvrir, à chaque coin de rue, des événements qui correspondent à vos passions et à vos centres d&apos;intérêt... En quelques clics !

@@ -1,3 +1,4 @@
+// src/app/wazaadmin/page.tsx
 'use client';
 import React, { useEffect, useState, useContext, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
@@ -5,7 +6,6 @@ import axios from 'axios';
 import dynamic from 'next/dynamic';
 import { AuthContext } from '../../contexts/AuthProvider.client';
 import Swal from 'sweetalert2';
-import '../../styles/adminEvents.css';
 
 const NativeEventDetailsPopup = dynamic(() => import('../../components/NativeEventDetailsPopup'), { ssr: false });
 

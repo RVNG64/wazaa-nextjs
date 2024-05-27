@@ -1,10 +1,13 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { auth } from '../utils/firebase';
-import Image from 'next/image';
-import { AnimatePresence, motion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import YouTube, { YouTubeProps, YouTubePlayer } from 'react-youtube';
-import MiniMap from './MiniMapEventDetails.client';
+import dynamic from 'next/dynamic';
+
+const Image = dynamic(() => import('next/image'), { ssr: false });
+const AnimatePresence = dynamic(() => import('framer-motion').then(mod => mod.AnimatePresence), { ssr: false });
+const MiniMap = dynamic(() => import('./MiniMapEventDetails.client'), { ssr: false });
 
 interface Event {
   eventID: string;
@@ -121,7 +124,7 @@ const NativeMapDetailsPopup: React.FC<NativeMapDetailsPopupProps> = ({ eventData
     }
   }, [isNativeMapDetailsPopup, eventData.eventID]);
 
-  const fetchCurrentStatus = async () => {
+  const fetchCurrentStatus = useCallback(async () => {
     // Assurez-vous que l'événement est chargé et que l'utilisateur est connecté
     const firebaseId = auth.currentUser ? auth.currentUser.uid : null;
     const eventId = nativeEvent ? nativeEvent.eventID : null;
@@ -151,7 +154,7 @@ const NativeMapDetailsPopup: React.FC<NativeMapDetailsPopupProps> = ({ eventData
     } catch (error) {
       console.error('Erreur lors de la récupération du statut actuel:', error);
     }
-  };
+  }, [nativeEvent]);
 
   // Appeler cette fonction dans useEffect lors du chargement du composant ou lorsque les données nécessaires sont disponibles
   useEffect(() => {
@@ -160,7 +163,7 @@ const NativeMapDetailsPopup: React.FC<NativeMapDetailsPopupProps> = ({ eventData
       fetchCurrentStatus();
       console.log('Statut actuel:', selectedStatus);
     }
-  }, [nativeEvent, auth.currentUser]);
+  }, [nativeEvent, fetchCurrentStatus, selectedStatus]);
 
   // Vérifier la présence de toutes les données nécessaires
   if (!eventData || !isNativeMapDetailsPopup) return null;

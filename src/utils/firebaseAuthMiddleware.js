@@ -1,11 +1,11 @@
 // utils/firebaseAuthMiddleware.js
-import * as admin from 'firebase-admin';
+import { initializeApp, credential, auth } from 'firebase-admin';
 
 const serviceAccount = JSON.parse(Buffer.from(process.env.FIREBASE_CREDENTIALS_BASE64, 'base64').toString('ascii'));
 
 if (!admin.apps.length) {
-  admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
+  initializeApp({
+    credential: credential.cert(serviceAccount),
   });
 }
 
@@ -16,7 +16,7 @@ export async function authenticate(req, res, next) {
   }
 
   try {
-    const decodedToken = await admin.auth().verifyIdToken(token);
+    const decodedToken = await auth().verifyIdToken(token);
     req.user = decodedToken;
     next();
   } catch (error) {
