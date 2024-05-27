@@ -1,14 +1,15 @@
+// src/app/evenement/page.tsx
 'use client';
-import React, { useState, useEffect } from 'react';
-import { useRouter, usePathname } from 'next/navigation';
+import React, { useState, useEffect, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { auth } from '../../utils/firebase';
-import LottieAnimation from '../../components/lotties/LottieMarkerEventCreation';
-import animationData from '../../assets/Animation - 1708647580453.json';
-import calendarData from '../../assets/Animation - 1708683332032.json';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUsers, faLock, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
-import ScrollToTopButton from '../../components/ScrollToTopButton';
+import dynamic from 'next/dynamic';
+
+const LottieAnimation = dynamic(() => import('../../components/lotties/LottieMarkerEventCreation'), { ssr: false });
+const FontAwesomeIcon = dynamic(() => import('@fortawesome/react-fontawesome').then(mod => mod.FontAwesomeIcon), { ssr: false });
+const ScrollToTopButton = dynamic(() => import('../../components/ScrollToTopButton'), { ssr: false });
 
 const ROUTES = {
   // PUBLIC_EVENT_CREATION: '/creation-evenement-public',
@@ -22,6 +23,8 @@ const ROUTES = {
 const NewEvents = () => {
   const [eventType, setEventType] = useState('');
   const [loggedIn, setLoggedIn] = useState(false);
+  const animationData = 'https://res.cloudinary.com/dvzsvgucq/raw/upload/v1716627156/Animation_-_1708647580453_oarpqk.json';
+  const calendarData = 'https://res.cloudinary.com/dvzsvgucq/raw/upload/v1716627386/Calendar_-_1712091697562_amlidv.json';
   const [, setCurrentAnimation] = useState<any>(animationData);
   const [screenAnimation, setScreenAnimation] = useState('screen-start');
   const [showTooltip, setShowTooltip] = useState<string | null>(null);
@@ -32,13 +35,7 @@ const NewEvents = () => {
     router.push(path);
   };
 
-  useEffect(() => {
-    if (auth.currentUser) {
-      fetchUserType();
-    }
-  }, [auth.currentUser?.uid]);
-
-  const fetchUserType = async () => {
+  const fetchUserType = useCallback(async () => {
     if (auth.currentUser) {
       try {
         const response = await axios.get(`/api/users/${auth.currentUser.uid}`);
@@ -46,13 +43,19 @@ const NewEvents = () => {
         if (response.data && response.data.type) {
           console.log('Type de l\'utilisateur:', response.data.type);
           setUserType(response.data.type);
-          console.log('Type de l\'utilisateur après la récupération:', userType);
+          console.log('Type de l\'utilisateur après la récupération:', response.data.type); // Utilisation de response.data.type
         }
       } catch (error) {
         console.error('Erreur lors de la récupération du profil utilisateur:', error);
       }
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    if (auth.currentUser) {
+      fetchUserType();
+    }
+  }, [fetchUserType]);
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(user => setLoggedIn(!!user));
@@ -109,7 +112,7 @@ const NewEvents = () => {
       <h1>Créer un nouvel événement</h1>
       <div className="new-event_content-wrapper">
         <div className="new-event_animation-section">
-          <LottieAnimation animationData={calendarData} />
+          <LottieAnimation animationUrl={calendarData} />
         </div>
         <div className="new-event_buttons-section">
           {eventType === '' && (

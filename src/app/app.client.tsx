@@ -3,19 +3,20 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { getAuth, onAuthStateChanged, User } from "firebase/auth";
 import { useRouter, usePathname } from 'next/navigation';
-import Joyride from 'react-joyride';
-import CookieConsent from "react-cookie-consent";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBookOpen } from '@fortawesome/free-solid-svg-icons';
-import { initializeCache } from '../cache'
 import { AuthContext } from '../contexts/AuthProvider.client';
 import { adVideos } from '../components/VideoAd';
-import AdBlockDetect from '../utils/AdBlockDetect';
-import Popup from '../components/PopupArrival';
-import SideMenu from "../components/SideMenu";
-import Navbar from "../components/Navbar.client";
-import Footer from "../components/Footer.client";
-import VideoAd from "../components/VideoAd";
+import dynamic from 'next/dynamic';
+
+const Joyride = dynamic(() => import('react-joyride'), { ssr: false });
+const CookieConsent = dynamic(() => import('react-cookie-consent'), { ssr: false });
+const FontAwesomeIcon = dynamic(() => import('@fortawesome/react-fontawesome').then(mod => mod.FontAwesomeIcon), { ssr: false });
+const AdBlockDetect = dynamic(() => import('../utils/AdBlockDetect'), { ssr: false });
+const Popup = dynamic(() => import('../components/PopupArrival'), { ssr: false });
+const SideMenu = dynamic(() => import("../components/SideMenu"), { ssr: false });
+const Navbar = dynamic(() => import("../components/Navbar.client"), { ssr: false });
+const Footer = dynamic(() => import("../components/Footer.client"), { ssr: false });
+const VideoAd = dynamic(() => import("../components/VideoAd"), { ssr: false });
 
 interface StyleWithCustomProperties extends React.CSSProperties {
   '--window-height'?: string;
@@ -87,7 +88,7 @@ function App({ children }: { children: React.ReactNode }) {
     if (!hasSeenPopup) {
       setTimeout(() => {
         setShowPopup(true);
-      }, 3000); // 3000 ms = 3 secondes
+      }, 6000); // 6000 ms = 6 secondes
     }
   }, []);
 

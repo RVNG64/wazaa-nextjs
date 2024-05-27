@@ -1,7 +1,9 @@
 'use client'
 import React from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
+import dynamic from 'next/dynamic';
+
+const Link = dynamic(() => import('next/link'), { ssr: false });
+const Image = dynamic(() => import('next/image'), { ssr: false });
 
 const Footer = () => {
   const iconStyle = {

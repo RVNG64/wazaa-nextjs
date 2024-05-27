@@ -3,8 +3,10 @@
 import React, { useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { auth } from '../../utils/firebase';
-import Select from 'react-select'
 import countryList from 'react-select-country-list'
+import dynamic from 'next/dynamic';
+
+const Select = dynamic(() => import('react-select'), { ssr: false });
 
 // Définition des types pour les étapes
 type StepType = 'next' | 'options';

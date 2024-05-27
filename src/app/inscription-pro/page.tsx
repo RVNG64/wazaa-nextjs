@@ -3,8 +3,10 @@
 import React, { useState } from 'react';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../utils/firebase';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import dynamic from 'next/dynamic';
+
+const Link = dynamic(() => import('next/link'), { ssr: false });
 
 const SignUpOrganizer = () => {
   const [email, setEmail] = useState('');

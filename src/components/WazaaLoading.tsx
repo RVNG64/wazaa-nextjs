@@ -1,14 +1,17 @@
 import React from 'react';
-import LottieWorldMapLoading from './lotties/LottieWorldMapLoading';
-import worldLottie from '../assets/Earth1- 1708701894997.json';
+import dynamic from 'next/dynamic';
+
+const LottieWorldMapLoading = dynamic(() => import('./lotties/LottieWorldMapLoading'), { ssr: false });
 
 const LoadingAnimation = ({ isLoading }: { isLoading: boolean }) => {
   if (!isLoading) return null;
 
+  const worldLottie = 'https://res.cloudinary.com/dvzsvgucq/raw/upload/v1716627571/Earth1-_1708701894997_nerun5.json';
+
   return (
     <div className="loading-map-animation_overlay">
       <div className="loading-map-animation">
-        <LottieWorldMapLoading animationData={worldLottie} />
+        <LottieWorldMapLoading animationUrl={worldLottie} />
       </div>
     </div>
   );

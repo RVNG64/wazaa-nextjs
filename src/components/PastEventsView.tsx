@@ -1,5 +1,7 @@
-import Image from 'next/image';
+import dynamic from 'next/dynamic';
 import '../styles/pastEventsView.css';
+
+const Image = dynamic(() => import('next/image'), { ssr: false });
 
 interface POI {
   '@id': string;

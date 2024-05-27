@@ -1,8 +1,11 @@
+// src/components/EventFilterBar.client.tsx
 'use client';
 import React, { useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPalette, faChild, faFutbol, faUtensils, faW, faMusic, faTree, faBriefcase, faPlane } from '@fortawesome/free-solid-svg-icons';
 import { useCategoryChange } from '../contexts/CategoryChangeContext';
+import dynamic from 'next/dynamic';
+
+const FontAwesomeIcon = dynamic(() => import('@fortawesome/react-fontawesome').then(mod => mod.FontAwesomeIcon), { ssr: false });
 
 export const categories = [
   { id: 'all', icon: faW, label: 'TOUS' },

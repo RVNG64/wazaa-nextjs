@@ -2,14 +2,16 @@
 'use client';
 import React, { useEffect, useState, useRef } from 'react';
 import { useRouter, usePathname, useParams } from 'next/navigation';
-import { AnimatePresence, motion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useEvents, POI, Theme, fetchEventById } from '../../../../../contexts/EventContext';
 import { auth } from '../../../../../utils/firebase';
-import Image from 'next/image';
-import Head from 'next/head';
-import MobileMenu from '../../../../../components/MobileMenu';
-import ScrollToTopButton from '../../../../../components/ScrollToTopButton';
-import MiniMap from '../../../../../components/MiniMapEventDetails.client';
+import dynamic from 'next/dynamic';
+
+const AnimatePresence = dynamic(() => import('framer-motion').then(mod => mod.AnimatePresence), { ssr: false });
+const Image = dynamic(() => import('next/image'), { ssr: false });
+const MobileMenu = dynamic(() => import('../../../../../components/MobileMenu'), { ssr: false });
+const ScrollToTopButton = dynamic(() => import('../../../../../components/ScrollToTopButton'), { ssr: false });
+const MiniMap = dynamic(() => import('../../../../../components/MiniMapEventDetails.client'), { ssr: false });
 
 interface EventDetailsClientProps {
   eventId: string;
@@ -37,12 +39,12 @@ const EventDetailsClient: React.FC<EventDetailsClientProps> = ({ eventId }) => {
     if (topRef.current) {
       topRef.current.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [location]);
+  }, []);
 
   // Fonction pour remonter en haut de la page
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, [location]);
+  }, []);
 
   // Mettre à jour les données de l'événement
   useEffect(() => {
@@ -76,7 +78,7 @@ const EventDetailsClient: React.FC<EventDetailsClientProps> = ({ eventId }) => {
     };
 
     checkIfFavorite();
-  }, [eventData, auth.currentUser]);
+  }, [eventData]);
 
   useEffect(() => {
     const loadEventDetails = async () => {

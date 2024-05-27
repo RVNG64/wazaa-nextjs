@@ -3,8 +3,10 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import LoginRequiredPopup from '../components/LoginRequiredPopup';
-import ContactPopup from '../components/ContactPopup';
+import dynamic from 'next/dynamic';
+
+const ContactPopup = dynamic(() => import('./ContactPopup'), { ssr: false });
+const LoginRequiredPopup = dynamic(() => import('./LoginRequiredPopup'), { ssr: false });
 
 const MobileMenu = ({ toggleListView: parentToggleListView }: { toggleListView?: () => void }) => {
   const [isVisible, setIsVisible] = useState(window.innerWidth < 576);
@@ -33,7 +35,7 @@ const MobileMenu = ({ toggleListView: parentToggleListView }: { toggleListView?:
       setIsLoggedIn(!!user);
     });
     return unsubscribe;
-  }, []);
+  }, [auth]);
 
   useEffect(() => {
     const checkIfNearBottom = () => {
@@ -56,7 +58,7 @@ const MobileMenu = ({ toggleListView: parentToggleListView }: { toggleListView?:
 
     window.addEventListener('scroll', checkIfNearBottom);
     return () => window.removeEventListener('scroll', checkIfNearBottom);
-  }, [location.pathname]);
+  }, []);
 
   const toggleContactPopup = () => {
     setShowContactPopup(!showContactPopup);

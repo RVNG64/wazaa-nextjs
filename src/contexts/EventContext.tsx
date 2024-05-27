@@ -148,8 +148,8 @@ interface MimeType {
 interface EventsContextProps {
   events: POI[];
   setEvents: React.Dispatch<React.SetStateAction<POI[]>>;
-  fetchEventsInBounds: (bounds: L.LatLngBounds) => Promise<POI[]>;
-  initializeEvents: (bounds?: L.LatLngBounds) => Promise<void>;
+  fetchEventsInBounds: (bounds: L.LatLngBounds, startDate?: string, endDate?: string) => Promise<POI[]>;
+  initializeEvents: (bounds?: L.LatLngBounds, startDate?: string, endDate?: string) => Promise<void>;
   fetchAllEvents: () => Promise<POI[]>;
 }
 
@@ -168,16 +168,17 @@ export const useEvents = () => {
   return context;
 };
 
-export const fetchEventsInBounds = async (bounds: L.LatLngBounds) => {
+export const fetchEventsInBounds = async (bounds: L.LatLngBounds, startDate?: string, endDate?: string) => {
   const ne = bounds.getNorthEast();
   const sw = bounds.getSouthWest();
   try {
-    const response = await fetch(
-      `/api/events?ne=${ne.lat},${ne.lng}&sw=${sw.lat},${sw.lng}`
-    );
+    const url = new URL('/api/events', window.location.origin);
+    url.searchParams.append('ne', `${ne.lat},${ne.lng}`);
+    url.searchParams.append('sw', `${sw.lat},${sw.lng}`);
+    if (startDate) url.searchParams.append('startDate', startDate);
+    if (endDate) url.searchParams.append('endDate', endDate);
 
-    const textResponse = await response.text();
-    console.log("Réponse brute: ", textResponse);
+    const response = await fetch(url.toString());
 
     if (!response.ok) {
       console.error("Erreur de réponse du serveur: ", response.status);
@@ -191,6 +192,7 @@ export const fetchEventsInBounds = async (bounds: L.LatLngBounds) => {
     }
 
     const data = await response.json();
+
     return data;
   } catch (error) {
     console.error("Erreur lors du chargement des événements", error);
@@ -227,20 +229,31 @@ const fetchAllEvents = async () => {
 export const EventsProvider: React.FC<EventsProviderProps> = ({ children, initialBounds }) => {
   const [events, setEvents] = useState<POI[]>([]);
 
-  const fetchEventsInBounds = async (bounds: L.LatLngBounds) => {
+  const fetchEventsInBounds = async (bounds: L.LatLngBounds, startDate?: string, endDate?: string) => {
     const ne = bounds.getNorthEast();
     const sw = bounds.getSouthWest();
     try {
-      const response = await fetch(
-        `/api/events?ne=${ne.lat},${ne.lng}&sw=${sw.lat},${sw.lng}`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          },
-        });
-      console.log("Réponse brute: ", response);
+      const url = new URL('/api/events', window.location.origin);
+      url.searchParams.append('ne', `${ne.lat},${ne.lng}`);
+      url.searchParams.append('sw', `${sw.lat},${sw.lng}`);
+      if (startDate) url.searchParams.append('startDate', startDate);
+      if (endDate) url.searchParams.append('endDate', endDate);
+
+      const response = await fetch(url.toString(), {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+      });
+
+      if (!response.ok) {
+        console.error("Erreur de réponse du serveur: ", response.status);
+        throw new Error(`Erreur de serveur: ${response.status}`);
+      }
+
       const data = await response.json();
+
       return data;
     } catch (error) {
       console.error("Erreur lors du chargement des événements", error);
@@ -248,9 +261,9 @@ export const EventsProvider: React.FC<EventsProviderProps> = ({ children, initia
     }
   };
 
-  const initializeEvents = async (bounds?: L.LatLngBounds) => {
+  const initializeEvents = async (bounds?: L.LatLngBounds, startDate?: string, endDate?: string) => {
     if (bounds) {
-      const initialEvents = await fetchEventsInBounds(bounds);
+      const initialEvents = await fetchEventsInBounds(bounds, startDate, endDate);
       setEvents(initialEvents);
     } else {
       const allEvents = await fetchAllEvents();

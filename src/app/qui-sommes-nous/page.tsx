@@ -1,12 +1,14 @@
 // src/app/qui-sommes-nous/page.tsx
 'use client';
 import React, { useState } from 'react';
-import Link from 'next/link';
-import Head from 'next/head';
 import { useRouter } from 'next/navigation';
-import ContactPopup from '../../components/ContactPopup';
-import MobileMenu from '../../components/MobileMenu';
-import ScrollToTopButton from '../../components/ScrollToTopButton';
+import dynamic from 'next/dynamic';
+
+const Link = dynamic(() => import('next/link'), { ssr: false });
+const Head = dynamic(() => import('next/head'), { ssr: false });
+const ContactPopup = dynamic(() => import('../../components/ContactPopup'), { ssr: false });
+const MobileMenu = dynamic(() => import('../../components/MobileMenu'), { ssr: false });
+const ScrollToTopButton = dynamic(() => import('../../components/ScrollToTopButton'), { ssr: false });
 
 const Apropos: React.FC = () => {
   const [showContactPopup, setShowContactPopup] = useState(false);

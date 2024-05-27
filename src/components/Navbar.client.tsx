@@ -2,17 +2,17 @@
 // src/components/Navbar.client.tsx
 import React, { useState, useRef, useEffect, useContext } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import Link from 'next/link';
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 import '../utils/firebase';
-import Image from 'next/image';
 import ReactDatePicker from 'react-datepicker';
 import { AuthContext } from '../contexts/AuthProvider.client';
 import { useSearch } from '../contexts/EventFilter';
 import { motion } from 'framer-motion';
 import LottieCalendarMobile from './lotties/LottieCalendarMobile';
-import calendarLottie from '../assets/Calendar - 1712091697562.json';
 import "react-datepicker/dist/react-datepicker.css";
+import dynamic from 'next/dynamic';
+
+const Image = dynamic(() => import('next/image'), { ssr: false });
 
 const EventFilter = ({ showEventFilter }: { showEventFilter: boolean }) => {
   const [showDatePicker, setShowDatePicker] = useState(false);
@@ -64,7 +64,6 @@ const EventFilter = ({ showEventFilter }: { showEventFilter: boolean }) => {
               id="startDate"
               dateFormat="dd/MM/yyyy"
               className="filter-date"
-              readOnly
             />
           </div>
           <div className="date-picker-wrapper">
@@ -75,7 +74,6 @@ const EventFilter = ({ showEventFilter }: { showEventFilter: boolean }) => {
               id="endDate"
               dateFormat="dd/MM/yyyy"
               className="filter-date"
-              readOnly
             />
           </div>
         </div>
@@ -227,6 +225,8 @@ const Navbar = ({ onPathChange }: { onPathChange: (path: string) => void }) => {
     console.log("showEventFilter changed to: ", showEventFilter);
   }, [showEventFilter]);
 */
+
+  const calendarLottie = "https://res.cloudinary.com/dvzsvgucq/raw/upload/v1716627386/Calendar_-_1712091697562_amlidv.json";
   return (
     <nav className="navbar">
       {/*}
@@ -246,7 +246,7 @@ const Navbar = ({ onPathChange }: { onPathChange: (path: string) => void }) => {
             className=""
             onClick={handleToggleEventFilter}
           >
-            <LottieCalendarMobile animationData={calendarLottie} />
+            <LottieCalendarMobile animationUrl={calendarLottie} />
           </div>
         </div>
       )}

@@ -36,7 +36,7 @@
 }
 
 .leaflet-popup-content-wrapper {
-  padding: 0;
+  padding: 0 !important;
   height: 270px;
 }
 
@@ -57,7 +57,7 @@
 .leaflet-popup-content {
   width: 100% !important; /* Largeur de la popup */
   height: 270px !important; /* Hauteur de la popup */
-  margin: 0;
+  margin: 0 !important;
 }
 
 .custom-popup-image-container {

@@ -21,6 +21,8 @@ export default async function handler(req, res) {
   // Récupération et décomposition des paramètres de requête
   const ne = req.query.ne ? req.query.ne.split(',') : [];
   const sw = req.query.sw ? req.query.sw.split(',') : [];
+  const startDate = req.query.startDate ? new Date(req.query.startDate) : null;
+  const endDate = req.query.endDate ? new Date(req.query.endDate) : null;
 
   // Conversion des valeurs en nombres
   const northEastLat = parseFloat(ne[0]);
@@ -41,9 +43,17 @@ export default async function handler(req, res) {
       const lng = parseFloat(location['schema:longitude']);
       const isValidLatLong = !isNaN(lat) && !isNaN(lng);
 
-      return isValidLatLong &&
-              lat >= southWestLat && lat <= northEastLat &&
-              lng >= southWestLng && lng <= northEastLng;
+      const eventStartDate = event['schema:startDate'] ? new Date(event['schema:startDate'][0]) : null;
+      const eventEndDate = event['schema:endDate'] ? new Date(event['schema:endDate'][0]) : null;
+
+      const isWithinBounds = isValidLatLong &&
+        lat >= southWestLat && lat <= northEastLat &&
+        lng >= southWestLng && lng <= northEastLng;
+
+      const isWithinDateRange = (!startDate || !eventStartDate || eventStartDate >= startDate) &&
+        (!endDate || !eventEndDate || eventEndDate <= endDate);
+
+      return isWithinBounds && isWithinDateRange;
     });
 
     console.log(`Nombre d'événements JSON filtrés: ${filteredEvents.length}`);
