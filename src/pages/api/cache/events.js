@@ -1,3 +1,4 @@
+// src/pages/api/cache/events.js
 import { eventsCache, checkAndUpdateCache } from '../../../cache';
 
 export default async function handler(req, res) {

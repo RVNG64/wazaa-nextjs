@@ -1,11 +1,17 @@
 // src/app/faq/page.tsx
 'use client';
 import React from 'react';
-import { Accordion, AccordionSummary, AccordionDetails, Typography, Paper, useTheme } from '@mui/material';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { styled } from '@mui/material/styles';
-import MobileMenu from '../../components/MobileMenu';
-import ScrollToTopButton from '../../components/ScrollToTopButton';
+import { Typography, useTheme } from '@mui/material';
+import dynamic from 'next/dynamic';
+
+const Accordion = dynamic(() => import('@mui/material').then(mod => mod.Accordion), { ssr: false });
+const AccordionSummary = dynamic(() => import('@mui/material').then(mod => mod.AccordionSummary), { ssr: false });
+const AccordionDetails = dynamic(() => import('@mui/material').then(mod => mod.AccordionDetails), { ssr: false });
+const Paper = dynamic(() => import('@mui/material').then(mod => mod.Paper), { ssr: false });
+const ExpandMoreIcon = dynamic(() => import('@mui/icons-material/ExpandMore'), { ssr: false });
+const MobileMenu = dynamic(() => import('../../components/MobileMenu'), { ssr: false });
+const ScrollToTopButton = dynamic(() => import('../../components/ScrollToTopButton'), { ssr: false });
 
 const StyledAccordion = styled(Accordion)(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,

@@ -17,14 +17,14 @@ const useFetchFirstName = (): string => {
       const res = await axios.get<{ firstName: string }>(`/api/users/${firebaseId}`);
       setFirstName(res.data.firstName);
     } catch (err) {
-      const axiosError = err as AxiosError;  // Cast err to AxiosError type
+      const axiosError = err as AxiosError;
       console.error(axiosError.message);
     }
   };
 
   useEffect(() => {
     fetchUser();
-  }, [auth.currentUser?.uid]);  // Add dependency on auth.currentUser.uid
+  }, []);
 
   return firstName;
 };

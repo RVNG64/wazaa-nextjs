@@ -1,14 +1,13 @@
+// src/pages/favoris.tsx
 'use client';
 import React, { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { auth } from '../../utils/firebase';
 import axios from 'axios';
-import Image from 'next/image';
-import dynamic from 'next/dynamic';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { POI } from '../../contexts/EventContext';
 import { NativeEvent } from '../../contexts/NativeEventContext';
-import '../../styles/myEvents.css';
+import dynamic from 'next/dynamic';
 
 const NativeMapDetailsPopup = dynamic(() => import('../../components/NativeMapDetailsPopup.client'), { ssr: false });
 const MiniMap = dynamic(() => import('../../components/MiniMapEventDetails.client'), { ssr: false });
@@ -16,6 +15,8 @@ const PastEventsView = dynamic(() => import('../../components/PastEventsView'), 
 const EventCard = dynamic(() => import('../../components/EventCard'), { ssr: false });
 const MobileMenu = dynamic(() => import('../../components/MobileMenu'), { ssr: false });
 const ScrollToTopButton = dynamic(() => import('../../components/ScrollToTopButton'), { ssr: false });
+const Image = dynamic(() => import('next/image'), { ssr: false });
+const AnimatePresence = dynamic(() => import('framer-motion').then(mod => mod.AnimatePresence), { ssr: false });
 
 interface Ad {
   id: number;
@@ -55,7 +56,7 @@ const MyEvents = () => {
     if (showDetails && topOfPopup.current) {
       topOfPopup.current.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [showDetails]);
+  }, [showDetails, topOfPopup]);
 
   // Effets pour gérer les changements de location
   useEffect(() => {
@@ -167,7 +168,7 @@ const MyEvents = () => {
     };
 
     checkIfFavorite();
-  }, [selectedPoi, auth.currentUser]);
+  }, [selectedPoi]);
 
   useEffect(() => {
     const fetchFavorites = async () => {
@@ -252,7 +253,7 @@ const MyEvents = () => {
     };
 
     fetchRecommendations();
-  }, [auth.currentUser]);
+  }, []);
 
   /* Fonction pour récupérer les favoris
   useEffect(() => {

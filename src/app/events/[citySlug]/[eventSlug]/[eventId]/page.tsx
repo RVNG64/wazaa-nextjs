@@ -1,18 +1,20 @@
 // src/pages/events/[citySlug]/[eventSlug]/[eventId]/page.tsx
 /* eslint-disable react/no-unescaped-entities */
 'use client';
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { useRouter, usePathname, useParams } from 'next/navigation';
-import axios from 'axios';
-import Head from 'next/head';
-import Image from 'next/image';
 import { NativeEvent } from '../../../../../contexts/NativeEventContext';
-import { AnimatePresence, motion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import YouTube, { YouTubeProps, YouTubePlayer } from 'react-youtube';
 import { auth } from '../../../../../utils/firebase';
-import MobileMenu from '../../../../../components/MobileMenu';
-import ScrollToTopButton from '../../../../../components/ScrollToTopButton';
-import MiniMap from '../../../../../components/MiniMapEventDetails.client';
+import dynamic from 'next/dynamic';
+
+const Head = dynamic(() => import('next/head'), { ssr: false });
+const Image = dynamic(() => import('next/image'), { ssr: false });
+const AnimatePresence = dynamic(() => import('framer-motion').then(mod => mod.AnimatePresence), { ssr: false });
+const MobileMenu = dynamic(() => import('../../../../../components/MobileMenu'), { ssr: false });
+const ScrollToTopButton = dynamic(() => import('../../../../../components/ScrollToTopButton'), { ssr: false });
+const MiniMap = dynamic(() => import('../../../../../components/MiniMapEventDetails.client'), { ssr: false });
 
 const NativeEventDetails = () => {
   const params = useParams<{ eventId: string }>();
@@ -78,7 +80,7 @@ const NativeEventDetails = () => {
     if (nativeEvent) {
       checkIfFavorite();
     }
-  }, [nativeEvent, auth.currentUser]);
+  }, [nativeEvent]);
 
   // Fonction pour récupérer les détails de l'événement natif
   useEffect(() => {
@@ -110,10 +112,9 @@ const NativeEventDetails = () => {
     if (eventId) {
       loadNativeEventDetails();
     }
-  }, [eventId]);
+  }, [eventId, nativeEvent]);
 
-  const fetchCurrentStatus = async () => {
-    // Assurez-vous que l'événement est chargé et que l'utilisateur est connecté
+  const fetchCurrentStatus = useCallback(async () => {
     const firebaseId = auth.currentUser ? auth.currentUser.uid : null;
     const eventId = nativeEvent ? nativeEvent.eventID : null;
     console.log('ID de l\'événement (fetchCurrentStatus):', eventId);
@@ -142,16 +143,16 @@ const NativeEventDetails = () => {
     } catch (error) {
       console.error('Erreur lors de la récupération du statut actuel:', error);
     }
-  };
+  }, [nativeEvent]);
 
-  // Appeler cette fonction dans useEffect lors du chargement du composant ou lorsque les données nécessaires sont disponibles
+  // Utilisation du hook useEffect
   useEffect(() => {
     if (nativeEvent && auth.currentUser) {
       console.log('Début de la récupération du statut actuel pour l\'événement:', nativeEvent);
       fetchCurrentStatus();
       console.log('Statut actuel:', selectedStatus);
     }
-  }, [nativeEvent, auth.currentUser]);
+  }, [nativeEvent, fetchCurrentStatus, selectedStatus]);
 
   if (!nativeEvent) {
     return (
@@ -656,29 +657,6 @@ const NativeEventDetails = () => {
 
   return (
     <>
-        <Head>
-          <title>{eventName} | Wazaa</title>
-          <meta name="description" content={`${eventDescription.substring(0, 150)}...`} />
-          <link rel="canonical" href={canonicalUrl} />
-          <meta property="og:title" content={`${eventName} | Wazaa`} />
-          <meta property="og:description" content={`${eventDescription.substring(0, 150)}...`} />
-          <meta property="og:url" content={canonicalUrl} />
-          <meta property="og:image" content={eventImage} />
-          <meta property="og:image:secure_url" content={eventImage} />
-          <meta property="og:image:alt" content={eventName} />
-          <meta property="og:image:width" content="1200" />
-          <meta property="og:image:height" content="630" />
-          <meta property="og:type" content="website" />
-          <meta property="og:locale" content="fr_FR" />
-          <meta property="og:site_name" content="Wazaa" />
-          <meta name="twitter:card" content="summary_large_image" />
-          <meta name="twitter:site" content="WAZAA" />
-          <meta name="twitter:creator" content="WAZAA" />
-          <meta name="twitter:title" content={eventName} />
-          <meta name="twitter:description" content={`${eventDescription.substring(0, 150)}...`} />
-          <meta name="twitter:image" content={eventImage} />
-          <meta name="twitter:url" content={canonicalUrl} />
-        </Head>
       <AnimatePresence>
         <div ref={topRef} className="event-details-container">
 

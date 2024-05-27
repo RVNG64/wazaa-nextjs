@@ -1,15 +1,17 @@
 // src/app/profil-pro/page.tsx
 'use client';
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useCallback } from "react";
 import { usePathname, useRouter } from 'next/navigation';
 import axios from 'axios';
-import Image from 'next/image';
 import { useDropzone } from 'react-dropzone';
 import * as yup from 'yup';
 import { getAuth, User, EmailAuthProvider, reauthenticateWithCredential, updatePassword, deleteUser } from 'firebase/auth';
 import { AuthContext } from '../../contexts/AuthProvider.client';
-import MobileMenu from '../../components/MobileMenu';
-import ScrollToTopButton from '../../components/ScrollToTopButton';
+import dynamic from 'next/dynamic';
+
+const Image = dynamic(() => import('next/image'), { ssr: false });
+const MobileMenu = dynamic(() => import('../../components/MobileMenu'), { ssr: false });
+const ScrollToTopButton = dynamic(() => import('../../components/ScrollToTopButton'), { ssr: false });
 
 interface FirebaseUser {
   uid: string;
@@ -81,7 +83,7 @@ const OrganizerProfile = () => {
   });
   const location = usePathname();
   const router = useRouter();
-  const calculateCompletionPercentage = (): number => {
+  const calculateCompletionPercentage = useCallback((): number => {
     const fieldsToCheck = [
       { name: 'firstName', value: userProfile?.firstName },
       { name: 'lastName', value: userProfile?.lastName },
@@ -97,7 +99,7 @@ const OrganizerProfile = () => {
 
     const filledFields = fieldsToCheck.filter(field => field.value).length;
     return Math.round((filledFields / fieldsToCheck.length) * 100);
-  };
+  }, [userProfile]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -124,13 +126,13 @@ const OrganizerProfile = () => {
     if (currentUser) {
       fetchUserProfile(currentUser.uid);
     }
-  }, [currentUser]);
+  }, [currentUser, router]);
 
   useEffect(() => {
     if(userProfile) {
       setCompletionPercentage(calculateCompletionPercentage());
     }
-  }, [userProfile]);
+  }, [calculateCompletionPercentage, userProfile]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;

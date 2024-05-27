@@ -1,7 +1,9 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import YouTube, { YouTubeProps, YouTubePlayer } from 'react-youtube';
+import dynamic from 'next/dynamic';
+
+const FontAwesomeIcon = dynamic(() => import('@fortawesome/react-fontawesome').then(mod => mod.FontAwesomeIcon), { ssr: false });
 
 interface VideoAdProps {
   onClose: () => void;
