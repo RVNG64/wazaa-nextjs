@@ -3,7 +3,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { auth } from '../../utils/firebase';
-import axios from 'axios';
+import api from '../../utils/api';
 import { motion } from 'framer-motion';
 import { POI } from '../../contexts/EventContext';
 import { NativeEvent } from '../../contexts/NativeEventContext';
@@ -149,10 +149,10 @@ const MyEvents = () => {
             ? `/api/users/nativeFavorites?userId=${userId}`
             : `/api/users/favoritesJSON?userId=${userId}`;
 
-          const response = await fetch(url);
-          if (!response.ok) throw new Error('Erreur lors de la récupération des favoris');
+          const response = await api.get(url, { params: { userId } });
+          if (response.status !== 200) throw new Error('Erreur lors de la récupération des favoris');
 
-          const favorites: (POI | NativeEvent)[] = await response.json();
+          const favorites: (POI | NativeEvent)[] = await response.data;
           setIsFavorite(favorites.some((event: POI | NativeEvent) => {
             return '@id' in event
               ? event['@id'].split('/').pop() === eventId
@@ -175,8 +175,8 @@ const MyEvents = () => {
       if (auth.currentUser) {
         try {
           const userId = auth.currentUser.uid;
-          const response = await axios.get(`/api/users/favoritesJSON?userId=${userId}`);
-          const nativeResponse = await axios.get(`/api/users/nativeFavorites?userId=${userId}`);
+          const response = await api.get(`/api/users/favoritesJSON?userId=${userId}`);
+          const nativeResponse = await api.get(`/api/users/nativeFavorites?userId=${userId}`);
           const now = new Date();
 
           const upcomingFavorites: POI[] = [];
@@ -240,7 +240,7 @@ const MyEvents = () => {
       if (auth.currentUser) {
         try {
           const userId = auth.currentUser.uid;
-          const response = await axios.get(`/api/users/recommendations?userId=${userId}`);
+          const response = await api.get(`/api/users/recommendations?userId=${userId}`);
           setRecommendations(response.data);
           if (response.data.length === 0) {
             setRecommendationsError('Aucune recommandation disponible pour le moment.');
@@ -283,7 +283,7 @@ const MyEvents = () => {
     if (auth.currentUser) {
       try {
         const userId = auth.currentUser.uid;
-        const response = await axios.get(`/api/users/recommendations?userId=${userId}`);
+        const response = await api.get(`/api/users/recommendations?userId=${userId}`);
         setRecommendations(response.data);
         if (response.data.length === 0) {
           setRecommendationsError('Aucune recommandation disponible pour le moment.');
@@ -311,8 +311,8 @@ const MyEvents = () => {
     try {
       if (auth.currentUser) {
         const userId = auth.currentUser.uid;
-        const response = await axios.get(`/api/users/favoritesJSON?userId=${userId}`);
-        const nativeResponse = await axios.get(`/api/users/nativeFavorites?userId=${userId}`);
+        const response = await api.get(`/api/users/favoritesJSON?userId=${userId}`);
+        const nativeResponse = await api.get(`/api/users/nativeFavorites?userId=${userId}`);
         const now = new Date();
 
         // Séparation des événements passés et à venir
@@ -679,8 +679,8 @@ const MyEvents = () => {
       }
 
       try {
-        const poiResponse = await axios.get(`/api/users/favoritesJSON?userId=${userId}`);
-        const nativeResponse = await axios.get(`/api/users/nativeFavorites?userId=${userId}`);
+        const poiResponse = await api.get(`/api/users/favoritesJSON?userId=${userId}`);
+        const nativeResponse = await api.get(`/api/users/nativeFavorites?userId=${userId}`);
 
         if (poiResponse.status === 200 && nativeResponse.status === 200) {
           const poiFavorites = poiResponse.data;
@@ -1014,7 +1014,7 @@ const MyEvents = () => {
     const citySlug = city ? createEventSlug(city) : 'evenement';
 
     try {
-      const response = await axios.get(`/api/event/${eventId}`);
+      const response = await api.get(`/api/event/${eventId}`);
 
       if (response.data) {
         window.history.pushState({}, '', `/event/${citySlug}/${eventSlug}/${eventId}`);

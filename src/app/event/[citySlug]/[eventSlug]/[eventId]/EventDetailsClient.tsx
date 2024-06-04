@@ -1,11 +1,12 @@
 // src/app/event/[citySlug]/[eventSlug]/[eventId]/EventDetailsClient.tsx
 'use client';
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { useRouter, usePathname, useParams } from 'next/navigation';
+import dynamic from 'next/dynamic';
+import api from '../../../../../utils/api';
 import { motion } from 'framer-motion';
 import { useEvents, POI, Theme, fetchEventById } from '../../../../../contexts/EventContext';
 import { auth } from '../../../../../utils/firebase';
-import dynamic from 'next/dynamic';
 
 const AnimatePresence = dynamic(() => import('framer-motion').then(mod => mod.AnimatePresence), { ssr: false });
 const Image = dynamic(() => import('next/image'), { ssr: false });
@@ -52,55 +53,57 @@ const EventDetailsClient: React.FC<EventDetailsClientProps> = ({ eventId }) => {
     setEventData(event || null);
   }, [eventId, events]);
 
-  useEffect(() => {
-    const checkIfFavorite = async () => {
-      const userId = auth.currentUser ? auth.currentUser.uid : null;
-      const poiId = eventData ? eventData['@id'].split('/').pop() : null;
+  const checkIfFavorite = useCallback(async () => {
+    const userId = auth.currentUser ? auth.currentUser.uid : null;
+    const poiId = eventData ? eventData['@id'].split('/').pop() : null;
 
-      if (userId && poiId) {
-        try {
-          const response = await fetch(`/api/users/favoritesJSON?userId=${userId}`);
-          if (response.ok) {
-            const favorites = await response.json();
-            console.log('Favoris:', favorites);
-            setIsFavorite(favorites.some((event: any) => event.URI_ID_du_POI === poiId));
-          } else {
-            console.error('Erreur lors de la récupération des favoris');
-            setIsFavorite(false);
-          }
-        } catch (error) {
-          console.error('Erreur:', error);
+    if (userId && poiId) {
+      try {
+        const response = await api.get(`/api/users/favoritesJSON`, {
+          params: { userId }
+        });
+        if (response.status === 200) {
+          const favorites = await response.data;
+          console.log('Favoris:', favorites);
+          setIsFavorite(favorites.some((event: any) => event.URI_ID_du_POI === poiId));
+        } else {
+          console.error('Erreur lors de la récupération des favoris');
           setIsFavorite(false);
         }
-      } else {
+      } catch (error) {
+        console.error('Erreur:', error);
         setIsFavorite(false);
       }
-    };
-
-    checkIfFavorite();
+    } else {
+      setIsFavorite(false);
+    }
   }, [eventData]);
 
   useEffect(() => {
-    const loadEventDetails = async () => {
-      try {
-        setIsLoading(true);
-        if (eventId) {
-          const event = await fetchEventById(eventId);
-          if (event) {
-            setEventData(event);
-          } else {
-            setError('Événement non trouvé');
-          }
-        }
-        setIsLoading(false);
-      } catch (err) {
-        setError('Erreur lors du chargement des détails de l\'événement');
-        setIsLoading(false);
-      }
-    };
+    checkIfFavorite();
+  }, [checkIfFavorite]);
 
+  const loadEventDetails = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      if (eventId) {
+        const event = await fetchEventById(eventId);
+        if (event) {
+          setEventData(event);
+        } else {
+          setError('Événement non trouvé');
+        }
+      }
+      setIsLoading(false);
+    } catch (err) {
+      setError('Erreur lors du chargement des détails de l\'événement');
+      setIsLoading(false);
+    }
+  }, [eventId]);
+
+  useEffect(() => {
     loadEventDetails();
-  }, [eventId, events]);
+  }, [loadEventDetails]);
 
   const handleBackToMap = () => {
     navigate('/'); // Rediriger vers la page d'accueil
@@ -166,15 +169,15 @@ const EventDetailsClient: React.FC<EventDetailsClientProps> = ({ eventId }) => {
   const addToFavorites = async (eventId: string): Promise<boolean> => {
     try {
       if (auth.currentUser && auth.currentUser.uid) {
-        const response = await fetch(`/api/users/addFavorite?userId=${auth.currentUser.uid}`, {
+        const response = await api.get(`/api/users/addFavorite?userId=${auth.currentUser.uid}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${auth.currentUser.uid}`
           },
-          body: JSON.stringify({ eventId }),
+          data: JSON.stringify({ eventId }),
         });
-        if (response.ok) {
+        if (response.status === 200) {
           console.log('Événement ajouté aux favoris');
           return true;
         } else {
@@ -190,16 +193,16 @@ const EventDetailsClient: React.FC<EventDetailsClientProps> = ({ eventId }) => {
   const removeFromFavorites = async (eventId: string): Promise<boolean> => {
     try {
       if (auth.currentUser && auth.currentUser.uid) {
-        const response = await fetch(`/api/users/removeFavorite?userId=${auth.currentUser.uid}`, {
+        const response = await api.get(`/api/users/removeFavorite?userId=${auth.currentUser.uid}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${auth.currentUser.uid}`
           },
-          body: JSON.stringify({ eventId }),
+          data: JSON.stringify({ eventId }),
         });
         console.log('Événement retiré des favoris');
-        return response.ok;
+        return response.status === 200;
       }
       return false;
     } catch (error) {
@@ -248,8 +251,8 @@ const EventDetailsClient: React.FC<EventDetailsClientProps> = ({ eventId }) => {
     const userId = auth.currentUser?.uid;
     if (userId) {
       try {
-        const response = await fetch(`/api/users/favoritesJSON?userId=${userId}`);
-        if (!response.ok) {
+        const response = await api.get(`/api/users/favoritesJSON?userId=${userId}`);
+        if (response.status !== 200) {
           throw new Error('Erreur lors du chargement des favoris');
         }
         // const favorites = await response.json();

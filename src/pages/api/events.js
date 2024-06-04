@@ -1,57 +1,46 @@
-// src/pages/api/events.js
-import { checkAndUpdateCache, eventsCache } from '../../cache';
+import { checkAndUpdateCache, getEventsCache } from '../../cache';
 
 export const config = {
   api: {
-    responseLimit: '45mb', // Augmente la limite de réponse à 8MB
+    responseLimit: '45mb',
   },
 };
 
 export default async function handler(req, res) {
   console.log('Requête GET /api/events:', req.query);
-  console.log("Received NE:", req.query.ne, "Received SW:", req.query.sw);
-
-  await checkAndUpdateCache();
-
-  if (!eventsCache) {
-    console.log('Cache not available');
-    return res.status(503).json({ error: 'Cache is initializing, please retry.' });
-  }
-
-  // Récupération et décomposition des paramètres de requête
-  const ne = req.query.ne ? req.query.ne.split(',') : [];
-  const sw = req.query.sw ? req.query.sw.split(',') : [];
-  const startDate = req.query.startDate ? new Date(req.query.startDate) : null;
-  const endDate = req.query.endDate ? new Date(req.query.endDate) : null;
-
-  // Conversion des valeurs en nombres
-  const northEastLat = parseFloat(ne[0]);
-  const northEastLng = parseFloat(ne[1]);
-  const southWestLat = parseFloat(sw[0]);
-  const southWestLng = parseFloat(sw[1]);
-
-  // Vérification si les coordonnées sont valides
-  if (isNaN(northEastLat) || isNaN(northEastLng) || isNaN(southWestLat) || isNaN(southWestLng)) {
-    console.error('Paramètres de requête invalides:', req.query);
-    return res.status(400).send('Paramètres de requête invalides');
-  }
 
   try {
+    await checkAndUpdateCache();
+
+    const eventsCache = getEventsCache();
+    console.log('Vérification du cache après mise à jour');
+    if (!eventsCache || eventsCache.length === 0) {
+      console.log('Cache is still initializing, please retry.');
+      return res.status(503).json({ error: 'Cache is still initializing, please retry.' });
+    }
+
+    console.log('Cache validé avec', eventsCache.length, 'événements');
+
+    const { ne, sw, startDate, endDate } = req.query;
+    const [northEastLat, northEastLng] = ne ? ne.split(',').map(parseFloat) : [];
+    const [southWestLat, southWestLng] = sw ? sw.split(',').map(parseFloat) : [];
+
+    if ([northEastLat, northEastLng, southWestLat, southWestLng].some(isNaN)) {
+      console.error('Paramètres de requête invalides:', req.query);
+      return res.status(400).send('Paramètres de requête invalides');
+    }
+
     const filteredEvents = eventsCache.filter(event => {
       const location = event.isLocatedAt[0]['schema:geo'];
       const lat = parseFloat(location['schema:latitude']);
       const lng = parseFloat(location['schema:longitude']);
-      const isValidLatLong = !isNaN(lat) && !isNaN(lng);
 
       const eventStartDate = event['schema:startDate'] ? new Date(event['schema:startDate'][0]) : null;
       const eventEndDate = event['schema:endDate'] ? new Date(event['schema:endDate'][0]) : null;
 
-      const isWithinBounds = isValidLatLong &&
-        lat >= southWestLat && lat <= northEastLat &&
-        lng >= southWestLng && lng <= northEastLng;
-
-      const isWithinDateRange = (!startDate || !eventStartDate || eventStartDate >= startDate) &&
-        (!endDate || !eventEndDate || eventEndDate <= endDate);
+      const isWithinBounds = lat >= southWestLat && lat <= northEastLat && lng >= southWestLng && lng <= northEastLng;
+      const isWithinDateRange = (!startDate || !eventStartDate || eventStartDate >= new Date(startDate)) &&
+                                (!endDate || !eventEndDate || eventEndDate <= new Date(endDate));
 
       return isWithinBounds && isWithinDateRange;
     });
@@ -60,6 +49,6 @@ export default async function handler(req, res) {
     res.json(filteredEvents);
   } catch (error) {
     console.error('Erreur lors du filtrage des événements:', error);
-    res.status(500).send('Erreur serveur lors du filtrage');
+    res.status(500).send('Erreur serveur lors du filtrage: ' + error.message);
   }
 }

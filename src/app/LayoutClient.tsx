@@ -9,18 +9,6 @@ import App from "./app.client";
 
 export default function LayoutClient({ children }: { children: React.ReactNode }) {
 
-  // Initialisation du cache des événements lors du chargement de l'application
-  useEffect(() => {
-    const initCache = async () => {
-      try {
-        await fetch('/api/init-cache');
-      } catch (error) {
-        console.error('Erreur lors de l\'initialisation du cache des événements:', error);
-      }
-    };
-    initCache();
-  }, []); // Ce useEffect s'exécute une seule fois au montage du composant
-
   return (
     <AuthProvider>
       <SearchProvider>

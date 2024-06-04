@@ -4,6 +4,7 @@ import React, { useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { auth } from '../../utils/firebase';
 import countryList from 'react-select-country-list'
+import api from '../../utils/api';
 import dynamic from 'next/dynamic';
 
 const Select = dynamic(() => import('react-select'), { ssr: false });
@@ -149,16 +150,13 @@ const WelcomeInfos: React.FC = () => {
       // L'utilisateur a terminé la configuration du profil
       console.log("Sending data to server:", updatedProfileData);
 
-      fetch(`/api/user/profileInfos`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          firebaseId: user?.uid,
-          hasCompletedProfile: true,
-          profileData: updatedProfileData,
-        }),
+      api.post(`/api/user/profileInfos`, {
+        firebaseId: user?.uid,
+        hasCompletedProfile: true,
+        profileData: updatedProfileData,
       })
       .then(() => navigate('/profil'))
+      .catch(error => console.error('Erreur lors de l\'envoi des données de profil:', error));
     }
   };
 

@@ -3,7 +3,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
-import axios from 'axios';
+import api from '../../../../utils/api';
 import Swal from 'sweetalert2';
 import { motion } from 'framer-motion';
 import dynamic from 'next/dynamic';
@@ -79,7 +79,7 @@ const AttendanceEventsAdmin: React.FC = () => {
       // Appel API pour obtenir les détails de l'événement
       const fetchEventDetails = async () => {
         try {
-          const response = await axios.get(`/api/events/${eventId}`);
+          const response = await api.get(`/api/events/${eventId}`);
           setSelectedEvent(response.data);
         } catch (error) {
           console.error('Erreur lors du chargement des détails de l’événement', error);
@@ -95,7 +95,7 @@ const AttendanceEventsAdmin: React.FC = () => {
       // Récupérer la liste des participants
       const fetchParticipants = async () => {
         try {
-          const response = await axios.get(`/api/events/${selectedEvent.eventID}/participants`);
+          const response = await api.get(`/api/events/${selectedEvent.eventID}/participants`);
           if (response.data) {
             console.log('Participants', response.data);
             setParticipants(response.data);
@@ -159,7 +159,7 @@ const AttendanceEventsAdmin: React.FC = () => {
     if (result.isConfirmed) {
       try {
         if (selectedEvent) {
-          const response = await axios.delete(`${process.env.REACT_APP_API_URL}/events/${selectedEvent.eventID}/participants/${firebaseId}`);
+          const response = await api.delete(`${process.env.REACT_APP_API_URL}/events/${selectedEvent.eventID}/participants/${firebaseId}`);
           if (response.status === 200) {
             setParticipants(prevParticipants => prevParticipants.filter(participant => participant.firebaseId !== firebaseId));
             Swal.fire(
@@ -194,7 +194,7 @@ const AttendanceEventsAdmin: React.FC = () => {
     if (result.isConfirmed) {
       try {
         if (selectedEvent) {
-          const response = await axios.put(`${process.env.REACT_APP_API_URL}/events/${selectedEvent.eventID}/participants/${firebaseId}/block`);
+          const response = await api.put(`${process.env.REACT_APP_API_URL}/events/${selectedEvent.eventID}/participants/${firebaseId}/block`);
           if (response.status === 200) {
             setParticipants(prevParticipants => prevParticipants.map(participant => {
               if (participant.firebaseId === firebaseId) {

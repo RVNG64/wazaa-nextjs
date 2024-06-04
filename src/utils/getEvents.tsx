@@ -1,6 +1,6 @@
-// src/utils/getEvents.tsx
+/* src/utils/getEvents.tsx
 export const getEvents = async () => {
-  const baseUrl = 'http://www.wazaa.app';
+  const baseUrl = 'http://localhost:3000';
   // const baseUrl = https://wazaa.app || 'http://localhost:3000';
 
   const [eventsResponse, nativeEventsResponse] = await Promise.all([
@@ -23,3 +23,4 @@ export const getEvents = async () => {
 
   return { events, nativeEvents };
 };
+*/

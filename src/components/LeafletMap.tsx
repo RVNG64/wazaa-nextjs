@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { POI, useEvents } from '../contexts/EventContext';
 import { NativeEvent, useNativeEvents } from '../contexts/NativeEventContext';
-import { useRouter, usePathname } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { MapContainer } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
@@ -49,20 +49,11 @@ export default function Map() {
   const [showDetails, setShowDetails] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isListViewVisible, setIsListViewVisible] = useState(false);
-  const [showSharePopup, setShowSharePopup] = useState(false);
   const { searchStartDate, searchEndDate, searchQuery } = useSearch();
-  const [showShareConfirmation, setShowShareConfirmation] = useState(false);
-  const [showConnectAlert, setShowConnectAlert] = useState(false);
-  const [isFavorite, setIsFavorite] = useState(false);
-  const [favoriteMessage, setFavoriteMessage] = useState("");
   const [activeCategory, setActiveCategory] = useState<string>('all');
-  const [filteredEvents, setFilteredEvents] = useState<POI[]>([]);
-  const router = useRouter();
-  const navigate = (path: string) => {
-    router.push(path);
-  };
+  const [filteredEvents] = useState<POI[]>([]);
   const location = usePathname();
-  const [currentPath, setCurrentPath] = useState(location);
+  const [, setCurrentPath] = useState(location);
   const { events } = useEvents();
   const { nativeEvents } = useNativeEvents();
   const topOfPopup = useRef<HTMLDivElement>(null);

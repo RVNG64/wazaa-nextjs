@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { auth } from '../utils/firebase';
 import { POI } from '../contexts/EventContext';
+import api from '../utils/api';
 import dynamic from 'next/dynamic';
 
 const Image = dynamic(() => import('next/image'), { ssr: false });
@@ -45,10 +46,10 @@ const EventDetailsMapPopup = ({ selectedPoi, setShowDetails }: EventDetailsMapPo
 
       if (userId && poiId) {
         try {
-          const response = await fetch(`/api/users/favoritesJSON?userId=${userId}`);
-          if (!response.ok) throw new Error('Erreur lors de la récupération des favoris');
+          const response = await api.get(`/api/users/favoritesJSON?userId=${userId}`);
+          if (response.status !== 200) throw new Error('Erreur lors de la récupération des favoris');
 
-          const favorites = await response.json();
+          const favorites = await response.data;
           setIsFavorite(favorites.some((event: POI) => event['@id'].split('/').pop() === poiId));
         } catch (error) {
           console.error('Erreur:', error);
@@ -142,11 +143,11 @@ const EventDetailsMapPopup = ({ selectedPoi, setShowDetails }: EventDetailsMapPo
     const userId = auth.currentUser?.uid;
     if (userId) {
       try {
-        const response = await fetch(`/api/users/favoritesJSON?userId=${userId}`);
-        if (!response.ok) {
+        const response = await api.get(`/api/users/favoritesJSON?userId=${userId}`);
+        if (response.status !== 200) {
           throw new Error('Erreur lors du chargement des favoris');
         }
-        const favorites = await response.json();
+        const favorites = await response.data;
       } catch (error) {
         console.error('Erreur lors du chargement des favoris:', error);
       }
@@ -319,13 +320,11 @@ const EventDetailsMapPopup = ({ selectedPoi, setShowDetails }: EventDetailsMapPo
     }
 
     try {
-      const response = await fetch(`/api/users/addFavorite?userId=${auth.currentUser.uid}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ eventId }),
+      const response = await api.post(`/api/users/addFavorite?userId=${auth.currentUser.uid}`, {
+        eventId
       });
 
-      if (response.ok) {
+      if (response.status === 200) {
         console.log('Événement ajouté aux favoris');
         return true;
       } else {
@@ -344,13 +343,11 @@ const EventDetailsMapPopup = ({ selectedPoi, setShowDetails }: EventDetailsMapPo
     }
 
     try {
-      const response = await fetch(`/api/users/removeFavorite?userId=${auth.currentUser.uid}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ eventId }),
+      const response = await api.post(`/api/users/removeFavorite?userId=${auth.currentUser.uid}`, {
+        eventId
       });
 
-      if (response.ok) {
+      if (response.status === 200) {
         console.log('Événement retiré des favoris');
         return true;
       } else {

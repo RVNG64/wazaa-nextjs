@@ -1,13 +1,14 @@
 // src/app/connexion-pro/page.tsx
 'use client';
 import React, { useState } from 'react';
-import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail } from 'firebase/auth';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import api from '../../utils/api';
+import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail } from 'firebase/auth';
 
 async function getUserFromDatabase(uid: string) {
-  const response = await fetch(`/api/users/${uid}`);
-  const userDoc = await response.json();
+  const response = await api(`/api/users/${uid}`);
+  const userDoc = await response.data;
   return userDoc;
 }
 

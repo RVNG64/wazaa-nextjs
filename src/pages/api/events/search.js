@@ -4,7 +4,7 @@ import { checkAndUpdateCache, eventsCache } from '../../../cache';
 
 const sortByDateDescending = (a, b) => {
   const aStartDate = a['schema:startDate'] ? new Date(a['schema:startDate'][0]) : new Date(0);
-  const bStartDate = b['schema:startDate'] ? new Date(a['schema:startDate'][0]) : new Date(0);
+  const bStartDate = b['schema:startDate'] ? new Date(b['schema:startDate'][0]) : new Date(0);
   return aStartDate - bStartDate; // Trie du plus récent au plus ancien
 };
 
@@ -13,9 +13,10 @@ const normalizeString = (str) => {
 };
 
 export default async function handler(req, res) {
-  res.setHeader('Cache-Control', 'no-store'); // Utilisation de setHeader à la place de set
+  res.setHeader('Cache-Control', 'no-store');
 
   try {
+    // Vérifier et mettre à jour le cache si nécessaire
     await checkAndUpdateCache();
 
     if (!eventsCache) {
@@ -29,7 +30,6 @@ export default async function handler(req, res) {
     }
 
     const { searchTerm, startDate, endDate, page = 1 } = req.body;
-    console.log('Requête de recherche avancée:', req.body);
 
     const filterEvents = (event) => {
       if (searchTerm) {
@@ -60,7 +60,6 @@ export default async function handler(req, res) {
     const paginatedEvents = sortedEvents.slice(skip, skip + limit);
 
     console.log(`Nombre d'événements filtrés: ${sortedEvents.length}`);
-    console.log(`Nombre d'événements paginés: ${paginatedEvents.length}`);
 
     res.json({
       results: paginatedEvents,

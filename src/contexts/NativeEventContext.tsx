@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState } from 'react';
-import axios from 'axios';
+import api from '../utils/api';
 import L from 'leaflet';
 
 export interface NativeEvent {
@@ -71,7 +71,7 @@ export const fetchNativeEventsInBounds = async (bounds: L.LatLngBounds) => {
   const ne = bounds.getNorthEast();
   const sw = bounds.getSouthWest();
   try {
-    const response = await axios.get(
+    const response = await api.get(
       `/api/native-events?neLat=${ne.lat}&neLng=${ne.lng}&swLat=${sw.lat}&swLng=${sw.lng}`
     );
     const data = response.data;
@@ -84,7 +84,7 @@ export const fetchNativeEventsInBounds = async (bounds: L.LatLngBounds) => {
 
 export const fetchNativeEventsById = async (eventId: string) => {
   try {
-    const response = await axios.get(`/api/events/${eventId}`);
+    const response = await api.get(`/api/events/${eventId}`);
     if (!response.data) {
       throw new Error('Erreur lors de la récupération de l’événement natif');
     }
@@ -102,7 +102,7 @@ export const NativeEventProvider: React.FC<NativeEventProviderProps> = ({ childr
     const ne = bounds.getNorthEast();
     const sw = bounds.getSouthWest();
     try {
-      const response = await axios.get(
+      const response = await api.get(
         `/api/native-events?ne=${ne.lat},${ne.lng}&sw=${sw.lat},${sw.lng}`, {
           method: 'GET',
           headers: {

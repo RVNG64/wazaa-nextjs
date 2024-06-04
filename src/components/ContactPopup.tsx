@@ -1,7 +1,7 @@
 // src/components/ContactPopup.tsx
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import axios from 'axios';
+import api from '../utils/api';
 
 const ContactPopup = ({ onClose }: { onClose: () => void }) => {
   const [emailSent, setEmailSent] = useState(false);
@@ -33,7 +33,7 @@ const ContactPopup = ({ onClose }: { onClose: () => void }) => {
 
     console.log("Data:", data);
 
-    axios.post(`/api/contactForm`, data)
+    api.post(`/api/contactForm`, data)
       .then((response) => {
         console.log('Response:', response);
         setEmailSent(true);

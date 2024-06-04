@@ -1,8 +1,7 @@
 // src/app/page.tsx
 import React, { useState, useEffect } from 'react';
 import LeafletMap from '../components/LeafletMap';
-import { initializeCache, eventsCache } from '../cache';
-import { getEvents } from '../utils/getEvents';
+/* import { initializeCache, eventsCache } from '../cache';
 
 // Cette fonction génère les paramètres statiques pour ISR
 export async function generateStaticParams() {
@@ -31,7 +30,7 @@ export async function generateStaticParams() {
 interface PageProps {
   events: any;
   nativeEvents: any;
-}
+} */
 
 function Map() {
   /* const [isClient, setIsClient] = useState(false);

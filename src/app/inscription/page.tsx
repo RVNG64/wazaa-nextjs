@@ -5,6 +5,7 @@ import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../utils/firebase';
 import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
+import api from '../../utils/api';
 
 const Link = dynamic(() => import('next/link'), { ssr: false });
 
@@ -54,16 +55,12 @@ const SignUp = () => {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
-      await fetch(`/api/signup`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          firebaseId: user.uid,
-          firstName: firstName,
-          lastName: lastName,
-          email: email,
-          password: password,
-        }),
+      await api.post(`/api/signup`, {
+        firebaseId: user.uid,
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        password: password,
       });
 
       navigate('/welcomeIntro');

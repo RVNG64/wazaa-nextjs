@@ -2,7 +2,7 @@
 'use client';
 import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import axios from 'axios';
+import api from '../../utils/api';
 import { auth } from '../../utils/firebase';
 import { faUsers, faLock, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import dynamic from 'next/dynamic';
@@ -38,7 +38,7 @@ const NewEvents = () => {
   const fetchUserType = useCallback(async () => {
     if (auth.currentUser) {
       try {
-        const response = await axios.get(`/api/users/${auth.currentUser.uid}`);
+        const response = await api.get(`/api/users/${auth.currentUser.uid}`);
         console.log('Réponse de la récupération du profil utilisateur:', response.data);
         if (response.data && response.data.type) {
           console.log('Type de l\'utilisateur:', response.data.type);

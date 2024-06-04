@@ -1,7 +1,7 @@
 // src/app/recherche-avancee/page.tsx
 'use client';
 import React, { useState, useEffect, useMemo } from 'react';
-import axios from 'axios';
+import api from '../../utils/api';
 import { auth } from '../../utils/firebase';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
@@ -188,10 +188,10 @@ const AdvancedSearch = () => {
 
       if (userId && poiId) {
         try {
-          const response = await fetch(`/api/users/favoritesJSON?userId=${userId}`);
-          if (!response.ok) throw new Error('Erreur lors de la récupération des favoris');
+          const response = await api.get(`/api/users/favoritesJSON?userId=${userId}`);
+          if (response.status !== 200) throw new Error('Erreur lors de la récupération des favoris');
 
-          const favorites = await response.json();
+          const favorites = await response.data;
           setIsFavorite(favorites.some((event: POI) => event['@id'].split('/').pop() === poiId));
         } catch (error) {
           console.error('Erreur:', error);
@@ -222,13 +222,11 @@ const AdvancedSearch = () => {
     }
 
     try {
-      const response = await fetch(`/api/users/addFavorite?userId=${auth.currentUser.uid}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ eventId }),
+      const response = await api.post(`/api/users/addFavorite?userId=${auth.currentUser.uid}`, {
+        eventId,
       });
 
-      if (response.ok) {
+      if (response.status === 200) {
         console.log('Événement ajouté aux favoris');
         return true;
       } else {
@@ -247,13 +245,11 @@ const AdvancedSearch = () => {
     }
 
     try {
-      const response = await fetch(`/api/users/removeFavorite?userId=${auth.currentUser.uid}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ eventId }),
+      const response = await api.post(`/api/users/removeFavorite?userId=${auth.currentUser.uid}`, {
+        eventId
       });
 
-      if (response.ok) {
+      if (response.status === 200) {
         console.log('Événement retiré des favoris');
         setIsFavorite(false); // Mettre à jour l'état isFavorite
         return true;
@@ -282,7 +278,7 @@ const AdvancedSearch = () => {
     try {
       const uniqueSearchParam = new Date().getTime();
 
-      const response = await axios.post(`/api/events/search`, {
+      const response = await api.post(`/api/events/search`, {
         searchTerm,
         startDate,
         endDate,
@@ -415,11 +411,11 @@ const AdvancedSearch = () => {
       const userId = auth.currentUser?.uid;
       if (userId) {
         try {
-          const response = await fetch(`/api/users/favoritesJSON?userId=${userId}`);
-          if (!response.ok) {
+          const response = await api.get(`/api/users/favoritesJSON?userId=${userId}`);
+          if (response.status !== 200) {
             throw new Error('Erreur lors du chargement des favoris');
           }
-          const favorites = await response.json();
+          const favorites = await response.data;
           // Mettre à jour l'état avec les favoris
           // ...
         } catch (error) {

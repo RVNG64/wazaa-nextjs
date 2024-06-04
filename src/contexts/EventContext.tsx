@@ -1,6 +1,7 @@
 // src/contexts/EventContext.tsx
 'use client';
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import api from '../utils/api';
 import L from 'leaflet';
 
 export interface POI {
@@ -168,7 +169,7 @@ export const useEvents = () => {
   return context;
 };
 
-export const fetchEventsInBounds = async (bounds: L.LatLngBounds, startDate?: string, endDate?: string) => {
+const fetchEventsInBounds = async (bounds: L.LatLngBounds, startDate?: string, endDate?: string) => {
   const ne = bounds.getNorthEast();
   const sw = bounds.getSouthWest();
   try {
@@ -178,22 +179,14 @@ export const fetchEventsInBounds = async (bounds: L.LatLngBounds, startDate?: st
     if (startDate) url.searchParams.append('startDate', startDate);
     if (endDate) url.searchParams.append('endDate', endDate);
 
-    const response = await fetch(url.toString());
+    const response = await api.get(url.toString());
 
-    if (!response.ok) {
+    if (response.status !== 200) {
       console.error("Erreur de réponse du serveur: ", response.status);
       throw new Error(`Erreur de serveur: ${response.status}`);
     }
 
-    const contentType = response.headers.get("content-type");
-    if (!contentType || !contentType.includes("application/json")) {
-      console.error("Réponse non JSON: ", response);
-      throw new Error("Format de réponse non JSON");
-    }
-
-    const data = await response.json();
-
-    return data;
+    return response.data;
   } catch (error) {
     console.error("Erreur lors du chargement des événements", error);
     return [];
@@ -201,12 +194,13 @@ export const fetchEventsInBounds = async (bounds: L.LatLngBounds, startDate?: st
 };
 
 export const fetchEventById = async (eventId: string) => {
+  console.log(`Fetching event with id: ${eventId}`);
   try {
-    const response = await fetch(`/api/event/${eventId}`);
-    if (!response.ok) {
+    const response = await api.get(`/api/event/${eventId}`);
+    if (response.status !== 200) {
       throw new Error('Erreur lors de la récupération de l\'événement');
     }
-    return await response.json();
+    return response.data;
   } catch (error) {
     console.error('Erreur lors de la récupération de l\'événement:', error);
     return null;
@@ -215,11 +209,11 @@ export const fetchEventById = async (eventId: string) => {
 
 const fetchAllEvents = async () => {
   try {
-    const response = await fetch('/api/cache/events');
-    if (!response.ok) {
+    const response = await api.get('/api/cache/events');
+    if (response.status !== 200) {
       throw new Error('Erreur lors de la récupération des événements depuis le cache');
     }
-    return await response.json();
+    return response.data;
   } catch (error) {
     console.error("Erreur lors du chargement des événements depuis le cache", error);
     return [];
@@ -229,47 +223,26 @@ const fetchAllEvents = async () => {
 export const EventsProvider: React.FC<EventsProviderProps> = ({ children, initialBounds }) => {
   const [events, setEvents] = useState<POI[]>([]);
 
-  const fetchEventsInBounds = async (bounds: L.LatLngBounds, startDate?: string, endDate?: string) => {
-    const ne = bounds.getNorthEast();
-    const sw = bounds.getSouthWest();
-    try {
-      const url = new URL('/api/events', window.location.origin);
-      url.searchParams.append('ne', `${ne.lat},${ne.lng}`);
-      url.searchParams.append('sw', `${sw.lat},${sw.lng}`);
-      if (startDate) url.searchParams.append('startDate', startDate);
-      if (endDate) url.searchParams.append('endDate', endDate);
+  const initializeEvents = useCallback(async (bounds?: L.LatLngBounds, startDate?: string, endDate?: string) => {
+    console.log(`Initializing events with dates: startDate=${startDate}, endDate=${endDate}`);
 
-      const response = await fetch(url.toString(), {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-      });
-
-      if (!response.ok) {
-        console.error("Erreur de réponse du serveur: ", response.status);
-        throw new Error(`Erreur de serveur: ${response.status}`);
-      }
-
-      const data = await response.json();
-
-      return data;
-    } catch (error) {
-      console.error("Erreur lors du chargement des événements", error);
-      return [];
-    }
-  };
-
-  const initializeEvents = async (bounds?: L.LatLngBounds, startDate?: string, endDate?: string) => {
     if (bounds) {
       const initialEvents = await fetchEventsInBounds(bounds, startDate, endDate);
       setEvents(initialEvents);
     } else {
-      const allEvents = await fetchAllEvents();
-      setEvents(allEvents);
+      console.error('No bounds provided for initializing events');
+      //const allEvents = await fetchAllEvents();
+      //setEvents(allEvents);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    // Initialisation automatique des événements lors du montage du composant
+    console.log('useEffect used to initialize events');
+    initializeEvents(initialBounds).catch(error => {
+      console.error('Erreur lors de l\'initialisation des événements:', error);
+    });
+  }, [initialBounds, initializeEvents]);
 
   return (
     <EventsContext.Provider value={{ events, setEvents, fetchEventsInBounds, initializeEvents, fetchAllEvents }}>

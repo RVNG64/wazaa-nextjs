@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
+import api from '../utils/api';
 import { auth } from '../utils/firebase';
 import { motion } from 'framer-motion';
 import YouTube, { YouTubeProps, YouTubePlayer } from 'react-youtube';
@@ -96,10 +97,10 @@ const NativeMapDetailsPopup: React.FC<NativeMapDetailsPopupProps> = ({ eventData
       if (userId && nativeEventId) {
         try {
           // Appel de l'API pour récupérer les favoris natifs de l'utilisateur
-          const response = await fetch(`/api/users/${userId}/nativeFavorites`);
+          const response = await api.get(`/api/users/${userId}/nativeFavorites`);
           console.log('Réponse checkif:', response);
-          if (response.ok) {
-            const favorites = await response.json();
+          if (response.status === 200) {
+            const favorites = await response.data;
 
             // Vérification si l'événement actuel est dans la liste des favoris
             const isFavorited = favorites.some((favEvent: { eventID: string }) => favEvent.eventID === nativeEventId);
@@ -137,10 +138,10 @@ const NativeMapDetailsPopup: React.FC<NativeMapDetailsPopupProps> = ({ eventData
     }
 
     try {
-      const response = await fetch(`/api/events/${eventId}/attendance/currentStatus?firebaseId=${firebaseId}`);
+      const response = await api.get(`/api/events/${eventId}/attendance/currentStatus?firebaseId=${firebaseId}`);
       console.log('Réponse API fetchCurrentStatus:', response);
-      if (response.ok) {
-        const data = await response.json();
+      if (response.status === 200) {
+        const data = await response.data;
         console.log('Données API data fetchCurrentStatus:', data);
         if (data && data.status) {
           setSelectedStatus(data.status);
@@ -184,10 +185,9 @@ const NativeMapDetailsPopup: React.FC<NativeMapDetailsPopupProps> = ({ eventData
     console.log('ID Firebase:', firebaseId);
 
     try {
-      await fetch(`/api/events/${eventId}/attendance`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ firebaseId, status })
+      await api.post(`/api/events/${eventId}/attendance`, {
+        firebaseId,
+        status,
       });
       setSelectedStatus(status);
       showStatusMessage(`Statut de présence mis à jour: ${status}`);
@@ -335,11 +335,11 @@ const NativeMapDetailsPopup: React.FC<NativeMapDetailsPopupProps> = ({ eventData
     const userId = auth.currentUser?.uid;
     if (userId) {
       try {
-        const response = await fetch(`/api/users/${userId}/nativeFavorites`);
-        if (!response.ok) {
+        const response = await api.get(`/api/users/${userId}/nativeFavorites`);
+        if (response.status === 200) {
           throw new Error('Erreur lors du chargement des favoris');
         }
-        const updatedFavorites = await response.json();
+        const updatedFavorites = await response.data;
 
         // Mettre à jour l'état avec les favoris actualisés
         setFavoriteNativeEvents(updatedFavorites);
@@ -358,15 +358,11 @@ const NativeMapDetailsPopup: React.FC<NativeMapDetailsPopupProps> = ({ eventData
     }
 
     try {
-      const response = await fetch(`/api/users/${userId}/addNativeFavorite`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ eventID: eventId })
+      const response = await api.post(`/api/users/${userId}/addNativeFavorite`, {
+        eventID: eventId
       });
 
-      if (response.ok) {
+      if (response.status === 200) {
         console.log('Ajouté aux favoris natifs');
         // Appeler une fonction pour rafraîchir la liste des favoris
         await refreshFavorites();
@@ -389,15 +385,11 @@ const NativeMapDetailsPopup: React.FC<NativeMapDetailsPopupProps> = ({ eventData
     }
 
     try {
-      const response = await fetch(`/api/users/${userId}/removeNativeFavorite`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ eventID: eventId })
+      const response = await api.post(`/api/users/${userId}/removeNativeFavorite`, {
+        eventID: eventId
       });
 
-      if (response.ok) {
+      if (response.status === 200) {
         console.log('Retiré des favoris natifs');
         // Appeler une fonction pour rafraîchir la liste des favoris
         await refreshFavorites();
