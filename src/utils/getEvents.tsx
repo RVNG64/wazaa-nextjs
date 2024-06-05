@@ -24,3 +24,4 @@ export const getEvents = async () => {
   return { events, nativeEvents };
 };
 */
+export {};

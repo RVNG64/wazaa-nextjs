@@ -1,14 +1,14 @@
 // src/pages/api/sitemap.xml.js
 import { SitemapStream, streamToPromise } from 'sitemap';
 import { Readable } from 'stream';
-import { checkAndUpdateCache, eventsCache } from '../../cache';
+import { checkAndUpdateCache, getEventsCache } from '../../cache';
 
 export default async function handler(req, res) {
   try {
     // Vérifier et mettre à jour le cache si nécessaire
     await checkAndUpdateCache();
 
-    if (!eventsCache) {
+    if (!getEventsCache) {
       return res.status(503).json({ error: 'Cache is initializing, please retry.' });
     }
 
@@ -26,7 +26,7 @@ export default async function handler(req, res) {
       { url: '/inscription', changefreq: 'monthly', priority: 0.3 },
     ];
 
-    const eventUrls = eventsCache.map(event => ({
+    const eventUrls = getEventsCache.map(event => ({
       url: event.urlPath,
       changefreq: 'weekly',
       priority: 0.5
