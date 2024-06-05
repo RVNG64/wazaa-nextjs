@@ -2,7 +2,7 @@
 'use client';
 import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter, usePathname, useParams } from 'next/navigation';
-import axios from 'axios';
+import api from '../../../../utils/api';
 import { auth } from '../../../../utils/firebase';
 import Swal from 'sweetalert2';
 import ReactDatePicker from 'react-datepicker';
@@ -75,7 +75,7 @@ const EventEdit = () => {
     const fetchUserType = async () => {
       if (auth.currentUser) {
         try {
-          const response = await axios.get(`/api/users/${auth.currentUser.uid}`);
+          const response = await api.get(`/api/users/${auth.currentUser.uid}`);
           if (response.data) {
             setIsOrganizer(response.data.type === 'organizer');
           }
@@ -96,7 +96,7 @@ const EventEdit = () => {
         formData.append('file', files[0]);
 
         try {
-          const uploadResponse = await axios.post(`/api/uploadEventPoster`, formData, {
+          const uploadResponse = await api.post(`/api/uploadEventPoster`, formData, {
             headers: {
               'Content-Type': 'multipart/form-data'
             }
@@ -158,7 +158,7 @@ const EventEdit = () => {
 
   // Récupérer les détails de l'événement à modifier
   useEffect(() => {
-    axios.get(`/api/organized/events/edit/${eventId}`)
+    api.get(`/api/organized/events/edit/${eventId}`)
       .then(response => {
         console.log('Détails de l\'événement stocké:', response.data);
         const data = response.data;
@@ -440,7 +440,7 @@ const EventEdit = () => {
 
     if (eventCreatedData) {
       try {
-        const response = await axios.put(`/api/organized/events/update/${eventId}`, eventCreatedData);
+        const response = await api.put(`/api/organized/events/update/${eventId}`, eventCreatedData);
         console.log('Mise à jour réussie:', response.data);
         setShowSuccessAnimation(true);
         setTimeout(() => {
@@ -483,7 +483,7 @@ const EventEdit = () => {
   // Géocodage de l'adresse pour obtenir les coordonnées géographiques
   const handleAddressChange = async (address: string) => {
     try {
-      const response = await axios.get(`/api/geocode`, { params: { address } });
+      const response = await api.get(`/api/geocode`, { params: { address } });
 
       // Gérer le cas où aucun résultat n'est trouvé
       if (response.data.status === 'ZERO_RESULTS') {
@@ -637,7 +637,7 @@ const EventEdit = () => {
 
     if (confirmDelete.isConfirmed) {
       try {
-        const response = await axios.delete(`/api/organized/events/delete/${eventId}`);
+        const response = await api.delete(`/api/organized/events/delete/${eventId}`);
         console.log('Événement supprimé:', response.data);
         Swal.fire(
           'Supprimé !',

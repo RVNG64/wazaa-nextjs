@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { auth } from '../../utils/firebase';
-import axios from 'axios';
+import api from '../../utils/api';
 import ReactDatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'flatpickr/dist/themes/light.css';
@@ -30,7 +30,7 @@ const EventCreationForm = () => {
     const fetchUserType = async () => {
       if (auth.currentUser) {
         try {
-          const response = await axios.get(`/api/users/${auth.currentUser.uid}`);
+          const response = await api.get(`/api/users/${auth.currentUser.uid}`);
           if (response.data) {
             setIsOrganizer(response.data.type === 'organizer');
           }
@@ -126,7 +126,7 @@ const EventCreationForm = () => {
 
     try {
       console.log('Données avant POST:', eventCreatedData);
-      const response = await axios.post(`/api/organized/events/create`, eventCreatedData);
+      const response = await api.post(`/api/organized/events/create`, eventCreatedData);
       console.log('Événement créé:', response.data);
       navigate('/mes-evenements');
     } catch (error) {

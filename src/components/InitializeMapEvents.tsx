@@ -16,7 +16,7 @@ const InitializeMapEvents = () => {
     if (!isInitialized.current) {
       console.log("Initialisation des événements pour les limites actuelles de la carte");
       const bounds = map.getBounds();
-      console.log("Limites actuelles de la carte:", bounds);
+      console.log("Limites actuelles de la map:", bounds);
       if (bounds.isValid()) { // S'assure que les limites de la carte sont valides
         initializeEvents(bounds, searchStartDate, searchEndDate);
         initializeNativeEvents(bounds);

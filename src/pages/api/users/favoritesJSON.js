@@ -2,7 +2,7 @@
 import dbConnect from '../../../utils/dbConnect';
 import User from '../../../models/User';
 import Organizer from '../../../models/Organizer';
-import { initializeCache, eventsCache } from '../../../cache';
+import { checkAndUpdateCache, eventsCache } from '../../../cache';
 
 export default async function handler(req, res) {
   if (req.method !== 'GET') {
@@ -10,13 +10,13 @@ export default async function handler(req, res) {
   }
 
   try {
-    // Initialiser le cache si nécessaire
-    await initializeCache();
+    // Vérifier et mettre à jour le cache si nécessaire
+    await checkAndUpdateCache();
 
     // Vérifier si le cache des événements est disponible
     if (!eventsCache) {
       console.error('eventsCache est null');
-      return res.status(500).send('Erreur serveur : Cache des événements non initialisé');
+      return res.status(503).send('Erreur serveur : Cache des événements non initialisé');
     }
 
     const { userId } = req.query;

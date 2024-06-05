@@ -4,6 +4,7 @@ import React, { useState, useRef, useEffect, useContext } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 import '../utils/firebase';
+import api from '../utils/api';
 import ReactDatePicker from 'react-datepicker';
 import { AuthContext } from '../contexts/AuthProvider.client';
 import { useSearch } from '../contexts/EventFilter';
@@ -191,8 +192,8 @@ const Navbar = ({ onPathChange }: { onPathChange: (path: string) => void }) => {
 
   const fetchUserProfile = async (userId: string) => {
     try {
-      const response = await fetch(`/api/users/${userId}`);
-      const userData = await response.json();
+      const response = await api.get(`/api/users/${userId}`);
+      const userData = await response.data;
       if (userData) {
         setProfilePicUrl(userData.profilePic || '/profile.svg');
         setUserType(userData.type);

@@ -1,7 +1,7 @@
 // src/app/mes-evenements/page.tsx
 'use client';
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../../utils/api';
 import { auth } from '../../utils/firebase';
 import dynamic from 'next/dynamic';
 
@@ -66,7 +66,7 @@ const EventsOrganized = () => {
         try {
           const userId = auth.currentUser?.uid;
           if (userId) {
-            const response = await axios.get(`/api/organized/events/${userId}`);
+            const response = await api.get(`/api/organized/events/${userId}`);
             const correctedEvents = response.data.map((event: Event) => ({
               ...event,
               startTime: correctTimeFormat(event.startTime),

@@ -42,3 +42,6 @@ next-env.d.ts
 # firebase admin sdk
 /wazaa-afeec-firebase-adminsdk-8ijhx-f4ce5aee54.json
 /wazaa-afeec-firebase-adminsdk-8ijhx-f4ce5aee54.json:Zone.Identifier
+
+# cache
+cache/eventsCache.json

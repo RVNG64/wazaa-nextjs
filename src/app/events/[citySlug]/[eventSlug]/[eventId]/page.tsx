@@ -3,13 +3,13 @@
 'use client';
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { useRouter, usePathname, useParams } from 'next/navigation';
+import api from '../../../../../utils/api';
 import { NativeEvent } from '../../../../../contexts/NativeEventContext';
 import { motion } from 'framer-motion';
 import YouTube, { YouTubeProps, YouTubePlayer } from 'react-youtube';
 import { auth } from '../../../../../utils/firebase';
 import dynamic from 'next/dynamic';
 
-const Head = dynamic(() => import('next/head'), { ssr: false });
 const Image = dynamic(() => import('next/image'), { ssr: false });
 const AnimatePresence = dynamic(() => import('framer-motion').then(mod => mod.AnimatePresence), { ssr: false });
 const MobileMenu = dynamic(() => import('../../../../../components/MobileMenu'), { ssr: false });
@@ -60,9 +60,11 @@ const NativeEventDetails = () => {
 
       if (userId && nativeEventId) {
         try {
-          const response = await fetch(`/api/users/nativeFavorites?userId=${userId}`);
-          if (response.ok) {
-            const favorites = await response.json();
+          const response = await api.get(`/api/users/favoritesJSON`, {
+            params: { userId }
+          });
+            if (response.status === 200) {
+            const favorites = await response.data;
             setIsFavorite(favorites.some((favEvent: { eventID: string; }) => favEvent.eventID === nativeEventId));
           } else {
             console.error('Erreur lors de la récupération des favoris');
@@ -91,10 +93,10 @@ const NativeEventDetails = () => {
         if (eventId) {
           // Récupération de l'événement natif par son ID
           console.log('Récupération de l\'événement natif par son ID:', eventId);
-          const response = await fetch(`/api/events/${eventId}`);
+          const response = await api.get(`/api/events/${eventId}`);
           console.log('Réponse de l\'événement natif:', response);
-          if (response.ok) {
-            const event = await response.json();
+          if (response.status === 200) {
+            const event = await response.data;
             console.log('Evénement natif trouvé:', event);
             setNativeEvent(event);
             console.log('Evénement natif:', nativeEvent);
@@ -126,10 +128,10 @@ const NativeEventDetails = () => {
     }
 
     try {
-      const response = await fetch(`/api/events/${eventId}/attendance/currentStatus?firebaseId=${firebaseId}`);
+      const response = await api.get(`/api/events/${eventId}/attendance/currentStatus?firebaseId=${firebaseId}`);
       console.log('Réponse API fetchCurrentStatus:', response);
-      if (response.ok) {
-        const data = await response.json();
+      if (response.status === 200) {
+        const data = await response.data;
         console.log('Données API data fetchCurrentStatus:', data);
         if (data && data.status) {
           setSelectedStatus(data.status);
@@ -300,8 +302,8 @@ const NativeEventDetails = () => {
     const userId = auth.currentUser?.uid;
     if (userId) {
       try {
-        const response = await fetch(`/api/users/nativeFavorites?userId=${userId}`);
-        if (!response.ok) {
+        const response = await api.get(`/api/users/nativeFavorites?userId=${userId}`);
+        if (response.status !== 200) {
           throw new Error('Erreur lors du chargement des favoris');
         }
         // const favorites = await response.json();
@@ -320,15 +322,15 @@ const NativeEventDetails = () => {
     }
 
     try {
-      const response = await fetch(`/api/users/addNativeFavorite?userId=${userId}`, {
+      const response = await api.get(`/api/users/addNativeFavorite?userId=${userId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ eventID: eventId })
+        data: JSON.stringify({ eventID: eventId })
       });
 
-      if (response.ok) {
+      if (response.status === 200) {
         console.log('Ajouté aux favoris natifs');
         return true;
       } else {
@@ -352,10 +354,10 @@ const NativeEventDetails = () => {
     const eventId = nativeEvent ? nativeEvent.eventID : null;
 
     try {
-      await fetch(`/api/events/${eventId}/attendance`, {
+      await api.get(`/api/events/${eventId}/attendance`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ firebaseId, status })
+        data: JSON.stringify({ firebaseId, status })
       });
       setSelectedStatus(status);
       showStatusMessage(`Statut de présence mis à jour: ${status}`);
@@ -399,15 +401,15 @@ const NativeEventDetails = () => {
     }
 
     try {
-      const response = await fetch(`/api/users/removeNativeFavorite?userId=${userId}`, {
+      const response = await api.get(`/api/users/removeNativeFavorite?userId=${userId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ eventID: eventId })
+        data: JSON.stringify({ eventID: eventId })
       });
 
-      if (response.ok) {
+      if (response.status === 200) {
         console.log('Retiré des favoris natifs');
         return true;
       } else {

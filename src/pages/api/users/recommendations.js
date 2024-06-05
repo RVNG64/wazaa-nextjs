@@ -29,6 +29,10 @@ export default async function handler(req, res) {
   try {
     await checkAndUpdateCache();
 
+    if (!eventsCache) {
+      return res.status(503).send('Cache is initializing, please retry.');
+    }
+
     const user = await findUserOrOrganizer(userId);
     if (!user) {
       return res.status(404).send('Utilisateur non trouvé');
@@ -38,8 +42,6 @@ export default async function handler(req, res) {
 
     if (eventsCache && user.favEvents) {
       const userFavEventUuids = user.favEvents;
-
-      console.log('userFavEventUuids:', userFavEventUuids);
 
       const userFavoriteThemes = eventsCache
         .filter(event => userFavEventUuids.includes(getUuidFromUrl(event['@id'])))
@@ -56,8 +58,6 @@ export default async function handler(req, res) {
           }
           return [];
         });
-
-      console.log('userFavoriteThemes:', userFavoriteThemes);
 
       recommendedEvents = eventsCache
         .filter(event => event && event.hasTheme && !userFavEventUuids.includes(getUuidFromUrl(event['@id'])))
@@ -88,8 +88,6 @@ export default async function handler(req, res) {
 
       recommendedEvents = recommendedEvents.sort(() => 0.5 - Math.random()).slice(0, 12);
     }
-
-    console.log('Nombre d’événements recommandés:', recommendedEvents.length);
 
     res.json(recommendedEvents);
   } catch (error) {

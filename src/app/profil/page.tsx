@@ -2,7 +2,7 @@
 'use client';
 import React, { useState, useEffect, useContext, useCallback } from "react";
 import { usePathname, useRouter } from 'next/navigation';
-import axios from 'axios';
+import api from '../../utils/api';
 import { useDropzone } from 'react-dropzone';
 import * as yup from 'yup';
 import { getAuth, User, EmailAuthProvider, reauthenticateWithCredential, updatePassword, deleteUser } from 'firebase/auth';
@@ -73,7 +73,7 @@ const UserProfile = () => {
 
     const fetchUserProfile = async (firebaseId: string) => {
       try {
-        const response = await axios.get(`/api/users/${firebaseId}`);
+        const response = await api.get(`/api/users/${firebaseId}`);
         setUserProfile(response.data);
         setError(null);
       } catch (err: any) {
@@ -107,7 +107,7 @@ const UserProfile = () => {
     schema.validate(userProfile).then(async (data: any) => {
       // If the data is valid, send the request
       try {
-        const response = await axios.post(`/api/users/${userProfile?.firebaseId}`, data);
+        const response = await api.post(`/api/users/${userProfile?.firebaseId}`, data);
         console.log(response.data);
         setError(null);
       } catch (err:any) {
@@ -119,7 +119,7 @@ const UserProfile = () => {
       console.error(err);
       // You can also display the error message to the user here
     });
-    const response = await axios.post(`/api/users/${userProfile?.firebaseId}`, userProfile);
+    const response = await api.post(`/api/users/${userProfile?.firebaseId}`, userProfile);
     if (response.status === 200) {
       setShowConfirmation(true);
       setTimeout(() => setShowConfirmation(false), 3000);  // hide after 3 seconds
@@ -166,7 +166,7 @@ const UserProfile = () => {
 
           const token = await currentUser.getIdToken();
 
-          const response = await axios.delete(`/api/deleteUser/mongoDB/${currentUser.uid}`, {
+          const response = await api.delete(`/api/deleteUser/mongoDB/${currentUser.uid}`, {
             headers: {
               Authorization: `Bearer ${token}`
             }
@@ -212,7 +212,7 @@ const UserProfile = () => {
         if (userProfile && userProfile.profilePic) {
           public_id = userProfile.profilePic.split('/').pop()?.split('.')[0] ?? '';
           if (public_id) {
-            await axios.post(`/api/deleteProfilePic`, { public_id });
+            await api.post(`/api/deleteProfilePic`, { public_id });
           }
         }
 
@@ -220,7 +220,7 @@ const UserProfile = () => {
         const formData = new FormData();
         formData.append('file', file);
         if (currentUser) {
-          const response = await axios.post(`/api/uploadProfilePic/${currentUser.uid}`, formData, {
+          const response = await api.post(`/api/uploadProfilePic/${currentUser.uid}`, formData, {
             headers: {
               'Content-Type': 'multipart/form-data'
             }

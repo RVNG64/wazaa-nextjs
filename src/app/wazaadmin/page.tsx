@@ -2,7 +2,7 @@
 'use client';
 import React, { useEffect, useState, useContext, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import axios from 'axios';
+import api from '../../utils/api';
 import dynamic from 'next/dynamic';
 import { AuthContext } from '../../contexts/AuthProvider.client';
 import Swal from 'sweetalert2';
@@ -78,7 +78,7 @@ const AdminEvents = () => {
   const fetchPendingEvents = async () => {
     try {
       console.log('Fetching pending events...');
-      const response = await axios.get('/api/events/updateStatus'); // Mise à jour du chemin API
+      const response = await api.get('/api/events/updateStatus'); // Mise à jour du chemin API
       console.log('Pending events fetched:', response.data);
       setPendingEvents(response.data);
     } catch (error) {
@@ -104,7 +104,7 @@ const AdminEvents = () => {
       }).then(async (result) => {
         if (result.isConfirmed) {
           try {
-            await axios.put(`/api/events/updateStatus?eventId=${eventId}`, { validationStatus: newStatus }); // Mise à jour du chemin API
+            await api.put(`/api/events/updateStatus?eventId=${eventId}`, { validationStatus: newStatus }); // Mise à jour du chemin API
             fetchPendingEvents(); // Recharger la liste après la mise à jour
             Swal.fire('Mis à jour!', `L'événement a été ${action} avec succès.`, 'success');
           } catch (error) {

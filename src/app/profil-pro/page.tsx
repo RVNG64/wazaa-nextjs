@@ -2,7 +2,7 @@
 'use client';
 import React, { useState, useEffect, useContext, useCallback } from "react";
 import { usePathname, useRouter } from 'next/navigation';
-import axios from 'axios';
+import api from '../../utils/api';
 import { useDropzone } from 'react-dropzone';
 import * as yup from 'yup';
 import { getAuth, User, EmailAuthProvider, reauthenticateWithCredential, updatePassword, deleteUser } from 'firebase/auth';
@@ -113,7 +113,7 @@ const OrganizerProfile = () => {
 
     const fetchUserProfile = async (firebaseId: string) => {
       try {
-        const response = await axios.get(`/api/users/${firebaseId}`);
+        const response = await api.get(`/api/users/${firebaseId}`);
         console.log(response.data);
         setUserProfile(response.data);
         setError(null);
@@ -160,7 +160,7 @@ const OrganizerProfile = () => {
       // If the data is valid, send the request
       try {
         if (userProfile) {
-          const response = await axios.post(`/api/users/${userProfile?.firebaseId}`, userProfile);
+          const response = await api.post(`/api/users/${userProfile?.firebaseId}`, userProfile);
           console.log(response);
         }
         setError(null);
@@ -173,7 +173,7 @@ const OrganizerProfile = () => {
       console.error(err);
       // You can also display the error message to the user here
     });
-    const response = await axios.post(`/api/users/${userProfile?.firebaseId}`, userProfile);
+    const response = await api.post(`/api/users/${userProfile?.firebaseId}`, userProfile);
     if (response.status === 200) {
       setShowConfirmation(true);
       setTimeout(() => setShowConfirmation(false), 3000);  // hide after 3 seconds
@@ -265,7 +265,7 @@ const OrganizerProfile = () => {
         if (userProfile && userProfile.profilePic) {
           public_id = userProfile.profilePic.split('/').pop()?.split('.')[0] ?? '';
           if (public_id) {
-            await axios.post(`/api/deleteProfilePic`, { public_id });
+            await api.post(`/api/deleteProfilePic`, { public_id });
           }
         }
 
@@ -273,7 +273,7 @@ const OrganizerProfile = () => {
         const formData = new FormData();
         formData.append('file', file);
         if (currentUser) {
-          const response = await axios.post(`/api/uploadProfilePic/${currentUser.uid}`, formData, {
+          const response = await api.post(`/api/uploadProfilePic/${currentUser.uid}`, formData, {
             headers: {
               'Content-Type': 'multipart/form-data'
             }
