@@ -1,7 +1,7 @@
 // src/pages/api/users/recommendations.js
 import User from '../../../models/User';
 import Organizer from '../../../models/Organizer';
-import { checkAndUpdateCache, eventsCache } from '../../../cache';
+import { checkAndUpdateCache, getEventsCache } from '../../../cache';
 
 const getUuidFromUrl = (url) => {
   if (!url) return null;
@@ -29,7 +29,7 @@ export default async function handler(req, res) {
   try {
     await checkAndUpdateCache();
 
-    if (!eventsCache) {
+    if (!getEventsCache) {
       return res.status(503).send('Cache is initializing, please retry.');
     }
 
@@ -40,10 +40,10 @@ export default async function handler(req, res) {
 
     let recommendedEvents = [];
 
-    if (eventsCache && user.favEvents) {
+    if (getEventsCache && user.favEvents) {
       const userFavEventUuids = user.favEvents;
 
-      const userFavoriteThemes = eventsCache
+      const userFavoriteThemes = getEventsCache
         .filter(event => userFavEventUuids.includes(getUuidFromUrl(event['@id'])))
         .flatMap(event => {
           if (event && event.hasTheme) {
@@ -59,7 +59,7 @@ export default async function handler(req, res) {
           return [];
         });
 
-      recommendedEvents = eventsCache
+      recommendedEvents = getEventsCache
         .filter(event => event && event.hasTheme && !userFavEventUuids.includes(getUuidFromUrl(event['@id'])))
         .filter(event => event.hasTheme.some(theme => {
           const themeLabels = theme && theme['rdfs:label'] && theme['rdfs:label'].fr
@@ -69,7 +69,7 @@ export default async function handler(req, res) {
         }));
 
       if (userFavoriteThemes.length === 0) {
-        recommendedEvents = eventsCache
+        recommendedEvents = getEventsCache
           .filter(event => event.hasAudience && event.hasAudience.some(audience => ['Nationale', 'Régionale'].includes(audience['rdfs:label'].fr)))
           .filter(event => !userFavEventUuids.includes(getUuidFromUrl(event['@id'])));
       }

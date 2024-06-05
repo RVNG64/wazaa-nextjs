@@ -1,6 +1,6 @@
 // src/pages/api/events/search.js
 import { validationResult } from 'express-validator';
-import { checkAndUpdateCache, eventsCache } from '../../../cache';
+import { checkAndUpdateCache, getEventsCache } from '../../../cache';
 
 const sortByDateDescending = (a, b) => {
   const aStartDate = a['schema:startDate'] ? new Date(a['schema:startDate'][0]) : new Date(0);
@@ -19,7 +19,7 @@ export default async function handler(req, res) {
     // Vérifier et mettre à jour le cache si nécessaire
     await checkAndUpdateCache();
 
-    if (!eventsCache) {
+    if (!getEventsCache) {
       return res.status(503).json({ error: 'Cache is initializing, please retry.' });
     }
 
@@ -52,7 +52,7 @@ export default async function handler(req, res) {
       return true;
     };
 
-    const filteredEvents = eventsCache.filter(filterEvents);
+    const filteredEvents = getEventsCache.filter(filterEvents);
     const sortedEvents = filteredEvents.sort(sortByDateDescending);
 
     const limit = 10;
