@@ -1,7 +1,6 @@
-// src/pages/api/users/recommendations.js
 import User from '../../../models/User';
 import Organizer from '../../../models/Organizer';
-import { checkAndUpdateCache, getEventsCache } from '../../../cache';
+import { checkAndUpdateCacheBackground, getEventsCache, initializeCache } from '../../../cache';
 
 const getUuidFromUrl = (url) => {
   if (!url) return null;
@@ -9,27 +8,26 @@ const getUuidFromUrl = (url) => {
   return match ? match[1] : null;
 };
 
-// Fonction pour rechercher dans les collections User et Organizer
 const findUserOrOrganizer = async (userId) => {
-  let user = await User.findOne({ firebaseId: userId }).select('favEvents');
+  let user = await User.findOne({ firebaseId: userId }).select('favEvents').lean(); // Utilisation de lean() pour optimiser
   if (!user) {
-    user = await Organizer.findOne({ firebaseId: userId }).select('favEvents');
+    user = await Organizer.findOne({ firebaseId: userId }).select('favEvents').lean(); // Utilisation de lean() pour optimiser
   }
   return user;
 };
 
 export default async function handler(req, res) {
   const { userId } = req.query;
-
-  // Vérifier si userId est fourni
   if (!userId) {
     return res.status(400).json({ error: 'userId is required' });
   }
 
   try {
-    await checkAndUpdateCache();
+    await initializeCache();
+    checkAndUpdateCacheBackground();
 
-    if (!getEventsCache) {
+    const eventsCache = getEventsCache();
+    if (!eventsCache || eventsCache.length === 0) {
       return res.status(503).send('Cache is initializing, please retry.');
     }
 
@@ -39,11 +37,10 @@ export default async function handler(req, res) {
     }
 
     let recommendedEvents = [];
-
-    if (getEventsCache && user.favEvents) {
+    if (eventsCache && user.favEvents) {
       const userFavEventUuids = user.favEvents;
 
-      const userFavoriteThemes = getEventsCache
+      const userFavoriteThemes = eventsCache
         .filter(event => userFavEventUuids.includes(getUuidFromUrl(event['@id'])))
         .flatMap(event => {
           if (event && event.hasTheme) {
@@ -59,7 +56,7 @@ export default async function handler(req, res) {
           return [];
         });
 
-      recommendedEvents = getEventsCache
+      recommendedEvents = eventsCache
         .filter(event => event && event.hasTheme && !userFavEventUuids.includes(getUuidFromUrl(event['@id'])))
         .filter(event => event.hasTheme.some(theme => {
           const themeLabels = theme && theme['rdfs:label'] && theme['rdfs:label'].fr
@@ -69,22 +66,20 @@ export default async function handler(req, res) {
         }));
 
       if (userFavoriteThemes.length === 0) {
-        recommendedEvents = getEventsCache
+        recommendedEvents = eventsCache
           .filter(event => event.hasAudience && event.hasAudience.some(audience => ['Nationale', 'Régionale'].includes(audience['rdfs:label'].fr)))
           .filter(event => !userFavEventUuids.includes(getUuidFromUrl(event['@id'])));
       }
 
-      recommendedEvents = recommendedEvents.map(event => {
-        return {
-          id: event['@id'],
-          image: event?.['hasMainRepresentation']?.[0]?.['ebucore:hasRelatedResource']?.[0]?.['ebucore:locator'] || 'default-image-url',
-          title: event?.['rdfs:label']?.fr?.[0] || 'Titre non disponible',
-          startDate: event?.['schema:startDate']?.[0] || 'Date non disponible',
-          address: event?.['isLocatedAt']?.[0]?.['schema:address']?.[0]
-            ? `${event['isLocatedAt'][0]['schema:address'][0]['schema:streetAddress']?.[0] || ''}, ${event['isLocatedAt'][0]['schema:address'][0]['schema:postalCode'] || ''} ${event['isLocatedAt'][0]['schema:address'][0]['schema:addressLocality'] || ''}`
-            : 'Adresse non disponible'
-        };
-      });
+      recommendedEvents = recommendedEvents.map(event => ({
+        id: event['@id'],
+        image: event?.['hasMainRepresentation']?.[0]?.['ebucore:hasRelatedResource']?.[0]?.['ebucore:locator'] || 'default-image-url',
+        title: event?.['rdfs:label']?.fr?.[0] || 'Titre non disponible',
+        startDate: event?.['schema:startDate']?.[0] || 'Date non disponible',
+        address: event?.['isLocatedAt']?.[0]?.['schema:address']?.[0]
+          ? `${event['isLocatedAt'][0]['schema:address'][0]['schema:streetAddress']?.[0] || ''}, ${event['isLocatedAt'][0]['schema:address'][0]['schema:postalCode'] || ''} ${event['isLocatedAt'][0]['schema:address'][0]['schema:addressLocality'] || ''}`
+          : 'Adresse non disponible'
+      }));
 
       recommendedEvents = recommendedEvents.sort(() => 0.5 - Math.random()).slice(0, 12);
     }

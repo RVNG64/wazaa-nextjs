@@ -1,8 +1,7 @@
-// pages/api/users/favoritesJSON.js
 import dbConnect from '../../../utils/dbConnect';
 import User from '../../../models/User';
 import Organizer from '../../../models/Organizer';
-import { checkAndUpdateCache, getEventsCache } from '../../../cache';
+import { checkAndUpdateCacheBackground, getEventsCache, initializeCache } from '../../../cache';
 
 export default async function handler(req, res) {
   if (req.method !== 'GET') {
@@ -10,18 +9,15 @@ export default async function handler(req, res) {
   }
 
   try {
-    // Vérifier et mettre à jour le cache si nécessaire
-    await checkAndUpdateCache();
+    await initializeCache();
+    checkAndUpdateCacheBackground();
 
-    // Vérifier si le cache des événements est disponible
-    if (!getEventsCache) {
-      console.error('getEventsCache est null');
+    const eventsCache = getEventsCache();
+    if (!eventsCache || eventsCache.length === 0) {
       return res.status(503).send('Erreur serveur : Cache des événements non initialisé');
     }
 
     const { userId } = req.query;
-
-    // Vérifier si userId est fourni
     if (!userId) {
       return res.status(400).json({ error: 'userId is required' });
     }
@@ -36,8 +32,7 @@ export default async function handler(req, res) {
       }
     }
 
-    // Filtrer les événements favoris de l'utilisateur
-    const favoriteEvents = getEventsCache.filter(event =>
+    const favoriteEvents = eventsCache.filter(event =>
       user.favEvents.includes(event['@id'].split('/').pop())
     );
 

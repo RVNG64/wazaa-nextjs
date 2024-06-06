@@ -2,6 +2,7 @@
 'use client';
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { useRouter, usePathname, useParams } from 'next/navigation';
+import Head from 'next/head';
 import dynamic from 'next/dynamic';
 import api from '../../../../../utils/api';
 import { motion } from 'framer-motion';
@@ -436,7 +437,7 @@ const EventDetailsClient: React.FC<EventDetailsClientProps> = ({ eventId }) => {
 
   return (
     <>
-      {/*<Head>
+      <Head>
         <title>{eventName} | Wazaa </title>
         <meta name="description" content={`${eventDescription.substring(0, 150)}...`} />
         <link rel="canonical" href={canonicalUrl} />
@@ -458,7 +459,7 @@ const EventDetailsClient: React.FC<EventDetailsClientProps> = ({ eventId }) => {
         <meta name="twitter:description" content={`${eventDescription.substring(0, 150)}...`} />
         <meta name="twitter:image" content={eventImage} />
         <meta name="twitter:url" content={canonicalUrl} />
-      </Head> */}
+      </Head>
       <AnimatePresence>
         <div ref={topRef} className="event-details-container">
 

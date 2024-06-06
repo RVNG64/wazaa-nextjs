@@ -1,26 +1,20 @@
-import { checkAndUpdateCache, getEventsCache } from '../../../cache';
+import { checkAndUpdateCacheBackground, getEventsCache, initializeCache } from '../../../cache';
 
 export default async function handler(req, res) {
-  res.setHeader('Cache-Control', 'public, max-age=259200'); // Définit la durée de mise en cache du client à 3 jours
+  res.setHeader('Cache-Control', 'public, max-age=259200'); // Set client-side cache duration to 3 days
   console.log('Requête pour événement:', req.query);
 
   const { eventId } = req.query;
 
   try {
-    // Vérifier et mettre à jour le cache si nécessaire
-    await checkAndUpdateCache();
+    await initializeCache(); // Ensure the cache is initialized before continuing
+    checkAndUpdateCacheBackground(); // Background check and update
 
-    // Obtenir le cache mis à jour
     const eventsCache = getEventsCache();
-    console.log('Cache après mise à jour:', eventsCache ? 'disponible' : 'non disponible');
-
-    // Vérifier si le cache est disponible
     if (!eventsCache || eventsCache.length === 0) {
-      console.log('Cache non disponible après mise à jour');
-      return res.status(503).json({ error: 'Cache is initializing, please retry.' });
+      return res.status(503).json({ error: 'Cache is still initializing, please retry.' });
     }
 
-    // Rechercher l'événement par ID dans le cache
     const event = eventsCache.find(e => e['@id'].split('/').pop() === eventId);
 
     if (event) {
