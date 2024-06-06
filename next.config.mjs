@@ -18,6 +18,33 @@ const nextConfig = {
   },
   staticPageGenerationTimeout: 60,
   compress: true,
+  async redirects() {
+    return [
+      {
+        source: '/:path*',
+        has: [
+          {
+            type: 'header',
+            key: 'x-forwarded-proto',
+            value: 'http'
+          }
+        ],
+        permanent: true,
+        destination: 'https://www.wazaa.app/:path*'
+      },
+      {
+        source: '/:path*',
+        has: [
+          {
+            type: 'host',
+            value: 'wazaa.app'
+          }
+        ],
+        permanent: true,
+        destination: 'https://www.wazaa.app/:path*'
+      }
+    ];
+  },
   webpack(config, { isServer }) {
     // Commenter ou supprimer la configuration pour Preact
     /*

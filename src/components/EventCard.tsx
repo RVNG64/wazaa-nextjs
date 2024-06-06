@@ -27,9 +27,10 @@ const EventCard = ({ event, onCardClick }: { event: any; onCardClick: (event: an
 
   // Extraction des données en fonction du type d'événement
   const defaultImageUrl = 'https://res.cloudinary.com/dvzsvgucq/image/upload/v1693844552/hervemake_A_determined_business_owner_engaging_in_a_networking__4d7e7005-1d7f-4395-a9b6-d2bd94e12421_vdnels.png';
-  const image = isNativeEvent
+  const poster = isNativeEvent
     ? event.photoUrl || defaultImageUrl
     : event['hasMainRepresentation']?.[0]?.['ebucore:hasRelatedResource']?.[0]?.['ebucore:locator'] || defaultImageUrl;
+  const image = Array.isArray(poster) ? poster[0] : poster;
 
   const title = isNativeEvent
     ? event.name
@@ -56,7 +57,7 @@ const EventCard = ({ event, onCardClick }: { event: any; onCardClick: (event: an
 
       {image !== 'default-image-url' && (
         <div className="event-card_image-container">
-          <Image src={image} alt={title} className="event-image" width={300} height={200} />
+          <Image src={image} alt={title} className="event-image" width={300} height={200} style={{ width: '100%', height: '100%' }} />
         </div>
       )}
 

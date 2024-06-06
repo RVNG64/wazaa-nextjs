@@ -7,7 +7,7 @@ export const metadata = {
   openGraph: {
     title: 'Choix d\'inscription | WAZAA',
     description: "Choisissez le type de compte que vous souhaitez créer sur Wazaa et accédez à une multitude d'événements près de chez vous.",
-    url: 'https://www.wazaa.app/sign-up-choice',
+    url: 'https://www.wazaa.app/inscription-choice',
     images: [{ url: '/og-image.png' }],
     siteName: 'WAZAA',
     locale: 'fr_FR',
