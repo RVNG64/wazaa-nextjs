@@ -485,11 +485,13 @@ export default function Map() {
 
   return (
     <>
+      <div className="map-title">
+        <h1 className="map-title">WAZAA</h1><h2 className="map-title">, un monde d&apos;événements autour de vous</h2>
+      </div>
       <CategoryProvider onCategoryChange={handleCategoryChange}>
         <EventFilterBar />
       </CategoryProvider>
       <LoadingAnimation isLoading={isLoading} />
-      <h1 className="h1-visually-hidden">WAZAA - Un monde d&apos;événements autour de vous</h1>
       <ListViewToggle onToggle={toggleListView} />
       {isListViewVisible && (
         <>

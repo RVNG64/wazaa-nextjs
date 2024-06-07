@@ -45,7 +45,81 @@ const nextConfig = {
       }
     ];
   },
+  headers: async () => {
+    return [
+      {
+        source: '/(.*)', // This will apply the headers to all pages and static files
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable' // One year cache duration for static files
+          },
+          {
+            key: 'X-Robots-Tag',
+            value: 'noindex, nofollow'
+          },
+          {
+            key: 'TDM-Policy',
+            value: 'all-rights-reserved'
+          }
+        ]
+      },
+      {
+        source: '/_next/static/(.*)', // Cache for Next.js generated static files
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable' // One year cache duration for Next.js static files
+          }
+        ]
+      },
+      {
+        source: '/api/(.*)', // API caching
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=60' // Cache API responses for 1 minute
+          }
+        ]
+      },
+      {
+        source: '/static/(.*)', // Custom static files
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable' // One year cache duration for static files
+          }
+        ]
+      },
+      {
+        source: '/fonts/(.*)', // Fonts
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable' // One year cache duration for fonts
+          }
+        ]
+      }
+    ]
+  },
+
   webpack(config, { isServer }) {
+    config.module.rules.push({
+      test: /\.css$/,
+      exclude: /node_modules\/(?!react-datepicker|leaflet|react-leaflet-cluster)/, // Inclure les fichiers CSS de react-datepicker, leaflet, et react-leaflet-cluster
+      use: [
+        {
+          loader: 'style-loader',
+        },
+        {
+          loader: 'css-loader',
+          options: {
+            importLoaders: 1,
+          },
+        },
+      ],
+    });
+
     // Commenter ou supprimer la configuration pour Preact
     /*
     if (!isServer) {

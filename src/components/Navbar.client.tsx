@@ -6,11 +6,11 @@ import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 import '../utils/firebase';
 import api from '../utils/api';
 import ReactDatePicker from 'react-datepicker';
+import "react-datepicker/dist/react-datepicker.css";
 import { AuthContext } from '../contexts/AuthProvider.client';
 import { useSearch } from '../contexts/EventFilter';
 import { motion } from 'framer-motion';
 import LottieCalendarMobile from './lotties/LottieCalendarMobile';
-import "react-datepicker/dist/react-datepicker.css";
 import dynamic from 'next/dynamic';
 
 const Image = dynamic(() => import('next/image'), { ssr: false });
