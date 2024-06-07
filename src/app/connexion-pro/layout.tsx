@@ -3,10 +3,10 @@ import { ReactNode } from 'react';
 export async function generateMetadata() {
   return {
     title: 'Connexion PRO | WAZAA',
-    description: "Plongez dans un univers d'événements près de chez vous avec Wazaa ! Connectez-vous dès maintenant pour profiter de toutes les fonctionnalités.",
+    description: "Découvrez des événements près de chez vous ! Explorez des expériences uniques, musicales, culturelles et touristiques avec Wazaa !",
     openGraph: {
       title: "WAZAA - un monde d'événements autour de vous",
-      description: "Plongez dans un univers d'événements près de chez vous avec Wazaa ! Connectez-vous dès maintenant pour profiter de toutes les fonctionnalités.",
+      description: "Découvrez des événements près de chez vous ! Explorez des expériences uniques, musicales, culturelles et touristiques avec Wazaa !",
       url: 'https://www.wazaa.app/connexion',
       images: [{ url: '/og-image.png' }],
       siteName: 'WAZAA',
@@ -18,7 +18,7 @@ export async function generateMetadata() {
       site: '@wazaa_app',
       creator: '@wazaa_app',
       title: "WAZAA - un monde d'événements autour de vous",
-      description: "Plongez dans un univers d'événements près de chez vous avec Wazaa ! Connectez-vous dès maintenant pour profiter de toutes les fonctionnalités.",
+      description: "Découvrez des événements près de chez vous ! Explorez des expériences uniques, musicales, culturelles et touristiques avec Wazaa !",
       images: ['/og-image.png'],
     },
   };

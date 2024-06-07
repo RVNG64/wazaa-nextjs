@@ -55,20 +55,20 @@ import '../styles/welcomeScreen.css';
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.wazaa.app'),
   title: "WAZAA - Un monde d'événements autour de vous",
-  description: "Plongez dans un univers d'événements près de chez vous ! Explorez dès maintenant une mosaïque d'expériences uniques, musicales, culturelles, touristiques et bien d'autres avec Wazaa !",
+  description: "Découvrez des événements près de chez vous ! Explorez des expériences uniques, musicales, culturelles et touristiques avec Wazaa !",
   keywords: "événements, sorties, loisirs, culture, musique, tourisme, Wazaa, Bordeaux, Gironde, Sud-Ouest, France, Pays Basque, Landes, Pyrénées-Atlantiques",
   openGraph: {
     type: 'website',
     url: 'https://www.wazaa.app/',
     title: "WAZAA - Un monde d'événements autour de vous",
-    description: "Plongez dans un univers d'événements près de chez vous ! Explorez dès maintenant une mosaïque d'expériences uniques, musicales, culturelles, touristiques et bien d'autres avec Wazaa !",
+    description: "Découvrez des événements près de chez vous ! Explorez des expériences uniques, musicales, culturelles et touristiques avec Wazaa !",
     images: [{ url: '/og-image.png', width: 800, height: 600, alt: 'Og Image Alt' }]
   },
   twitter: {
     card: 'summary_large_image',
     site: '@twitterhandle',
     title: "WAZAA - Un monde d'événements autour de vous",
-    description: "Plongez dans un univers d'événements près de chez vous ! Explorez dès maintenant une mosaïque d'expériences uniques, musicales, culturelles, touristiques et bien d'autres avec Wazaa !",
+    description: "Découvrez des événements près de chez vous ! Explorez des expériences uniques, musicales, culturelles et touristiques avec Wazaa !",
     images: { url: '/og-image.png', width: 800, height: 600, alt: 'Twitter Image Alt' }
   }
 };
@@ -103,6 +103,8 @@ export default function RootLayout({
     <html lang="fr">
       <head>
         <meta charSet="utf-8" />
+        <meta name="robots" content="noindex,nofollow" />
+        <meta name="tdm-policy" content="all-rights-reserved" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="canonical" href="https://www.wazaa.app/" />
@@ -114,7 +116,7 @@ export default function RootLayout({
         <link rel="stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
         <link rel="" as="image" href="https://api.mapbox.com/styles/v1/example/tiles/256/0/0/0?access_token=your_token" crossOrigin="anonymous" />
         <meta name="google-site-verification" content="rxFdv_sLMmx55m5kcOxYzhll02GuFHsgKKZuxPmkd8Q" />
-        <Script strategy="lazyOnload" id="hotjar">
+        <Script async strategy="lazyOnload" id="hotjar">
           {`
             (function(h,o,t,j,a,r){
               h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
@@ -126,6 +128,25 @@ export default function RootLayout({
             })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
           `}
         </Script>
+        <Script
+          id="google-tag-manager"
+          type="application/ld+json"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              "name": "Wazaa",
+              "url": "https://www.wazaa.app",
+              "logo": "https://www.wazaa.app/logo192.png",
+              "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+33-6-65-51-19-93",
+                "contactType": "Customer Service"
+              }
+            })
+          }}
+        />
       </head>
       <body>
         <LayoutClient>

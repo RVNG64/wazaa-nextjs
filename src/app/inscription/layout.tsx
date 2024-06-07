@@ -2,11 +2,11 @@ import { ReactNode } from 'react';
 
 export const metadata = {
   title: 'Inscription | WAZAA',
-  description: "Plongez dans un univers d'événements près de chez vous avec Wazaa ! Inscrivez-vous dès maintenant pour profiter de toutes les fonctionnalités.",
+  description: "Découvrez des événements près de chez vous ! Explorez des expériences uniques, musicales, culturelles et touristiques avec Wazaa !",
   keywords: 'événements, inscription, loisirs, culture, musique, tourisme, Wazaa, Bordeaux, Gironde, Sud-Ouest, France, Pays Basque, Landes, Pyrénées-Atlantiques',
   openGraph: {
     title: 'Inscription | WAZAA',
-    description: "Plongez dans un univers d'événements près de chez vous avec Wazaa ! Inscrivez-vous dès maintenant pour profiter de toutes les fonctionnalités.",
+    description: "Découvrez des événements près de chez vous ! Explorez des expériences uniques, musicales, culturelles et touristiques avec Wazaa !",
     url: 'https://www.wazaa.app/inscription',
     images: [{ url: '/og-image.png' }],
     siteName: 'WAZAA',
@@ -18,7 +18,7 @@ export const metadata = {
     site: '@wazaa_app',
     creator: '@wazaa_app',
     title: 'Inscription | WAZAA',
-    description: "Plongez dans un univers d'événements près de chez vous avec Wazaa ! Inscrivez-vous dès maintenant pour profiter de toutes les fonctionnalités.",
+    description: "Découvrez des événements près de chez vous ! Explorez des expériences uniques, musicales, culturelles et touristiques avec Wazaa !",
     images: ['/og-image.png'],
   },
 };

@@ -385,7 +385,7 @@ const EventDetailsMapPopup = ({ selectedPoi, setShowDetails }: EventDetailsMapPo
 
           {poiImage && (
             <div className="popup-details_image-container">
-              <Image src={poiImage} alt={poiName} className="popup-details_image" width={696} height={600} />
+              <Image src={poiImage} alt={poiName} className="popup-details_image" width={696} height={600} layout='responsive' />
               <button onClick={handleCloseDetails} className="popup-details_close-btn">
                 <i className="fas fa-times"></i> {/* Icône de fermeture */}
               </button>
