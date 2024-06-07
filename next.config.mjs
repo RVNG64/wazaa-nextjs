@@ -106,7 +106,7 @@ const nextConfig = {
   webpack(config, { isServer }) {
     config.module.rules.push({
       test: /\.css$/,
-      exclude: /node_modules\/(?!react-datepicker|leaflet|react-leaflet-cluster)/, // Inclure les fichiers CSS de react-datepicker, leaflet, et react-leaflet-cluster
+      exclude: /node_modules\/(?!react-datepicker|leaflet|react-leaflet-cluster|flatpickr)/, // Inclure les fichiers CSS de react-datepicker, leaflet, react-leaflet-cluster, et flatpickr
       use: [
         {
           loader: 'style-loader',
