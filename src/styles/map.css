@@ -8,10 +8,9 @@
   overflow: hidden;
 }
 
-.map-title {
+.map-title-container {
   display: flex;
   justify-content: center;
-  font-size: 1rem !important;
   font-weight: bold;
   background-color: #202020;
   color: white;
@@ -20,6 +19,7 @@
 }
 
 .map-title h1, .map-title h2 {
+  font-size: 1rem !important;
   margin: 0;
   padding: 0;
 }

@@ -56,7 +56,7 @@ const Apropos: React.FC = () => {
           </video>
           <div className="about_hero-overlay"></div>
           <div className="about_hero-text">
-            <h1 className="about_hero-title">Live and spread the WOW*</h1>
+            <h1 className="about_hero-title">WAZAA - Live and spread the WOW*</h1>
             <p className="about_hero-title-translation">*Nous existons pour vivre et partager des moments d&apos;émerveillement</p>
           </div>
         </div>
