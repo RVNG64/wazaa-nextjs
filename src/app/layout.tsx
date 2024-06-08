@@ -103,7 +103,6 @@ export default function RootLayout({
     <html lang="fr">
       <head>
         <meta charSet="utf-8" />
-        <meta name="robots" content="noindex,nofollow" />
         <meta name="tdm-policy" content="all-rights-reserved" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
