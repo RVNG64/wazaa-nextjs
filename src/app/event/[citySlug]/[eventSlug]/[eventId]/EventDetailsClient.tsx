@@ -491,13 +491,13 @@ const EventDetailsClient: React.FC<EventDetailsClientProps> = ({ eventId }) => {
               variants={themesContainerVariant}
             >
               {eventThemes.split(',').map((theme: string, index: number) => (
-                <motion.span
+                <motion.h2
                   key={index}
                   className="popup-details_theme-tag"
                   variants={themeTagVariant}
                 >
                   #{theme.trim()}
-                </motion.span>
+                </motion.h2>
               ))}
             </motion.div>
 
