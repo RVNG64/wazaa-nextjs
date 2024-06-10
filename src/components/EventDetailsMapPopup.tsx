@@ -139,6 +139,14 @@ const EventDetailsMapPopup = ({ selectedPoi, setShowDetails }: EventDetailsMapPo
     }
   };
 
+  const handleCloseDetails = (event: React.MouseEvent) => {
+    event.stopPropagation();
+    setShowDetails(false);
+    if (window.history.state && window.history.state.eventPopup) {
+      window.history.back();
+    }
+  };
+
   const refreshFavorites = async () => {
     const userId = auth.currentUser?.uid;
     if (userId) {
@@ -305,14 +313,6 @@ const EventDetailsMapPopup = ({ selectedPoi, setShowDetails }: EventDetailsMapPo
     exit: { opacity: 0, scale: 0.9 }
   };
 
-  const handleCloseDetails = (event: React.MouseEvent) => {
-    event.stopPropagation();
-    setShowDetails(false);
-    if (window.history.state && window.history.state.eventPopup) {
-      window.history.back();
-    }
-  };
-
   const addToFavorites = async (eventId: string): Promise<boolean> => {
     if (!auth.currentUser || !auth.currentUser.uid) {
       console.error("Utilisateur non connecté");
@@ -385,7 +385,7 @@ const EventDetailsMapPopup = ({ selectedPoi, setShowDetails }: EventDetailsMapPo
 
           {poiImage && (
             <div className="popup-details_image-container">
-              <Image src={poiImage} alt={poiName} className="popup-details_image" width={696} height={600} layout='responsive' />
+              <Image src={poiImage} alt={poiName} className="popup-details_image" width={696} height={600} />
               <button onClick={handleCloseDetails} className="popup-details_close-btn">
                 <i className="fas fa-times"></i> {/* Icône de fermeture */}
               </button>

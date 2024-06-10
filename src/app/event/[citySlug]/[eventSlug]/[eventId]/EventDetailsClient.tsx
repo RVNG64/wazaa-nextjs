@@ -608,9 +608,9 @@ const EventDetailsClient: React.FC<EventDetailsClientProps> = ({ eventId }) => {
               </div>
             </motion.div>
           </div>
-          <button onClick={handleBackToMap} className="back-to-map-btn">
+          {/* <button onClick={handleBackToMap} className="back-to-map-btn">
             <i className="fas fa-arrow-left"></i> Retour à la carte
-          </button>
+          </button> */}
         </div>
       </AnimatePresence>
       <MobileMenu />

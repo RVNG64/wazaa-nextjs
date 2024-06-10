@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 // src/app/layout.tsx
 import type { Metadata } from "next";
 import Script from "next/script";
