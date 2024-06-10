@@ -1,6 +1,6 @@
 // src/components/LeafletMap.tsx
 'use client';
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { POI, useEvents } from '../contexts/EventContext';
 import { NativeEvent, useNativeEvents } from '../contexts/NativeEventContext';
 import { usePathname } from 'next/navigation';
@@ -43,7 +43,9 @@ const mapMarker = new L.Icon({
 });
 
 export default function Map() {
-  const position: [number, number] = [43.4833, -1.4833]; // Coordonnées par défaut
+  console.log("Map component rendered.");
+
+  const position: [number, number] = useMemo(() => [43.4833, -1.4833], []); // Coordonnées par défaut
   const [selectedPoi, setSelectedPoi] = useState<POI | null>(null);
   const [selectedNativeEvent, setSelectedNativeEvent] = useState<NativeEvent | null>(null);
   const [showDetails, setShowDetails] = useState(false);
@@ -59,6 +61,26 @@ export default function Map() {
   const topOfPopup = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
 
+  useEffect(() => {
+    console.log("Current state: ", {
+      selectedPoi,
+      selectedNativeEvent,
+      showDetails,
+      isLoading,
+      isListViewVisible,
+      activeCategory,
+      filteredEvents
+    });
+  }, [
+    selectedPoi,
+    selectedNativeEvent,
+    showDetails,
+    isLoading,
+    isListViewVisible,
+    activeCategory,
+    filteredEvents
+  ]);
+
   // Met à jour les détails de l'événement en fonction de l'URL
   useEffect(() => {
     if (location) {
@@ -67,7 +89,7 @@ export default function Map() {
       if (eventId) {
         // Vérifier si l'événement existe et ouvrir la popup
         const event = events.find(e => e['@id'].includes(eventId));
-        if (event) {
+        if (event && selectedPoi !== event) { // Ajouter cette vérification
           setSelectedPoi(event);
           setShowDetails(true);
         }
@@ -76,23 +98,36 @@ export default function Map() {
     }
   }, [location, events]);
 
+  // Ferme les détails de l'événement
+  const handleCloseDetails = useCallback((event: React.MouseEvent) => {
+    console.log("handleCloseDetails called in Map component.");
+    event.stopPropagation();
+    if (showDetails) { // Ajouter cette vérification
+      setShowDetails(false);
+      if (window.history.state && window.history.state.eventPopup) {
+        console.log("Navigating back in history in Map component.");
+        window.history.back();
+      }
+    }
+  }, [showDetails]);
+
   // Ferme les détails de l'événement si l'utilisateur clique sur le bouton "Retour"
   useEffect(() => {
+    console.log("useEffect for handleOutsideClick is called in Map component.");
+
     const handleOutsideClick = (event: MouseEvent) => {
-      // Vérifier si topOfPopup.current n'est pas null avant de l'utiliser
       if (showDetails && topOfPopup.current && !topOfPopup.current.contains(event.target as Node)) {
+        console.log("Outside click detected, closing details in Map component.");
         handleCloseDetails(event as unknown as React.MouseEvent);
       }
     };
 
-    // Ajouter l'écouteur d'événement au document
     document.addEventListener('mousedown', handleOutsideClick);
 
     return () => {
-      // Nettoyer l'écouteur d'événement
       document.removeEventListener('mousedown', handleOutsideClick);
     };
-  }, [showDetails, topOfPopup]);
+  }, [showDetails]);
 
   // Déclencheur pour fermer les détails de l'événement si l'URL change
   useEffect(() => {
@@ -156,7 +191,7 @@ export default function Map() {
   };
 
   // Gestion de l'événement de clic sur le marqueur natif
-  const handleNativeMarkerClick = (nativeEvent: NativeEvent) => {
+  const handleNativeMarkerClick = useCallback((nativeEvent: NativeEvent) => {
     const eventName = nativeEvent.name;
     const eventId = nativeEvent.eventID;
     const eventSlug = createEventSlug(eventName);
@@ -166,7 +201,7 @@ export default function Map() {
     window.history.pushState({ eventPopup: true }, '', `/events/${citySlug}/${eventSlug}/${eventId}`);
     setSelectedNativeEvent(nativeEvent);
     setShowDetails(true);
-  }
+  }, []);
 
   // Centrer la carte sur le marqueur POI
   const centerMapOnMarker = (poi: POI) => {
@@ -190,7 +225,7 @@ export default function Map() {
   };
 
   // Gestion de l'événement de clic sur le marqueur
-  const handleMarkerClick = (poi: POI) => {
+  const handleMarkerClick = useCallback((poi: POI) => {
     const eventName = poi['rdfs:label']?.fr?.[0] || '';
     const eventId = poi['@id'].split('/').pop();
     const eventSlug = createEventSlug(eventName);
@@ -200,24 +235,14 @@ export default function Map() {
     window.history.pushState({ eventPopup: true }, '', `/event/${citySlug}/${eventSlug}/${eventId}`);
     setSelectedPoi(poi);
     setShowDetails(true);
-  };
+  }, [createEventSlug]);
 
   //
   const toggleListView = () => {
     setIsListViewVisible(!isListViewVisible);
   };
 
-  // Ferme les détails de l'événement
-  const handleCloseDetails = (event: React.MouseEvent) => {
-    event.stopPropagation();
-    setShowDetails(false);
-    // window.history.back();
-    if (window.history.state && window.history.state.eventPopup) {
-      window.history.back();
-    }
-  };
-
-  const updateSelectedEvent = (event: POI | NativeEvent) => {
+  const updateSelectedEvent = useCallback((event: POI | NativeEvent) => {
     if ('@id' in event) { // Si c'est un POI
       const eventName = event['rdfs:label']?.fr?.[0] || '';
       const eventId = event['@id'].split('/').pop();
@@ -239,7 +264,7 @@ export default function Map() {
       setSelectedNativeEvent(event);
       setShowDetails(true);
     }
-  };
+  }, []);
 
   const isEventInPeriod = (poi: POI, dateDebut: Date, dateFin: Date) => {
     const startDate = poi['takesPlaceAt']?.[0]?.['startDate'] ? new Date(poi['takesPlaceAt'][0]['startDate']) : new Date();
@@ -303,8 +328,8 @@ export default function Map() {
   }, [searchStartDate, searchEndDate]);
 
   // Affiche les dates formatées dans DateDisplay
-  const formattedStartDate = new Date(startDate).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' });
-  const formattedEndDate = new Date(endDate).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' });
+  const formattedStartDate = useMemo(() => new Date(startDate).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' }), [startDate]);
+  const formattedEndDate = useMemo(() => new Date(endDate).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' }), [endDate]);
 
   // Convertit une date au format 'YYYY-MM-DD'
   const formatDate = (date: string) => {
@@ -485,10 +510,10 @@ export default function Map() {
 
   return (
     <>
-      <div className="map-title-container">
-        <h1>WAZAA</h1>
-        <h2>, un monde d&apos;événements autour de vous</h2>
-      </div>
+      <header className="map-title-container">
+        <h1 className="map-title">WAZAA</h1>
+        <h2 className="map-title">, un monde d&apos;événements autour de vous</h2>
+      </header>
       <CategoryProvider onCategoryChange={handleCategoryChange}>
         <EventFilterBar />
       </CategoryProvider>

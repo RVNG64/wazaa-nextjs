@@ -1,5 +1,5 @@
 // src/app/page.tsx
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import LeafletMap from '../components/LeafletMap';
 /* import { initializeCache, eventsCache } from '../cache';
 

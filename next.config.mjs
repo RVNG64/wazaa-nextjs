@@ -55,10 +55,6 @@ const nextConfig = {
             value: 'public, max-age=31536000, immutable' // One year cache duration for static files
           },
           {
-            key: 'X-Robots-Tag',
-            value: 'noindex, nofollow'
-          },
-          {
             key: 'TDM-Policy',
             value: 'all-rights-reserved'
           }

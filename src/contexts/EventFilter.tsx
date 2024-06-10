@@ -1,4 +1,4 @@
-// SearchContext.tsx
+// EventFilter.tsx
 import React, { createContext, useState, useContext } from 'react';
 
 interface SearchContextType {
@@ -38,6 +38,7 @@ export const SearchProvider: React.FC<SearchProviderProps> = ({ children }) => {
     </SearchContext.Provider>
   );
 };
+
 
 
 /* import React, { useState } from 'react';
