@@ -24,7 +24,7 @@ const NewEvents = () => {
   const [eventType, setEventType] = useState('');
   const [loggedIn, setLoggedIn] = useState(false);
   const animationData = 'https://res.cloudinary.com/dvzsvgucq/raw/upload/v1716627156/Animation_-_1708647580453_oarpqk.json';
-  const calendarData = 'https://res.cloudinary.com/dvzsvgucq/raw/upload/v1716627386/Calendar_-_1712091697562_amlidv.json';
+  const calendarData = 'https://res.cloudinary.com/dvzsvgucq/raw/upload/v1719267028/Animation_-_1708683332032_nhte5z.json';
   const [, setCurrentAnimation] = useState<any>(animationData);
   const [screenAnimation, setScreenAnimation] = useState('screen-start');
   const [showTooltip, setShowTooltip] = useState<string | null>(null);

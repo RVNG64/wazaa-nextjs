@@ -19,7 +19,6 @@ const Marker = dynamic(() => import('react-leaflet').then(mod => mod.Marker), { 
 const Popup = dynamic(() => import('react-leaflet').then(mod => mod.Popup), { ssr: false });
 const MarkerClusterGroup = dynamic(() => import('react-leaflet-cluster'), { ssr: false });
 const NativeMapDetailsPopup = dynamic(() => import('../components/NativeMapDetailsPopup.client'), { ssr: false });
-const EventDetails = dynamic(() => import('../app/event/[citySlug]/[eventSlug]/[eventId]/page'), { ssr: false });
 const LoadingAnimation = dynamic(() => import('../components/WazaaLoading'), { ssr: false });
 const ListViewToggle = dynamic(() => import('../components/ListToggleView'), { ssr: false });
 const ListView = dynamic(() => import('../components/ListView'), { ssr: false });
@@ -58,28 +57,35 @@ export default function Map() {
   const [, setCurrentPath] = useState(location);
   const { events } = useEvents();
   const { nativeEvents } = useNativeEvents();
+  const [previousUrl, setPreviousUrl] = useState<string | null>(null);
+  const listViewRef = useRef<HTMLDivElement>(null);
+  const listViewToggleRef = useRef<HTMLDivElement>(null);
+  const detailPopupRef = useRef<HTMLDivElement>(null);
   const topOfPopup = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
 
+  // Gérer la fermeture de la vue liste lorsqu'on clique en dehors de la popup ou du bouton de bascule
   useEffect(() => {
-    console.log("Current state: ", {
-      selectedPoi,
-      selectedNativeEvent,
-      showDetails,
-      isLoading,
-      isListViewVisible,
-      activeCategory,
-      filteredEvents
-    });
-  }, [
-    selectedPoi,
-    selectedNativeEvent,
-    showDetails,
-    isLoading,
-    isListViewVisible,
-    activeCategory,
-    filteredEvents
-  ]);
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        (detailPopupRef.current && detailPopupRef.current.contains(event.target as Node)) ||
+        (listViewToggleRef.current && listViewToggleRef.current.contains(event.target as Node)) ||
+        (listViewRef.current && listViewRef.current.contains(event.target as Node))
+      ) {
+        // Ne pas fermer si on clique à l'intérieur de la popup de détails, sur le bouton de basculement ou à l'intérieur de la vue liste
+        return;
+      }
+      // Fermer la vue liste et les détails
+      setShowDetails(false);
+      setIsListViewVisible(false);
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showDetails, isListViewVisible]);
 
   // Met à jour les détails de l'événement en fonction de l'URL
   useEffect(() => {
@@ -96,13 +102,13 @@ export default function Map() {
       }
       setCurrentPath(path);
     }
-  }, [location, events]);
+  }, [location, events, selectedPoi]);
 
   // Ferme les détails de l'événement
   const handleCloseDetails = useCallback((event: React.MouseEvent) => {
     console.log("handleCloseDetails called in Map component.");
     event.stopPropagation();
-    if (showDetails) { // Ajouter cette vérification
+    if (showDetails) {
       setShowDetails(false);
       if (window.history.state && window.history.state.eventPopup) {
         console.log("Navigating back in history in Map component.");
@@ -127,7 +133,7 @@ export default function Map() {
     return () => {
       document.removeEventListener('mousedown', handleOutsideClick);
     };
-  }, [showDetails]);
+  }, [handleCloseDetails, showDetails]);
 
   // Déclencheur pour fermer les détails de l'événement si l'URL change
   useEffect(() => {
@@ -144,7 +150,7 @@ export default function Map() {
   }, [showDetails]);
 
   // Formatage des lettres accentuées pour les URL
-  const removeAccents = (str: string) => {
+  const removeAccents = useCallback((str: string) => {
     const accents =
       'ÀÁÂÃÄÅàáâãäåÒÓÔÕÖØòóôõöøÈÉÊËèéêëÇçÌÍÎÏìíîïÙÚÛÜùúûüÿÑñ';
     const accentsOut =
@@ -154,17 +160,17 @@ export default function Map() {
       const accentIndex = accents.indexOf(letter);
       return accentIndex !== -1 ? accentsOut[accentIndex] : letter;
     }).join('');
-  };
+  }, []);
 
   // Création d'un slug pour l'événement
-  const createEventSlug = (eventName: string) => {
+  const createEventSlug = useCallback((eventName: string) => {
     const noAccents = removeAccents(eventName);
     return noAccents
       .toLowerCase()
       .replace(/\s+/g, '-')
       .replace(/[^a-z0-9-]/g, '')
       .replace(/--+/g, '-');
-  };
+  }, [removeAccents]);
 
   // Centrer la carte sur le marqueur natif
   const centerMapOnNativeMarker = (nativeEvent: NativeEvent) => {
@@ -198,10 +204,13 @@ export default function Map() {
     const city = nativeEvent.location?.city;
     const citySlug = city ? createEventSlug(city) : 'evenement';
 
-    window.history.pushState({ eventPopup: true }, '', `/events/${citySlug}/${eventSlug}/${eventId}`);
+    // Utiliser window.history.pushState uniquement si la vue liste n'est pas visible
+    if (!isListViewVisible) {
+      window.history.pushState({ eventPopup: true }, '', `/events/${citySlug}/${eventSlug}/${eventId}`);
+    }
     setSelectedNativeEvent(nativeEvent);
     setShowDetails(true);
-  }, []);
+  }, [createEventSlug, isListViewVisible]);
 
   // Centrer la carte sur le marqueur POI
   const centerMapOnMarker = (poi: POI) => {
@@ -232,35 +241,24 @@ export default function Map() {
     const city = poi.isLocatedAt[0]['schema:address']?.[0]['schema:addressLocality'];
     const citySlug = city ? createEventSlug(city) : 'evenement';
 
-    window.history.pushState({ eventPopup: true }, '', `/event/${citySlug}/${eventSlug}/${eventId}`);
+    // Utiliser window.history.pushState uniquement si la vue liste n'est pas visible
+    if (!isListViewVisible) {
+      window.history.pushState({ eventPopup: true }, '', `/event/${citySlug}/${eventSlug}/${eventId}`);
+    }
     setSelectedPoi(poi);
     setShowDetails(true);
-  }, [createEventSlug]);
+  }, [createEventSlug, isListViewVisible]);
 
-  //
-  const toggleListView = () => {
-    setIsListViewVisible(!isListViewVisible);
-  };
+  // Basculer entre la vue liste et la vue carte
+  const toggleListView = useCallback((isListView: boolean) => {
+    setIsListViewVisible(isListView);
+  }, []);
 
   const updateSelectedEvent = useCallback((event: POI | NativeEvent) => {
     if ('@id' in event) { // Si c'est un POI
-      const eventName = event['rdfs:label']?.fr?.[0] || '';
-      const eventId = event['@id'].split('/').pop();
-      const eventSlug = createEventSlug(eventName);
-      const city = event.isLocatedAt[0]['schema:address']?.[0]['schema:addressLocality'];
-      const citySlug = city ? createEventSlug(city) : 'evenement';
-
-      window.history.pushState({}, '', `/event/${citySlug}/${eventSlug}/${eventId}`);
       setSelectedPoi(event);
       setShowDetails(true);
     } else { // Si c'est un NativeEvent
-      const eventName = event.name;
-      const eventId = event.eventID;
-      const eventSlug = createEventSlug(eventName);
-      const city = event.location?.city;
-      const citySlug = city ? createEventSlug(city) : 'evenement';
-
-      window.history.pushState({}, '', `/events/${citySlug}/${eventSlug}/${eventId}`);
       setSelectedNativeEvent(event);
       setShowDetails(true);
     }
@@ -518,15 +516,18 @@ export default function Map() {
         <EventFilterBar />
       </CategoryProvider>
       <LoadingAnimation isLoading={isLoading} />
-      <ListViewToggle onToggle={toggleListView} />
+      <ListViewToggle onToggle={toggleListView} ref={listViewToggleRef} />
       {isListViewVisible && (
         <>
           <div className="list-item_overlay"></div>
-          <ListView
-            isVisible={isListViewVisible}
-            events={poisFiltres}
-            nativeEvents={filteredNativeEvents}
-            onEventClick={updateSelectedEvent} />
+          <div ref={listViewRef}>
+            <ListView
+              isVisible={isListViewVisible}
+              events={poisFiltres}
+              nativeEvents={filteredNativeEvents}
+              onEventClick={updateSelectedEvent}
+            />
+          </div>
         </>
       )}
       <SideMenu />
@@ -534,7 +535,7 @@ export default function Map() {
 
         <MapContainer
           center={position}
-          zoom={12}
+          zoom={11}
           ref={mapRef}
           className="map-container"
         >
@@ -657,21 +658,23 @@ export default function Map() {
         </MapContainer>
         <MobileMenu toggleListView={toggleListView} />
         {showDetails && selectedPoi && (
-          <EventDetailsMapPopup
-            selectedPoi={selectedPoi}
-            setShowDetails={setShowDetails}
-          />
+          <div ref={detailPopupRef}> {/* Ajout de la référence */}
+            <EventDetailsMapPopup
+              selectedPoi={selectedPoi}
+              setShowDetails={setShowDetails}
+              isListViewVisible={isListViewVisible}
+            />
+          </div>
         )}
         {showDetails && selectedNativeEvent && (
-          <NativeMapDetailsPopup
-            eventData={selectedNativeEvent}
-            isNativeMapDetailsPopup={showDetails}
-            onClose={() => setShowDetails(false)}
-            onResetSelectedEvent={() => setSelectedNativeEvent(null)}
-          />
-        )}
-        {showDetails && selectedPoi && (
-          <EventDetails/>
+          <div ref={detailPopupRef}> {/* Ajout de la référence */}
+            <NativeMapDetailsPopup
+              eventData={selectedNativeEvent}
+              isNativeMapDetailsPopup={showDetails}
+              onClose={() => setShowDetails(false)}
+              onResetSelectedEvent={() => setSelectedNativeEvent(null)}
+            />
+          </div>
         )}
     </>
   );

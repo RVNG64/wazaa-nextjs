@@ -15,9 +15,10 @@ const AnimatePresence = dynamic(() => import('framer-motion').then(mod => mod.An
 type EventDetailsMapPopupProps = {
   selectedPoi: POI | null;
   setShowDetails: React.Dispatch<React.SetStateAction<boolean>>;
+  isListViewVisible: boolean;
 };
 
-const EventDetailsMapPopup = ({ selectedPoi, setShowDetails }: EventDetailsMapPopupProps) => {
+const EventDetailsMapPopup = ({ selectedPoi, setShowDetails, isListViewVisible }: EventDetailsMapPopupProps) => {
   const [showSharePopup, setShowSharePopup] = useState(false);
   const [showShareConfirmation, setShowShareConfirmation] = useState(false);
   const [showConnectAlert, setShowConnectAlert] = useState(false);
@@ -144,6 +145,8 @@ const EventDetailsMapPopup = ({ selectedPoi, setShowDetails }: EventDetailsMapPo
     setShowDetails(false);
     if (window.history.state && window.history.state.eventPopup) {
       window.history.back();
+    } else if (isListViewVisible) {
+      window.history.pushState({}, '', '/'); // Revenir à l'URL de la page d'accueil
     }
   };
 

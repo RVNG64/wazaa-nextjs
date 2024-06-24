@@ -8,7 +8,7 @@ import dynamic from 'next/dynamic';
 const ContactPopup = dynamic(() => import('./ContactPopup'), { ssr: false });
 const LoginRequiredPopup = dynamic(() => import('./LoginRequiredPopup'), { ssr: false });
 
-const MobileMenu = ({ toggleListView: parentToggleListView }: { toggleListView?: () => void }) => {
+const MobileMenu = ({ toggleListView: parentToggleListView }: { toggleListView?: (isListView: boolean) => void }) => {
   const [isVisible, setIsVisible] = useState(window.innerWidth < 576);
   const [isNearBottom, setIsNearBottom] = useState(false);
   const [isListViewActive, setIsListViewActive] = useState(false);
@@ -69,9 +69,10 @@ const MobileMenu = ({ toggleListView: parentToggleListView }: { toggleListView?:
   };
 
   const toggleListView = () => {
-    setIsListViewActive(!isListViewActive);
-    parentToggleListView?.();
-  }
+    const newIsListViewActive = !isListViewActive;
+    setIsListViewActive(newIsListViewActive);
+    parentToggleListView?.(newIsListViewActive);
+  };
 
   const handleMapListViewToggle = () => {
     if (location.pathname === '/') {
