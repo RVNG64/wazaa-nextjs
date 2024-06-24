@@ -38,39 +38,6 @@ function App({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const auth = getAuth();
 
-/* Protection des routes
-  useEffect(() => {
-    console.log('Location:', location);
-    console.log('Current User:', currentUser);
-    console.log('Loading:', loading);
-
-    // Listes des routes nécessitant une authentification
-    const protectedRoutes = [
-      "/profil", "/profil-pro", "/favoris", "/mes-evenements",
-      "/mes-evenements/modifier/:eventId", "/creation-evenement", "/wazaadmin",
-      "/mes-evenements/:eventId/participants"
-    ];
-
-    // Routes bloquées pour les utilisateurs connectés
-    const blockedRoutes = ["/connexion", "/inscription", "/connexion-pro",
-      "/inscription-pro", "/inscription-choice", "/connexion-choice"
-    ];
-
-    const pathIsProtected = protectedRoutes.includes(location);
-    const pathIsBlocked = blockedRoutes.includes(location);
-
-    if (!loading) {
-      if (pathIsProtected && !currentUser) {
-        console.log('Redirecting to /connexion');
-        router.push('/connexion');
-      } else if (pathIsBlocked && currentUser) {
-        console.log('Redirecting to /');
-        router.push('/');
-      }
-    }
-
-  }, [currentUser, router, loading, location]); */
-
   useEffect(() => {
     setWindowHeight(window.innerHeight);
 

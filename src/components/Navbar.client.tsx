@@ -1,6 +1,6 @@
 'use client'
 // src/components/Navbar.client.tsx
-import React, { useState, useRef, useEffect, useContext } from 'react';
+import React, { useState, useRef, useEffect, useContext, useMemo } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 import '../utils/firebase';
@@ -17,35 +17,32 @@ const Image = dynamic(() => import('next/image'), { ssr: false });
 
 const EventFilter = ({ showEventFilter }: { showEventFilter: boolean }) => {
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const { setSearchStartDate, setSearchEndDate } = useSearch();
+  const { searchStartDate, setSearchStartDate, searchEndDate, setSearchEndDate } = useSearch(); // Utilisation du contexte
 
-  // Calcul des dates par défaut
-  const today = new Date();
-  const endDate = new Date();
-  endDate.setDate(today.getDate() + 6);
-
-  // États pour les dates de début et de fin
-  const [startDate, setStartDate] = useState<Date | null>(today);
-  const [endDateState, setEndDateState] = useState<Date | null>(endDate);
+  // Utilisation des dates du contexte pour initialiser les états locaux
+  const startDate = useMemo(() => searchStartDate ? new Date(searchStartDate) : new Date(), [searchStartDate]);
+  const endDate = useMemo(() => searchEndDate ? new Date(searchEndDate) : (() => {
+    const date = new Date();
+    date.setDate(date.getDate() + 6);
+    return date;
+  })(), [searchEndDate]);
 
   useEffect(() => {
-    if (startDate && endDateState) {
-      setSearchStartDate(startDate.toISOString().split('T')[0]);
-      setSearchEndDate(endDateState.toISOString().split('T')[0]);
-    }
-  }, [startDate, endDateState, setSearchStartDate, setSearchEndDate]);
+    console.log('Navbar searchStartDate:', searchStartDate);
+    console.log('Navbar searchEndDate:', searchEndDate);
+  }, [searchStartDate, searchEndDate]);
 
   const handleStartDateChange = (date: Date | null) => {
     if (date) {
-      setStartDate(date);
-      setSearchStartDate(date.toISOString().split('T')[0]);
+      console.log('Changing startDate to:', date.toISOString().split('T')[0]);
+      setSearchStartDate(date.toISOString().split('T')[0]); // Utilisation du setter du contexte
     }
   };
 
   const handleEndDateChange = (date: Date | null) => {
     if (date) {
-      setEndDateState(date);
-      setSearchEndDate(date.toISOString().split('T')[0]);
+      console.log('Changing endDate to:', date.toISOString().split('T')[0]);
+      setSearchEndDate(date.toISOString().split('T')[0]); // Utilisation du setter du contexte
     }
   };
 
@@ -70,7 +67,7 @@ const EventFilter = ({ showEventFilter }: { showEventFilter: boolean }) => {
           <div className="date-picker-wrapper">
             <label htmlFor="endDate" className="date-label">Au</label>
             <ReactDatePicker
-              selected={endDateState}
+              selected={endDate}
               onChange={handleEndDateChange}
               id="endDate"
               dateFormat="dd/MM/yyyy"
