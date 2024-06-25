@@ -9,7 +9,7 @@ const cache = setupCache({
 
 // Créez une instance Axios avec l'adaptateur de cache
 const api = axios.create({
-  baseURL: 'http://localhost:3000', // 'https://www.wazaa.app ou 'http://localhost:3000'
+  baseURL: 'https://www.wazaa.app', // 'https://www.wazaa.app ou 'http://localhost:3000'
   adapter: cache.adapter
 });
 
