@@ -57,7 +57,6 @@ export default function Map() {
   const [, setCurrentPath] = useState(location);
   const { events } = useEvents();
   const { nativeEvents } = useNativeEvents();
-  const [previousUrl, setPreviousUrl] = useState<string | null>(null);
   const listViewRef = useRef<HTMLDivElement>(null);
   const listViewToggleRef = useRef<HTMLDivElement>(null);
   const detailPopupRef = useRef<HTMLDivElement>(null);
