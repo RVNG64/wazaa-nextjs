@@ -3,6 +3,9 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import api from '../utils/api';
 import L from 'leaflet';
+import dynamic from 'next/dynamic';
+
+const LoadingAnimation = dynamic(() => import('../components/WazaaLoading'), { ssr: false });
 
 export interface POI {
   '@id': string;
@@ -152,6 +155,7 @@ interface EventsContextProps {
   fetchEventsInBounds: (bounds: L.LatLngBounds, startDate?: string, endDate?: string) => Promise<POI[]>;
   initializeEvents: (bounds?: L.LatLngBounds, startDate?: string, endDate?: string) => Promise<void>;
   fetchAllEvents: () => Promise<POI[]>;
+  isLoading?: boolean;
 }
 
 interface EventsProviderProps {
@@ -222,10 +226,12 @@ const fetchAllEvents = async () => {
 
 export const EventsProvider: React.FC<EventsProviderProps> = ({ children, initialBounds }) => {
   const [events, setEvents] = useState<POI[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const initializeEvents = useCallback(async (bounds?: L.LatLngBounds, startDate?: string, endDate?: string) => {
     console.log(`Initializing events with dates: startDate=${startDate}, endDate=${endDate}`);
 
+    setIsLoading(true);
     if (bounds) {
       const initialEvents = await fetchEventsInBounds(bounds, startDate, endDate);
       setEvents(initialEvents);
@@ -234,19 +240,21 @@ export const EventsProvider: React.FC<EventsProviderProps> = ({ children, initia
       //const allEvents = await fetchAllEvents();
       //setEvents(allEvents);
     }
+    setIsLoading(false);
   }, []);
 
   useEffect(() => {
     // Initialisation automatique des événements lors du montage du composant
-    console.log('useEffect used to initialize events');
     initializeEvents(initialBounds).catch(error => {
       console.error('Erreur lors de l\'initialisation des événements:', error);
+      setIsLoading(false);
     });
   }, [initialBounds, initializeEvents]);
 
   return (
     <EventsContext.Provider value={{ events, setEvents, fetchEventsInBounds, initializeEvents, fetchAllEvents }}>
       {children}
+      <LoadingAnimation isLoading={isLoading} />
     </EventsContext.Provider>
   );
 };

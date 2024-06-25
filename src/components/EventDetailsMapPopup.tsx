@@ -1,6 +1,6 @@
 // src/components/EventDetailsMapPopup.tsx
 'use client';
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { auth } from '../utils/firebase';
@@ -63,6 +63,53 @@ const EventDetailsMapPopup = ({ selectedPoi, setShowDetails, isListViewVisible }
 
     checkIfFavorite();
   }, [selectedPoi]);
+
+  // Formatage des lettres accentuées pour les URL
+  const removeAccents = useCallback((str: string) => {
+    const accents =
+      'ÀÁÂÃÄÅàáâãäåÒÓÔÕÖØòóôõöøÈÉÊËèéêëÇçÌÍÎÏìíîïÙÚÛÜùúûüÿÑñ';
+    const accentsOut =
+      'AAAAAAaaaaaaOOOOOOooooooEEEEeeeeCcIIIIiiiiUUUUuuuuyNn';
+
+    return str.split('').map((letter: string, index: number) => {
+      const accentIndex = accents.indexOf(letter);
+      return accentIndex !== -1 ? accentsOut[accentIndex] : letter;
+    }).join('');
+  }, []);
+
+  // Création d'un slug pour l'événement
+  const createEventSlug = useCallback((eventName: string) => {
+    const noAccents = removeAccents(eventName);
+    return noAccents
+      .toLowerCase()
+      .replace(/\s+/g, '-')
+      .replace(/[^a-z0-9-]/g, '')
+      .replace(/--+/g, '-');
+  }, [removeAccents]);
+
+  const generateEventUrl = useCallback(() => {
+    if (!selectedPoi) return '';
+
+    const eventName = selectedPoi['rdfs:label']?.fr?.[0] || '';
+    const eventId = selectedPoi['@id'].split('/').pop();
+    const eventSlug = createEventSlug(eventName);
+    const city = selectedPoi['isLocatedAt'][0]['schema:address']?.[0]['schema:addressLocality'];
+    const citySlug = city ? createEventSlug(city) : 'evenement';
+
+    return `${window.location.origin}/event/${citySlug}/${eventSlug}/${eventId}`;
+  }, [selectedPoi, createEventSlug]);
+
+  const copyToClipboard = () => {
+    const eventUrl = generateEventUrl();
+    if (eventUrl) {
+      navigator.clipboard.writeText(eventUrl)
+        .then(() => {
+          setShowShareConfirmation(true);
+          setTimeout(() => setShowShareConfirmation(false), 3000);
+        })
+        .catch(err => console.error("Impossible de copier le lien", err));
+    }
+  };
 
   if (!selectedPoi) return null;
 
@@ -182,16 +229,6 @@ const EventDetailsMapPopup = ({ selectedPoi, setShowDetails, isListViewVisible }
     }
 
     window.open(url, '_blank');
-  };
-
-  const copyToClipboard = () => {
-    const eventUrl = window.location.href;
-    navigator.clipboard.writeText(eventUrl)
-      .then(() => {
-        setShowShareConfirmation(true);
-        setTimeout(() => setShowShareConfirmation(false), 3000);
-      })
-      .catch(err => console.error("Impossible de copier le lien", err));
   };
 
   const shareEvent = () => {
