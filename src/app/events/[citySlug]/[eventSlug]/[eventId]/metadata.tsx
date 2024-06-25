@@ -1,8 +1,8 @@
 // src/app/event/[citySlug]/[eventSlug]/[eventId]/metadata.tsx
 import api from '../../../../../utils/api';
 export async function generateMetadata({ params }: { params: { eventId: string } }) {
-  const response = await api.get(`http://localhost:3000//api/events/${params?.eventId}`);
-  //const response = await api.get(`https://www.wazaa.app/api/events/${params?.eventId}`);
+  //const response = await api.get(`http://localhost:3000//api/events/${params?.eventId}`);
+  const response = await api.get(`https://www.wazaa.app/api/events/${params?.eventId}`);
   const nativeEvent = await response.data;
 
   const removeAccents = (str: string) => {
